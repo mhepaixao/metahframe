@@ -203,7 +203,8 @@ public class Agent {
       else{
          //exploration
          //nextCity = getPseudoRandomCity(); //method 1
-         nextCity = getPseudoRandomProportionalCity(); //method 2
+         //nextCity = getPseudoRandomProportionalCity(); //method 2
+         nextCity = getMaxActionChoiceCity();
       }
 
       return nextCity;
@@ -237,7 +238,7 @@ public class Agent {
       for(int i = 0; i <= citiesToVisit.length - 1; i++){
          if(citiesToVisit[i] != null){
             city = citiesToVisit[i];
-            if(AntQ.getActionChoice(getCurrentCity(), city) > AntQ.getActionChoice(getCurrentCity(), maxActionChoiceCity)){
+            if(AntQ.getActionChoice(getCurrentCity(), city, this) > AntQ.getActionChoice(getCurrentCity(), maxActionChoiceCity, this)){
                maxActionChoiceCity = city;
             }
          }
@@ -314,11 +315,11 @@ public class Agent {
     */
    private double[] getPseudoRandomProportionalProbabilities(){
       double probabilities[] = new double[citiesToVisit.length];
-      double actionChoiceSum = AntQ.getActionChoiceSum(getCurrentCity(), citiesToVisit);
+      double actionChoiceSum = AntQ.getActionChoiceSum(getCurrentCity(), citiesToVisit, this);
 
       for(int i = 0; i <= probabilities.length - 1; i++){
          if(citiesToVisit[i] != null){
-            probabilities[i] = AntQ.getActionChoice(getCurrentCity(), citiesToVisit[i]) / actionChoiceSum;
+            probabilities[i] = AntQ.getActionChoice(getCurrentCity(), citiesToVisit[i], this) / actionChoiceSum;
          }
          else{
             probabilities[i] = 0;

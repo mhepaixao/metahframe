@@ -56,6 +56,24 @@ public class InstanceReader extends JFrame {
       return instance;
    }
 
+   public int getNumberOfJobs(){
+      int numberOfJobs = 0;
+      String instanceLine = null;
+
+      try{
+         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
+
+         instanceLine = reader.readLine();
+
+         numberOfJobs = Integer.parseInt(instanceLine.split(" ")[0]);
+      }
+      catch(Exception e){
+         System.out.println("JSSP instance reader error");
+      }
+
+      return numberOfJobs;
+   }
+
    /**
     * Method to read the type of the instance.
     *

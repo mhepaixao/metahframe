@@ -17,6 +17,9 @@
  * @author Matheus Paixao
  */
 public class AntQ {
+   private static String problem = "";
+
+
    //constant initialization parameters
    private static final double delta = 1;
    private static final double beta = 2;
@@ -84,6 +87,10 @@ public class AntQ {
 
       if(args.length > 0){
          totalIterations = Integer.parseInt(args[0]); //the user can pass the number of iterations
+
+         if(args.length > 1){
+            problem = args[1];
+         }
       }
       else{
          totalIterations = 200;
@@ -94,8 +101,10 @@ public class AntQ {
 
       while(iterationsCounter <= totalIterations){
          initialTime = System.currentTimeMillis();
-         //update the action choices of all edges
-         updateActionChoices();
+         if(!problem.equals("jssp")){
+            //update the action choices of all edges
+            updateActionChoices();
+         }
          //in this step all the agents chooses the next city to move to
          //when all the agents have choosen the next city, they update the AQ value of the correspondent edge 
          for(int i = 0; i <= cities.length - 1; i++){
@@ -204,23 +213,43 @@ public class AntQ {
     */
    private static void init(){
       InstanceReader instanceReader = new InstanceReader();
-      String instanceType = instanceReader.getInstanceType();
 
-      System.out.println("memory before edges");
-      printUsedMemory();
-      if(instanceType == "coordinates"){
-         createCartesianCoordinatesEdges(instanceReader.getCitiesList());
+      if(problem.equals("jssp")){
+         createJSSPEdges(instanceReader.getNumberOfJobs());
       }
-      else if(instanceType == "matrix"){
-         createMatrixEdges(instanceReader.getEdgesValuesMatrix());
-      }
-      System.out.println("memory after edges");
-      printUsedMemory();
+      else{
+         String instanceType = instanceReader.getInstanceType();
+         //System.out.println("memory before edges");
+         //printUsedMemory();
+         if(instanceType == "coordinates"){
+            createCartesianCoordinatesEdges(instanceReader.getCitiesList());
+         }
+         else if(instanceType == "matrix"){
+            createMatrixEdges(instanceReader.getEdgesValuesMatrix());
+         }
+         //System.out.println("memory after edges");
+         //printUsedMemory();
 
-      actionChoices = new double[edges.length][edges.length];
-      initAQValues(getAQ0());
+         actionChoices = new double[edges.length][edges.length];
+         initAQValues(getAQ0());
+      }
 
       initAgents();
+   }
+
+   private static void createJSSPEdges(int numberOfJobs){
+      cities = new City[numberOfJobs];
+
+      for(int i = 0; i <= cities.length - 1; i++){
+         cities[i] = new City(i);
+      }
+
+      edges = new Edge[cities.length][cities.length];
+      for(int i = 0; i <= cities.length - 1; i++){
+         for(int j = 0; j <= cities.length - 1; j++){
+            edges[i][j] = new Edge(cities[i], cities[j]);
+         }
+      }
    }
 
    /**
@@ -329,17 +358,17 @@ public class AntQ {
     * @see Agent constructor in Agent class.
     */
    private static void initAgents(){
-      agents = new Agent[cities.length]; 
-      //agents = new Agent[1]; 
+      //agents = new Agent[cities.length]; 
+      agents = new Agent[1]; 
 
-      System.out.println("memory before agents");
-      printUsedMemory();
+      //System.out.println("memory before agents");
+      //printUsedMemory();
       for(int i = 0; i <= agents.length - 1; i++){
          agents[i] = new Agent(cities[i]);
          System.out.println("agent "+i);
       }
-      System.out.println("memory after agents");
-      printUsedMemory();
+      //System.out.println("memory after agents");
+      //printUsedMemory();
    }
 
    /**
@@ -378,8 +407,53 @@ public class AntQ {
     * @param city2 the second city of the edge 
     * @return the action choice of the edge
     */
-   public static double getActionChoice(City city1, City city2){
-      return actionChoices[city1.getIndex()][city2.getIndex()];
+   public static double getActionChoice(City city1, City city2, Agent agent){
+      double actionChoice = 0;
+
+      if(problem.equals("jssp")){
+         int[] nodes = getNodes(city1, city2, agent);
+
+      }
+      else{
+         actionChoice = actionChoices[city1.getIndex()][city2.getIndex()];
+      }
+
+      return actionChoice;
+   }
+
+   private static int getNumberOfNodes(Edge[] tour){
+      int nodesCounter = 0;
+
+      for(int i = 0; i <= tour.length - 1; i++){
+         if(tour[i] != null){
+            nodesCounter++;
+         }
+      }
+
+      return nodesCounter + 2;
+   }
+
+   private static int[] getNodes(City city1, City city2, Agent agent){
+      int[] nodes;
+
+      Edge[] tour = agent.getTour();
+      nodes = new int[getNumberOfNodes(tour)];
+
+      if(tour[0] == null){
+         nodes[0] = city1.getIndex();
+         nodes[1] = city2.getIndex();
+      }
+      else{
+         for(int i = 0; i <= tour.length - 1; i++){
+            if(tour[i] != null){
+               nodes[i] = tour[i].getCity1().getIndex();
+               nodes[i+1] = tour[i].getCity2().getIndex();
+            }
+         }
+         nodes[nodes.length - 1] = city2.getIndex();
+      }
+
+      return nodes;
    }
 
    /**
@@ -389,12 +463,12 @@ public class AntQ {
     * @return the sum of action choices of all remaining cities to visit of an agent.
     * @see getActionChoice
     */
-   public static double getActionChoiceSum(City currentCity, City citiesToVisit[]){
+   public static double getActionChoiceSum(City currentCity, City citiesToVisit[], Agent agent){
       double actionChoiceSum = 0;
 
       for(int i = 0; i <= citiesToVisit.length - 1; i++){
          if(citiesToVisit[i] != null){
-            actionChoiceSum += getActionChoice(currentCity, citiesToVisit[i]);
+            actionChoiceSum += getActionChoice(currentCity, citiesToVisit[i], agent);
          }
       }
 
