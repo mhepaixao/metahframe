@@ -18,6 +18,7 @@
  */
 public class AntQ {
    private static String problem = "";
+   private static double[][] times;
 
 
    //constant initialization parameters
@@ -216,6 +217,7 @@ public class AntQ {
 
       if(problem.equals("jssp")){
          createJSSPEdges(instanceReader.getNumberOfJobs());
+         times = instanceReader.getTimesMatrix();
       }
       else{
          String instanceType = instanceReader.getInstanceType();
@@ -358,8 +360,8 @@ public class AntQ {
     * @see Agent constructor in Agent class.
     */
    private static void initAgents(){
-      //agents = new Agent[cities.length]; 
-      agents = new Agent[1]; 
+      agents = new Agent[cities.length]; 
+      //agents = new Agent[1]; 
 
       //System.out.println("memory before agents");
       //printUsedMemory();
@@ -412,7 +414,11 @@ public class AntQ {
 
       if(problem.equals("jssp")){
          int[] nodes = getNodes(city1, city2, agent);
+         actionChoice = 1 / getMakespan(nodes);
 
+         if(Double.isNaN(actionChoice) || actionChoice == Double.POSITIVE_INFINITY || actionChoice == Double.NEGATIVE_INFINITY){
+            actionChoice = 0;
+         }
       }
       else{
          actionChoice = actionChoices[city1.getIndex()][city2.getIndex()];
@@ -454,6 +460,12 @@ public class AntQ {
       }
 
       return nodes;
+   }
+
+   private static double getMakespan(int[] nodes){
+      double makespan = 0;
+
+      return makespan;
    }
 
    /**

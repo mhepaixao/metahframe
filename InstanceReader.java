@@ -74,6 +74,41 @@ public class InstanceReader extends JFrame {
       return numberOfJobs;
    }
 
+   public double[][] getTimesMatrix(){
+      double[][] times = null;
+      String instanceLine = null;
+      String[] values = null;
+      int jobCounter = 0;
+
+      try{
+         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
+
+         while(reader.ready()){
+            instanceLine = reader.readLine();
+            spacesMatcher = Pattern.compile("\\s{2,}").matcher(instanceLine);
+            instanceLine = spacesMatcher.replaceAll(" ").trim(); //replace all spaces for just one
+
+            values = instanceLine.split(" ");
+            if(values.length == 2){
+               times = new double[Integer.parseInt(values[0])][Integer.parseInt(values[1])];
+            }
+            else{
+               for(int i = 0; i <= values.length - 1; i = i + 2){
+                  times[jobCounter][Integer.parseInt(values[i])] = Double.parseDouble(values[i + 1]);
+               }
+
+               jobCounter++;
+            }
+         }
+      }
+      catch(Exception e){
+         System.out.println("JSSP get times matrix error");
+         e.printStackTrace();
+      }
+
+      return times;
+   }
+
    /**
     * Method to read the type of the instance.
     *
