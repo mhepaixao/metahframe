@@ -295,7 +295,137 @@ public class InstanceReader extends JFrame {
     * @see getNumberOfCitiesInMatrixFormat
     */
    public double[][] getEdgesValuesMatrix(){
-      int numberOfCities = getNumberOfCitiesInMatrixFormat();
+      double edgesValuesMatrix[][] = null;
+
+      try{
+         String instanceLine = null;
+         String[] values;
+
+         BufferedReader reader = new BufferedReader(new FileReader(instance));
+         while(reader.ready()){
+            instanceLine = reader.readLine();
+
+            Matcher twoLettersMatcher = Pattern.compile("[a-z][a-z]").matcher(instanceLine) ;
+            Matcher numbersMatcher = Pattern.compile("[0-9]").matcher(instanceLine) ;
+
+            //if it isn't a text line and has numbers
+            if((twoLettersMatcher.find() == false) && (numbersMatcher.find() == true)){
+               Matcher spacesMatcher = Pattern.compile("\\s{2,}").matcher(instanceLine);
+               instanceLine = spacesMatcher.replaceAll(" ").trim(); //replace all spaces for just one
+
+               values = instanceLine.split(" ");
+               if(Double.parseDouble(values[0]) == 0.0){
+                  edgesValuesMatrix = getEdgesValuesMatrixInFormat1();
+               }
+               else{
+                  edgesValuesMatrix = getEdgesValuesMatrixInFormat2();
+               }
+
+               break;
+            }
+         }
+      }
+      catch(Exception e){
+         System.out.println("Error in get edges values matrix");
+         e.printStackTrace();
+      }
+
+      return edgesValuesMatrix;
+   }
+
+   private double[][] getEdgesValuesMatrixInFormat1(){
+      int numberOfCities = getNumberOfCitiesInMatrixFormat1();
+      double edgesValuesMatrix[][] = new double[numberOfCities][numberOfCities];
+
+      try{
+         String instanceLine = null;
+         String[] values;
+         int lineIndex = -1;
+         int columnIndex = -1;
+
+         BufferedReader reader = new BufferedReader(new FileReader(instance));
+         while(reader.ready()){
+            instanceLine = reader.readLine();
+
+            Matcher twoLettersMatcher = Pattern.compile("[a-z][a-z]").matcher(instanceLine) ;
+            Matcher numbersMatcher = Pattern.compile("[0-9]").matcher(instanceLine) ;
+
+            //if it isn't a text line and has numbers
+            if((twoLettersMatcher.find() == false) && (numbersMatcher.find() == true)){
+               Matcher spacesMatcher = Pattern.compile("\\s{2,}").matcher(instanceLine);
+               instanceLine = spacesMatcher.replaceAll(" ").trim(); //replace all spaces for just one
+
+               values = instanceLine.split(" ");
+
+               //format 1
+               for(int i = 0; i <= values.length - 1; i++){
+                  if(Double.parseDouble(values[i]) == 0.0){
+                     lineIndex++;
+
+                     if(lineIndex > numberOfCities){
+                        break;
+                     }
+
+                     columnIndex = -1;
+                  }
+                  else{
+                     columnIndex++;
+                  }
+
+                  edgesValuesMatrix[lineIndex][lineIndex + (columnIndex + 1)] = Double.parseDouble(values[i]);
+                  edgesValuesMatrix[lineIndex + (columnIndex + 1)][lineIndex] = Double.parseDouble(values[i]);
+               }
+            }
+         }
+      }
+      catch(Exception e){
+         System.out.println("Error in get edges values matrix in format 1");
+         e.printStackTrace();
+      }
+
+      return edgesValuesMatrix;
+   }
+
+   private int getNumberOfCitiesInMatrixFormat1(){
+      int numberOfCities = 0;
+
+      try{
+         String instanceLine = null;
+         String[] values;
+
+         BufferedReader reader = new BufferedReader(new FileReader(instance));
+         while(reader.ready()){
+            instanceLine = reader.readLine();
+
+            Matcher twoLettersMatcher = Pattern.compile("[a-z][a-z]").matcher(instanceLine) ;
+            Matcher numbersMatcher = Pattern.compile("[0-9]").matcher(instanceLine) ;
+
+            //if it isn't a text line and has numbers
+            if((twoLettersMatcher.find() == false) && (numbersMatcher.find() == true)){
+               Matcher spacesMatcher = Pattern.compile("\\s{2,}").matcher(instanceLine);
+               instanceLine = spacesMatcher.replaceAll(" ").trim(); //replace all spaces for just one
+
+               values = instanceLine.split(" ");
+
+               for(int i = 0; i <= values.length - 1; i++){
+                  if(Double.parseDouble(values[i]) == 0.0){
+                     numberOfCities++;
+                  }
+               }
+            }
+
+         }
+      }
+      catch(Exception e){
+         System.out.println("Error in get number od cities in matrix format 1");
+         e.printStackTrace();
+      }
+
+      return numberOfCities;
+   }
+
+   private double[][] getEdgesValuesMatrixInFormat2(){
+      int numberOfCities = getNumberOfCitiesInMatrixFormat2();
       double edgesValuesMatrix[][] = new double[numberOfCities][numberOfCities];
 
       try{
@@ -317,7 +447,7 @@ public class InstanceReader extends JFrame {
 
                values = instanceLine.split(" ");
 
-               //format 1
+               //format 2
                for(int i = 0; i <= values.length - 1; i++){
                   edgesValuesMatrix[lineIndex][lineIndex + (i + 1)] = Double.parseDouble(values[i]);
                   edgesValuesMatrix[lineIndex + (i + 1)][lineIndex] = Double.parseDouble(values[i]);
@@ -329,7 +459,8 @@ public class InstanceReader extends JFrame {
          }
       }
       catch(Exception e){
-         System.out.println("Error in get edges values matrix");
+         System.out.println("Error in get edges values matrix in format 2");
+         e.printStackTrace();
       }
 
       return edgesValuesMatrix;
@@ -341,7 +472,7 @@ public class InstanceReader extends JFrame {
     * @author Matheus Paixao
     * @return the number of cities 
     */
-   private int getNumberOfCitiesInMatrixFormat(){
+   private int getNumberOfCitiesInMatrixFormat2(){
       int numberOfCities = 0;
 
       try{
@@ -367,4 +498,5 @@ public class InstanceReader extends JFrame {
       //in symmetric matrix the last line is the city An-1
       return numberOfCities + 1;
    }
+
 }
