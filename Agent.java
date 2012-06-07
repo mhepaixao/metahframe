@@ -203,8 +203,7 @@ public class Agent {
       else{
          //exploration
          //nextCity = getPseudoRandomCity(); //method 1
-         //nextCity = getPseudoRandomProportionalCity(); //method 2
-         nextCity = getMaxActionChoiceCity();
+         nextCity = getPseudoRandomProportionalCity(); //method 2
       }
 
       return nextCity;

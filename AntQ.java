@@ -218,6 +218,7 @@ public class AntQ {
       if(problem.equals("jssp")){
          createJSSPEdges(instanceReader.getNumberOfJobs());
          times = instanceReader.getTimesMatrix();
+         initAQValues(0.01);
       }
       else{
          String instanceType = instanceReader.getInstanceType();
@@ -413,7 +414,10 @@ public class AntQ {
 
       if(problem.equals("jssp")){
          int[] nodes = getNodes(city1, city2, agent);
-         actionChoice = 1 / getMakespan(nodes);
+         double heuristicValue = 1 / getMakespan(nodes);
+
+         Edge edge = edges[city1.getIndex()][city2.getIndex()];
+         actionChoice =  Math.pow(edge.getAQValue(), delta) * Math.pow(heuristicValue, beta);
 
          if(Double.isNaN(actionChoice) || actionChoice == Double.POSITIVE_INFINITY || actionChoice == Double.NEGATIVE_INFINITY){
             actionChoice = 0;
@@ -594,8 +598,19 @@ public class AntQ {
    private static double calculateTourValue(Edge[] tour){
       double tourValue = 0;
 
-      for(int i = 0; i <= tour.length - 1; i++){
-         tourValue += tour[i].getEdgeValue();
+      if(problem.equals("jssp")){
+         int[] nodes = new int[tour.length];
+
+         for(int i = 0; i <= nodes.length - 1; i++){
+            nodes[i] = tour[i].getCity1().getIndex();
+         }
+
+         tourValue = getMakespan(nodes);
+      }
+      else{
+         for(int i = 0; i <= tour.length - 1; i++){
+            tourValue += tour[i].getEdgeValue();
+         }
       }
 
       return tourValue;
