@@ -367,7 +367,6 @@ public class AntQ {
       //printUsedMemory();
       for(int i = 0; i <= agents.length - 1; i++){
          agents[i] = new Agent(cities[i]);
-         System.out.println("agent "+i);
       }
       //System.out.println("memory after agents");
       //printUsedMemory();
@@ -463,9 +462,23 @@ public class AntQ {
    }
 
    private static double getMakespan(int[] nodes){
-      double makespan = 0;
+      double[] makespan = new double[times[0].length];
+      int job = 0;
 
-      return makespan;
+      for(int i = 0; i <= nodes.length - 1; i++){
+         job = nodes[i];
+         makespan[0] = makespan[0] + times[job][0];
+         for(int j = 1; j <= times[0].length - 1; j++){
+            if(makespan[j] > makespan[j - 1]){
+               makespan[j] = makespan[j] + times[job][j];
+            }
+            else{
+               makespan[j] = makespan[j - 1] + times[job][j];
+            }
+         }
+      }
+
+      return makespan[times[0].length - 1];
    }
 
    /**
