@@ -287,8 +287,9 @@ public class InstanceReader extends JFrame {
     * Method to get the edges values matrix when the instance is in the distance matrix format.
     *
     * The distance matrix must be in one of the formats that follows:
+    * 1) Symmetric matrix, where the '0's delimits each row
     * Let n be the number of cities.
-    * 1) Symmetric matrix, where the first line is A1, A2 to A1, An. And the last line is An-1, An.
+    * 2) Symmetric matrix, where the first row is A1, A2 to A1, An. And the last row is An-1, An.
     *
     * @author Matheus Paixao
     * @return the edges values matrix
@@ -301,7 +302,7 @@ public class InstanceReader extends JFrame {
          String instanceLine = null;
          String[] values;
 
-         BufferedReader reader = new BufferedReader(new FileReader(instance));
+         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
          while(reader.ready()){
             instanceLine = reader.readLine();
 
@@ -314,6 +315,8 @@ public class InstanceReader extends JFrame {
                instanceLine = spacesMatcher.replaceAll(" ").trim(); //replace all spaces for just one
 
                values = instanceLine.split(" ");
+
+               //if the matrix is in format 1
                if(Double.parseDouble(values[0]) == 0.0){
                   edgesValuesMatrix = getEdgesValuesMatrixInFormat1();
                }
@@ -321,6 +324,7 @@ public class InstanceReader extends JFrame {
                   edgesValuesMatrix = getEdgesValuesMatrixInFormat2();
                }
 
+               //read only the first line of values
                break;
             }
          }
@@ -333,6 +337,14 @@ public class InstanceReader extends JFrame {
       return edgesValuesMatrix;
    }
 
+   /**
+    * Method to get the edges values matrix when the matrix instance is in format 1.
+    *
+    * Format 1: Symmetric matrix, where the '0's delimits each row.
+    * @author Matheus Paixao
+    * @return the edges values matrix
+    * @see getNumberOfCitiesInMatrixFormat1
+    */
    private double[][] getEdgesValuesMatrixInFormat1(){
       int numberOfCities = getNumberOfCitiesInMatrixFormat1();
       double edgesValuesMatrix[][] = new double[numberOfCities][numberOfCities];
@@ -340,10 +352,10 @@ public class InstanceReader extends JFrame {
       try{
          String instanceLine = null;
          String[] values;
-         int lineIndex = -1;
+         int rowIndex = -1;
          int columnIndex = -1;
 
-         BufferedReader reader = new BufferedReader(new FileReader(instance));
+         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
          while(reader.ready()){
             instanceLine = reader.readLine();
 
@@ -359,21 +371,18 @@ public class InstanceReader extends JFrame {
 
                //format 1
                for(int i = 0; i <= values.length - 1; i++){
+                  //if it's a new row of the matrix
                   if(Double.parseDouble(values[i]) == 0.0){
-                     lineIndex++;
-
-                     if(lineIndex > numberOfCities){
-                        break;
-                     }
-
+                     rowIndex++;
                      columnIndex = -1;
                   }
                   else{
                      columnIndex++;
                   }
 
-                  edgesValuesMatrix[lineIndex][lineIndex + (columnIndex + 1)] = Double.parseDouble(values[i]);
-                  edgesValuesMatrix[lineIndex + (columnIndex + 1)][lineIndex] = Double.parseDouble(values[i]);
+                  //symmetric matrix
+                  edgesValuesMatrix[rowIndex][rowIndex + (columnIndex + 1)] = Double.parseDouble(values[i]);
+                  edgesValuesMatrix[rowIndex + (columnIndex + 1)][rowIndex] = Double.parseDouble(values[i]);
                }
             }
          }
@@ -386,6 +395,13 @@ public class InstanceReader extends JFrame {
       return edgesValuesMatrix;
    }
 
+   /**
+    * Method to get the number of cities when the instance is in distance matrix format 1.
+    *
+    * Format 1: Symmetric matrix, where the '0's delimits each row.
+    * @author Matheus Paixao
+    * @return the number of cities 
+    */
    private int getNumberOfCitiesInMatrixFormat1(){
       int numberOfCities = 0;
 
@@ -393,7 +409,7 @@ public class InstanceReader extends JFrame {
          String instanceLine = null;
          String[] values;
 
-         BufferedReader reader = new BufferedReader(new FileReader(instance));
+         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
          while(reader.ready()){
             instanceLine = reader.readLine();
 
@@ -408,6 +424,7 @@ public class InstanceReader extends JFrame {
                values = instanceLine.split(" ");
 
                for(int i = 0; i <= values.length - 1; i++){
+                  //if it's a new row of the matrix
                   if(Double.parseDouble(values[i]) == 0.0){
                      numberOfCities++;
                   }
@@ -424,6 +441,15 @@ public class InstanceReader extends JFrame {
       return numberOfCities;
    }
 
+   /**
+    * Method to get the edges values matrix when the matrix instance is in format 2.
+    *
+    * Let n be the number of cities.
+    * Format 2: Symmetric matrix, where the first row is A1, A2 to A1, An. And the last row is An-1, An.
+    * @author Matheus Paixao
+    * @return the edges values matrix
+    * @see getNumberOfCitiesInMatrixFormat2
+    */
    private double[][] getEdgesValuesMatrixInFormat2(){
       int numberOfCities = getNumberOfCitiesInMatrixFormat2();
       double edgesValuesMatrix[][] = new double[numberOfCities][numberOfCities];
@@ -431,9 +457,9 @@ public class InstanceReader extends JFrame {
       try{
          String instanceLine = null;
          String[] values;
-         int lineIndex = 0;
+         int rowIndex = 0;
 
-         BufferedReader reader = new BufferedReader(new FileReader(instance));
+         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
          while(reader.ready()){
             instanceLine = reader.readLine();
 
@@ -449,13 +475,13 @@ public class InstanceReader extends JFrame {
 
                //format 2
                for(int i = 0; i <= values.length - 1; i++){
-                  edgesValuesMatrix[lineIndex][lineIndex + (i + 1)] = Double.parseDouble(values[i]);
-                  edgesValuesMatrix[lineIndex + (i + 1)][lineIndex] = Double.parseDouble(values[i]);
+                  //symmetric matrix
+                  edgesValuesMatrix[rowIndex][rowIndex + (i + 1)] = Double.parseDouble(values[i]);
+                  edgesValuesMatrix[rowIndex + (i + 1)][rowIndex] = Double.parseDouble(values[i]);
                }
 
-               lineIndex++;
+               rowIndex++;
             }
-
          }
       }
       catch(Exception e){
@@ -467,8 +493,10 @@ public class InstanceReader extends JFrame {
    }
 
    /**
-    * Method to get the number of cities when the instance is in distance matrix format.
+    * Method to get the number of cities when the instance is in distance matrix format 2.
     *
+    * Let n be the number of cities.
+    * Format 2: Symmetric matrix, where the first row is A1, A2 to A1, An. And the last row is An-1, An.
     * @author Matheus Paixao
     * @return the number of cities 
     */
@@ -478,7 +506,7 @@ public class InstanceReader extends JFrame {
       try{
          String instanceLine = null;
 
-         BufferedReader reader = new BufferedReader(new FileReader(instance));
+         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
          while(reader.ready()){
             instanceLine = reader.readLine();
 
@@ -498,5 +526,4 @@ public class InstanceReader extends JFrame {
       //in symmetric matrix the last line is the city An-1
       return numberOfCities + 1;
    }
-
 }
