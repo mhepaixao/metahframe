@@ -127,6 +127,65 @@ public class InstanceReader extends JFrame {
       return numberOfRequirements;
    }
 
+   public double[][] getObjectivesMatrix(int numberOfRequirements){
+      double[][] objectivesMatrix = new double[getNumberOfObjectives()][numberOfRequirements];
+      String instanceLine = null;
+      String[] values = null;
+      int objectivesCounter = 0;
+
+      try{
+         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
+
+         while(reader.ready()){
+            instanceLine = reader.readLine();
+            spacesMatcher = Pattern.compile("\\s{2,}").matcher(instanceLine);
+            instanceLine = spacesMatcher.replaceAll(" ").trim(); //replace all spaces for just one
+
+            values = instanceLine.split(" ");
+            if(values.length > 1){
+               for(int i = 0; i <= values.length - 1; i++){
+                  objectivesMatrix[objectivesCounter][i] = Double.parseDouble(values[i]);
+               }
+
+               objectivesCounter++;
+            }
+         }
+      }
+      catch(Exception e){
+         System.out.println("requirements problem get number of objectives error");
+         e.printStackTrace();
+      }
+
+      return objectivesMatrix;
+   }
+
+   private int getNumberOfObjectives(){
+      int numberOfObjectives = 0;
+      String instanceLine = null;
+      String[] values = null;
+
+      try{
+         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
+
+         while(reader.ready()){
+            instanceLine = reader.readLine();
+            spacesMatcher = Pattern.compile("\\s{2,}").matcher(instanceLine);
+            instanceLine = spacesMatcher.replaceAll(" ").trim(); //replace all spaces for just one
+
+            values = instanceLine.split(" ");
+            if(values.length > 1){
+               numberOfObjectives++;
+            }
+         }
+      }
+      catch(Exception e){
+         System.out.println("requirements problem get number of objectives error");
+         e.printStackTrace();
+      }
+
+      return numberOfObjectives;
+   }
+
    /**
     * Method to read the type of the instance.
     *

@@ -20,6 +20,7 @@ public class AntQ {
    private static String problem = "";
    private static double[][] times;
 
+   private static double[][] objectivesMatrix;
 
    //constant initialization parameters
    private static final double delta = 1;
@@ -222,7 +223,9 @@ public class AntQ {
          initAQValues(0.01);
       }
       else if(problem.equals("requirements")){
-         createRequirementsEdges(instanceReader.getNumberOfRequirements());
+         int numberOfRequirements = instanceReader.getNumberOfRequirements();
+         createRequirementsEdges(numberOfRequirements);
+         objectivesMatrix = instanceReader.getObjectivesMatrix(numberOfRequirements);
       }
       else{
          String instanceType = instanceReader.getInstanceType();
@@ -380,8 +383,8 @@ public class AntQ {
     * @see Agent constructor in Agent class.
     */
    private static void initAgents(){
-      agents = new Agent[cities.length]; 
-      //agents = new Agent[1]; 
+      //agents = new Agent[cities.length]; 
+      agents = new Agent[1]; 
 
       //System.out.println("memory before agents");
       //printUsedMemory();
@@ -443,7 +446,8 @@ public class AntQ {
          }
       }
       else if(problem.equals("requirements")){
-         System.out.println("requirements action choice");
+         int[] nodes = getNodes(city1, city2, agent);
+
       }
       else{
          actionChoice = actionChoices[city1.getIndex()][city2.getIndex()];
