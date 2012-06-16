@@ -181,6 +181,7 @@ public class AntQ {
          iterationsCounter++;
       }
       //System.out.println("here counter: " + hereCounter);
+      System.out.println("Total time " + averageIterationTime * Math.pow(10, -3) + " seconds");
       System.out.println("Average time of iterations: " + averageIterationTime / iterationsCounter);
       System.out.println("Best tour value: " + calculateTourValue(globalBestTour));
       System.exit(0);
