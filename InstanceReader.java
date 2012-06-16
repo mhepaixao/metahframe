@@ -109,6 +109,24 @@ public class InstanceReader extends JFrame {
       return times;
    }
 
+   public int getNumberOfRequirements(){
+      int numberOfRequirements = 0;
+      String instanceLine = null;
+
+      try{
+         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
+
+         instanceLine = reader.readLine();
+
+         numberOfRequirements = Integer.parseInt(instanceLine.split(" ")[0]);
+      }
+      catch(Exception e){
+         System.out.println("requirements problem instance reader error");
+      }
+
+      return numberOfRequirements;
+   }
+
    /**
     * Method to read the type of the instance.
     *

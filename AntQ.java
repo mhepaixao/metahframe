@@ -102,7 +102,7 @@ public class AntQ {
 
       while(iterationsCounter <= totalIterations){
          initialTime = System.currentTimeMillis();
-         if(!problem.equals("jssp")){
+         if(!problem.equals("jssp") && !problem.equals("requirements")){
             //update the action choices of all edges
             updateActionChoices();
          }
@@ -221,6 +221,9 @@ public class AntQ {
          times = instanceReader.getTimesMatrix();
          initAQValues(0.01);
       }
+      else if(problem.equals("requirements")){
+         createRequirementsEdges(instanceReader.getNumberOfRequirements());
+      }
       else{
          String instanceType = instanceReader.getInstanceType();
          //System.out.println("memory before edges");
@@ -243,6 +246,21 @@ public class AntQ {
 
    private static void createJSSPEdges(int numberOfJobs){
       cities = new City[numberOfJobs];
+
+      for(int i = 0; i <= cities.length - 1; i++){
+         cities[i] = new City(i);
+      }
+
+      edges = new Edge[cities.length][cities.length];
+      for(int i = 0; i <= cities.length - 1; i++){
+         for(int j = 0; j <= cities.length - 1; j++){
+            edges[i][j] = new Edge(cities[i], cities[j]);
+         }
+      }
+   }
+
+   private static void createRequirementsEdges(int numberOfRequirements){
+      cities = new City[numberOfRequirements];
 
       for(int i = 0; i <= cities.length - 1; i++){
          cities[i] = new City(i);
@@ -423,6 +441,9 @@ public class AntQ {
          if(Double.isNaN(actionChoice) || actionChoice == Double.POSITIVE_INFINITY || actionChoice == Double.NEGATIVE_INFINITY){
             actionChoice = 0;
          }
+      }
+      else if(problem.equals("requirements")){
+         System.out.println("requirements action choice");
       }
       else{
          actionChoice = actionChoices[city1.getIndex()][city2.getIndex()];
