@@ -16,7 +16,15 @@
  *
  * @author Matheus Paixao
  */
-public class AntQ {
+public class AntQ implements Algorithm{
+   public double getSolution(){
+      return 0;
+   }
+   
+   public double getTimeElapsed(){
+      return 0;
+   }
+
    private static String problem = "";
    private static double[][] times;
 
