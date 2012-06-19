@@ -38,137 +38,6 @@ public class AntQ {
 
    private static Agent agents[];
 
-   public static void main(String[] args){
-      //algorithm variables:
-
-      int totalIterations = 0; //number of iterations to run
-      int iterationsCounter = 0;
-      
-      //time variables
-      double initialTime = 0;
-      double finalTime = 0;
-      double iterationTime = 0;
-      double averageIterationTime = 0;
-
-      Edge iterationBestTour[] = null; 
-      double iterationBestTourValue = 0;
-      Edge globalBestTour[] = null; 
-      int hereCounter = 0;
-
-      if(args.length > 0){
-         totalIterations = Integer.parseInt(args[0]); //the user can pass the number of iterations
-
-         if(args.length > 1){
-            problem = args[1];
-         }
-      }
-      else{
-         totalIterations = 200;
-      }
-
-      //initialization of the algorithm
-      init();
-
-      while(iterationsCounter <= totalIterations){
-         iterationBestTour = getIterationTour();
-         iterationBestTourValue = calculateTourValue(iterationBestTour);
-
-         if(iterationsCounter == 0){
-            globalBestTour = iterationBestTour;
-         }
-         else{
-            if(iterationBestTourValue < calculateTourValue(globalBestTour)){
-               System.out.println("found best tour");
-               hereCounter++;
-               globalBestTour = iterationBestTour;
-            }
-         }
-
-         finalTime = System.currentTimeMillis();
-         iterationTime = finalTime - initialTime;
-         System.out.println("time of iteration "+iterationsCounter + ": "+iterationTime);
-         averageIterationTime += iterationTime;
-         iterationsCounter++;
-      }
-
-      //System.out.println("here counter: " + hereCounter);
-      System.out.println("Total time " + averageIterationTime * Math.pow(10, -3) + " seconds");
-      System.out.println("Average time of iterations: " + averageIterationTime / iterationsCounter);
-      System.out.println("Best tour value: " + calculateTourValue(globalBestTour));
-      System.exit(0);
-   }
-
-   private static Edge[] getIterationTour(){
-      Edge[] iterationBestTour = null;
-      double iterationBestTourValue = 0;
-      Agent agent = null;
-      City nextCity = null;
-      double reinforcementLearningValue = 0;
-
-      if(!problem.equals("jssp") && !problem.equals("requirements")){
-         //update the action choices of all edges
-         updateActionChoices();
-      }
-      //in this step all the agents chooses the next city to move to
-      //when all the agents have choosen the next city, they update the AQ value of the correspondent edge 
-      for(int i = 0; i <= cities.length - 1; i++){
-         //if the agent didn't visit all the cities yet
-         if(i != cities.length - 1){
-            for(int j = 0; j <= agents.length - 1; j++){
-               agent = agents[j];
-               nextCity = agent.chooseNextCity();
-               agent.setNextCity(nextCity);
-               agent.addCityToTour(agent.getNextCity());
-
-               //if the agent has choosen the last city to visit
-               if(i == cities.length - 2){
-                  agent.addInitialCityToCitiesToVisit();
-               }
-            }
-         }
-         //all the agents go back to their initial city
-         else{
-            for(int j = 0; j <= agents.length - 1; j++){
-               agent = agents[j];
-               nextCity = agent.getInitialCity();
-               agent.setNextCity(nextCity);
-               agent.addCityToTour(agent.getNextCity());
-            }
-         }
-
-         //all the agents update the AQ value of the last edge added to their tour
-         for(int j = 0; j <= agents.length - 1; j++){
-            agent = agents[j];
-            updateAQValue(agent.getLastTourEdge(), 0, getMaxAQValue(agent.getCitiesToVisit(), agent.getNextCity()));
-
-            //if the agents has done the tour
-            if(i == cities.length - 1){
-               agent.loadCitiesToVisit(); //prepare the cities to visit array for another tour
-            }
-
-            agent.setCurrentCity(agent.getNextCity()); //move to the next choosed city
-            agent.removeCityFromCitiesToVisit(agent.getCurrentCity()); // remove the current city from the cities to visit
-         }
-      }
-
-      iterationBestTour = getIterationBestTour();
-      iterationBestTourValue = calculateTourValue(iterationBestTour);
-
-      //all the agents clear their tours
-      for(int i = 0; i <= agents.length - 1; i++){
-         agents[i].clearTour();
-      }
-
-      //in this step is calculated the reinforcement learning value and is updated the AQ value only 
-      //the edges belonging to the iterationBestTour
-      reinforcementLearningValue = w / iterationBestTourValue;
-      for(int i = 0; i <= iterationBestTour.length - 1; i++){
-         updateAQValue(iterationBestTour[i], reinforcementLearningValue, 0);
-      }
-
-      return iterationBestTour;
-   }
-
    /**
     * Main method, where the Ant Q algorithm is runned.
     *
@@ -197,6 +66,127 @@ public class AntQ {
     * @see clearReinforcementLearningValue
     * @see calculateTourValue
     */
+   public static void main(String[] args){
+      //algorithm variables:
+
+      int totalIterations = 0; //number of iterations to run
+      int iterationsCounter = 0;
+      
+      //time variables
+      double initialTime = 0;
+      double finalTime = 0;
+      double iterationTime = 0;
+      double averageIterationTime = 0;
+
+      Agent agent = null;
+      City nextCity = null;
+      double reinforcementLearningValue = 0;
+
+      Edge iterationBestTour[] = null; 
+      double iterationBestTourValue = 0;
+      Edge globalBestTour[] = null; 
+      int hereCounter = 0;
+
+      if(args.length > 0){
+         totalIterations = Integer.parseInt(args[0]); //the user can pass the number of iterations
+
+         if(args.length > 1){
+            problem = args[1];
+         }
+      }
+      else{
+         totalIterations = 200;
+      }
+
+      //initialization of the algorithm
+      init();
+
+      while(iterationsCounter <= totalIterations){
+         initialTime = System.currentTimeMillis();
+         if(!problem.equals("jssp") && !problem.equals("requirements")){
+            //update the action choices of all edges
+            updateActionChoices();
+         }
+         //in this step all the agents chooses the next city to move to
+         //when all the agents have choosen the next city, they update the AQ value of the correspondent edge 
+         for(int i = 0; i <= cities.length - 1; i++){
+            //if the agent didn't visit all the cities yet
+            if(i != cities.length - 1){
+               for(int j = 0; j <= agents.length - 1; j++){
+                  agent = agents[j];
+                  nextCity = agent.chooseNextCity();
+                  agent.setNextCity(nextCity);
+                  agent.addCityToTour(agent.getNextCity());
+
+                  //if the agent has choosen the last city to visit
+                  if(i == cities.length - 2){
+                     agent.addInitialCityToCitiesToVisit();
+                  }
+               }
+            }
+            //all the agents go back to their initial city
+            else{
+               for(int j = 0; j <= agents.length - 1; j++){
+                  agent = agents[j];
+                  nextCity = agent.getInitialCity();
+                  agent.setNextCity(nextCity);
+                  agent.addCityToTour(agent.getNextCity());
+               }
+            }
+
+            //all the agents update the AQ value of the last edge added to their tour
+            for(int j = 0; j <= agents.length - 1; j++){
+               agent = agents[j];
+               updateAQValue(agent.getLastTourEdge(), 0, getMaxAQValue(agent.getCitiesToVisit(), agent.getNextCity()));
+
+               //if the agents has done the tour
+               if(i == cities.length - 1){
+                  agent.loadCitiesToVisit(); //prepare the cities to visit array for another tour
+               }
+
+               agent.setCurrentCity(agent.getNextCity()); //move to the next choosed city
+               agent.removeCityFromCitiesToVisit(agent.getCurrentCity()); // remove the current city from the cities to visit
+            }
+         }
+
+         iterationBestTour = getIterationBestTour();
+         iterationBestTourValue = calculateTourValue(iterationBestTour);
+
+         //all the agents clear their tours
+         for(int i = 0; i <= agents.length - 1; i++){
+            agents[i].clearTour();
+         }
+
+         //in this step is calculated the reinforcement learning value and is updated the AQ value only 
+         //the edges belonging to the iterationBestTour
+         reinforcementLearningValue = w / iterationBestTourValue;
+         for(int i = 0; i <= iterationBestTour.length - 1; i++){
+            updateAQValue(iterationBestTour[i], reinforcementLearningValue, 0);
+         }
+
+         if(iterationsCounter == 0){
+            globalBestTour = iterationBestTour;
+         }
+         else{
+            if(iterationBestTourValue < calculateTourValue(globalBestTour)){
+               System.out.println("found best tour");
+               hereCounter++;
+               globalBestTour = iterationBestTour;
+            }
+         }
+
+         finalTime = System.currentTimeMillis();
+         iterationTime = finalTime - initialTime;
+         System.out.println("time of iteration "+iterationsCounter + ": "+iterationTime);
+         averageIterationTime += iterationTime;
+         iterationsCounter++;
+      }
+      //System.out.println("here counter: " + hereCounter);
+      System.out.println("Total time " + averageIterationTime * Math.pow(10, -3) + " seconds");
+      System.out.println("Average time of iterations: " + averageIterationTime / iterationsCounter);
+      System.out.println("Best tour value: " + calculateTourValue(globalBestTour));
+      System.exit(0);
+   }
    
    public static double getQ0(){
       return q0;
