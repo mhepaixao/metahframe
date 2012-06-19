@@ -9,51 +9,51 @@
  * @author: Matheus Paixao 
  */
 public class Edge {
-   private City city1;
-   private City city2;
+   private Node node1;
+   private Node node2;
    private double edgeValue;
    private double AQValue;
 
    /**
-    * Method to create an edge passing two cities.
+    * Method to create an edge passing two nodes.
     *
     * This method calculates the edge value and call the other Edge constructor.
     * @author Matheus Paixao 
-    * @param city1 First city of the edge. 
-    * @param city2 Second city of the edge. 
+    * @param node1 First node of the edge. 
+    * @param node2 Second node of the edge. 
     * @see calculateEdgeValue
     * @see Edge other constructor
     */
-   public Edge(City city1, City city2){
-      this(city1, city2, calculateEdgeValue(city1, city2));
+   public Edge(Node node1, Node node2){
+      this(node1, node2, calculateEdgeValue(node1, node2));
    }
 
    /**
-    * Method to create an edge passing two cities and the edge value.
+    * Method to create an edge passing two nodes and the edge value.
     *
     * The edge heuristic value is calculated only in the creation of the edge.
     * The AntQ Value and the reinforcement learning value are initiated with 0.
     * @author Matheus Paixao 
-    * @param city1 First city of the edge. 
-    * @param city2 Second city of the edge. 
-    * @param edgeValue the value of the edge (distance between the two cities)
+    * @param node1 First node of the edge. 
+    * @param node2 Second node of the edge. 
+    * @param edgeValue the value of the edge (distance between the two nodes)
     * @see calculateEdgeHeuristicValue
     */
-   public Edge(City city1, City city2, double edgeValue){
-      this.city1 = city1;
-      this.city2 = city2;
+   public Edge(Node node1, Node node2, double edgeValue){
+      this.node1 = node1;
+      this.node2 = node2;
 
       this.edgeValue = edgeValue;
 
       this.AQValue = 0;
    }
 
-   public City getCity1(){
-      return this.city1;
+   public Node getNode1(){
+      return this.node1;
    }
 
-   public City getCity2(){
-      return this.city2;
+   public Node getNode2(){
+      return this.node2;
    }
 
    public double getEdgeValue(){
@@ -85,9 +85,9 @@ public class Edge {
       boolean result = false;
 
       if(edge instanceof Edge){
-         City city1 = edge.getCity1();
-         City city2 = edge.getCity2();
-         if((city1.equals(this.getCity1())) && (city2.equals(this.getCity2()))){
+         Node node1 = edge.getNode1();
+         Node node2 = edge.getNode2();
+         if((node1.equals(this.getNode1())) && (node2.equals(this.getNode2()))){
             result = true;
          }
       }
@@ -100,13 +100,13 @@ public class Edge {
     *
     * The edge value is calculated using the distance between two points equation from analytic geometry.
     * @author Matheus Paixao
-    * @param city1 first city of the edge
-    * @param city2 second city of the edge
-    * @return The edge value (distance between the two cities).
+    * @param node1 first node of the edge
+    * @param node2 second node of the edge
+    * @return The edge value (distance between the two nodes).
     */
-   private static double calculateEdgeValue(City city1, City city2){
-      return Math.sqrt(Math.pow(city1.getX() - city2.getX(), 2) + 
-            Math.pow(city1.getY() - city2.getY(), 2));
+   private static double calculateEdgeValue(Node node1, Node node2){
+      return Math.sqrt(Math.pow(node1.getX() - node2.getX(), 2) + 
+            Math.pow(node1.getY() - node2.getY(), 2));
    }
 
    /**
@@ -117,6 +117,6 @@ public class Edge {
     * @see equals method of Node class.
     */
    public String toString(){
-      return getCity1().toString() + " " + getCity2().toString();
+      return getNode1().toString() + " " + getNode2().toString();
    }
 }

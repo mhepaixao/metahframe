@@ -233,12 +233,12 @@ public class InstanceReader extends JFrame {
    }
 
    /**
-    * Method to get the list of cities when the instance is in cartesian coordinates format.
+    * Method to get the list of nodes when the instance is in cartesian coordinates format.
     *
-    * It is used an auxiliary object. dynamicListOfCities is an ArrayList of City
-    * and is used to create the cities in a dynamic form. The AntQ algorithm uses an 
-    * array of cities. So, after create all the cities the dynamicListOfCities is casted
-    * to a simple City array.
+    * It is used an auxiliary object. dynamicListOfNodes is an ArrayList of Node
+    * and is used to create the nodes in a dynamic form. The AntQ algorithm uses an 
+    * array of nodes. So, after create all the nodes the dynamicListOfNodes is casted
+    * to a simple Node array.
     *
     * The cartesian coordinates have to be in one of the formats that follows:
     * 1) n Xe+P Ye+P, where n is the line number, X is the x cartesian value x*(10^P) and Y is the y cartesian value y*(10^P)  
@@ -247,20 +247,20 @@ public class InstanceReader extends JFrame {
     * 4) X Y, where X is the x cartesian value and Y is the y cartesian value  
     *
     * @author Matheus Paixao
-    * @return a City array containing all the cities of the instance.
+    * @return a Node array containing all the nodes of the instance.
     * @see getInstance
     * @see toArray method from ArrayList class
     */
-   public City[] getCitiesList(){
-      City[] cities = null; //array to return
-      ArrayList<City> dynamicListOfCities = new ArrayList<City>(); 
+   public Node[] getNodesList(){
+      Node[] nodes = null; //array to return
+      ArrayList<Node> dynamicListOfNodes = new ArrayList<Node>(); 
       File instance = getInstance();
 
       try{
          String instanceLine = null;
          String[] values;
-         City city = null;
-         int instanceLineCounter = 0; //will serve as a city id
+         Node node = null;
+         int instanceLineCounter = 0; //will serve as a node id
 
          BufferedReader reader = new BufferedReader(new FileReader(instance));
          while(reader.ready()){
@@ -276,17 +276,17 @@ public class InstanceReader extends JFrame {
 
                values = instanceLine.split(" ");
                if(values.length == 3){
-                  city = getCartesianCity(instanceLineCounter, values[1], values[2]); //formats 1 and 2
+                  node = getCartesianNode(instanceLineCounter, values[1], values[2]); //formats 1 and 2
                }
                else{
-                  city = getCartesianCity(instanceLineCounter, values[0], values[1]); //formats 3 and 4
+                  node = getCartesianNode(instanceLineCounter, values[0], values[1]); //formats 3 and 4
                }
 
                instanceLineCounter++;
             }
 
-            if(city != null){
-               dynamicListOfCities.add(city);
+            if(node != null){
+               dynamicListOfNodes.add(node);
             }
          }
       }
@@ -294,69 +294,69 @@ public class InstanceReader extends JFrame {
          e.printStackTrace();
       }
 
-      Collections.sort(dynamicListOfCities);
-      removeDuplicatedCities(dynamicListOfCities);
-      setCitiesIndexes(dynamicListOfCities);
+      Collections.sort(dynamicListOfNodes);
+      removeDuplicatedNodes(dynamicListOfNodes);
+      setNodesIndexes(dynamicListOfNodes);
 
-      //cast the dynamicListOfCities to a City array
-      cities = new City[dynamicListOfCities.size()];
-      for(int i = 0; i <= cities.length - 1; i++){
-         cities[i] = dynamicListOfCities.get(i);
+      //cast the dynamicListOfNodes to a Node array
+      nodes = new Node[dynamicListOfNodes.size()];
+      for(int i = 0; i <= nodes.length - 1; i++){
+         nodes[i] = dynamicListOfNodes.get(i);
       }
 
-      return cities;
+      return nodes;
    }
 
    /**
-    * Method to get the city when the values are in String format.
+    * Method to get the node when the values are in String format.
     *
     * @author Matheus Paixao
-    * @param id the id of the city.
+    * @param id the id of the node.
     * @param value1 the x cartesian value in String format.
     * @param value2 the y cartesian value in String format.
-    * @return the city with the x and y coordinates.
+    * @return the node with the x and y coordinates.
     */
-   private City getCartesianCity(int id, String value1, String value2){
+   private Node getCartesianNode(int id, String value1, String value2){
       double x = Double.parseDouble(value1);
       double y = Double.parseDouble(value2);
 
-      return new City(id, x, y);
+      return new Node(id, x, y);
    }
 
    /**
-    * Method to delete duplicate cities in the instance.
+    * Method to delete duplicate nodes in the instance.
     *
-    * The list of cities must be sorted.
+    * The list of nodes must be sorted.
     * @author Matheus Paixao
-    * @param dynamicListOfCities the list of cities to delete duplicated cities.
+    * @param dynamicListOfNodes the list of nodes to delete duplicated nodes.
     */
-   private void removeDuplicatedCities(ArrayList<City> dynamicListOfCities){
-      City city = null;
-      City nextCity = null;
+   private void removeDuplicatedNodes(ArrayList<Node> dynamicListOfNodes){
+      Node node = null;
+      Node nextNode = null;
 
-      for(int i = 0; i <= dynamicListOfCities.size() - 1; i++){
-         if(i != dynamicListOfCities.size() - 1){
-            city = dynamicListOfCities.get(i);
-            nextCity = dynamicListOfCities.get(i + 1);
+      for(int i = 0; i <= dynamicListOfNodes.size() - 1; i++){
+         if(i != dynamicListOfNodes.size() - 1){
+            node = dynamicListOfNodes.get(i);
+            nextNode = dynamicListOfNodes.get(i + 1);
 
-            if(city.equals(nextCity)){
-               dynamicListOfCities.remove(i);
+            if(node.equals(nextNode)){
+               dynamicListOfNodes.remove(i);
             }
          }
       }
    }
 
    /**
-    * Method to set the index of each city of the list.
+    * Method to set the index of each node of the list.
     *
-    * After sort and delete duplicate cities, it's necessary set new indexes.
+    * After sort and delete duplicate nodes, it's necessary set new indexes.
     * @author Matheus Paixao
-    * @param dynamicListOfCities the list od cities to set a new index
-    * @see setIndex in City class
+    * @param dynamicListOfNodes the list od nodes to set a new index
+    * @see setIndex in Node class
     */
-   private void setCitiesIndexes(ArrayList<City> dynamicListOfCities){
-      for(int i = 0; i <= dynamicListOfCities.size() - 1; i++){
-         dynamicListOfCities.get(i).setIndex(i);
+   private void setNodesIndexes(ArrayList<Node> dynamicListOfNodes){
+      for(int i = 0; i <= dynamicListOfNodes.size() - 1; i++){
+         dynamicListOfNodes.get(i).setIndex(i);
       }
    }
 
@@ -365,12 +365,12 @@ public class InstanceReader extends JFrame {
     *
     * The distance matrix must be in one of the formats that follows:
     * 1) Symmetric matrix, where the '0's delimits each row
-    * Let n be the number of cities.
+    * Let n be the number of nodes.
     * 2) Symmetric matrix, where the first row is A1, A2 to A1, An. And the last row is An-1, An.
     *
     * @author Matheus Paixao
     * @return the edges values matrix
-    * @see getNumberOfCitiesInMatrixFormat
+    * @see getNumberOfNodesInMatrixFormat
     */
    public double[][] getEdgesValuesMatrix(){
       double edgesValuesMatrix[][] = null;
@@ -420,11 +420,11 @@ public class InstanceReader extends JFrame {
     * Format 1: Symmetric matrix, where the '0's delimits each row.
     * @author Matheus Paixao
     * @return the edges values matrix
-    * @see getNumberOfCitiesInMatrixFormat1
+    * @see getNumberOfNodesInMatrixFormat1
     */
    private double[][] getEdgesValuesMatrixInFormat1(){
-      int numberOfCities = getNumberOfCitiesInMatrixFormat1();
-      double edgesValuesMatrix[][] = new double[numberOfCities][numberOfCities];
+      int numberOfNodes = getNumberOfNodesInMatrixFormat1();
+      double edgesValuesMatrix[][] = new double[numberOfNodes][numberOfNodes];
 
       try{
          String instanceLine = null;
@@ -473,14 +473,14 @@ public class InstanceReader extends JFrame {
    }
 
    /**
-    * Method to get the number of cities when the instance is in distance matrix format 1.
+    * Method to get the number of nodes when the instance is in distance matrix format 1.
     *
     * Format 1: Symmetric matrix, where the '0's delimits each row.
     * @author Matheus Paixao
-    * @return the number of cities 
+    * @return the number of nodes 
     */
-   private int getNumberOfCitiesInMatrixFormat1(){
-      int numberOfCities = 0;
+   private int getNumberOfNodesInMatrixFormat1(){
+      int numberOfNodes = 0;
 
       try{
          String instanceLine = null;
@@ -503,7 +503,7 @@ public class InstanceReader extends JFrame {
                for(int i = 0; i <= values.length - 1; i++){
                   //if it's a new row of the matrix
                   if(Double.parseDouble(values[i]) == 0.0){
-                     numberOfCities++;
+                     numberOfNodes++;
                   }
                }
             }
@@ -511,25 +511,25 @@ public class InstanceReader extends JFrame {
          }
       }
       catch(Exception e){
-         System.out.println("Error in get number od cities in matrix format 1");
+         System.out.println("Error in get number od nodes in matrix format 1");
          e.printStackTrace();
       }
 
-      return numberOfCities;
+      return numberOfNodes;
    }
 
    /**
     * Method to get the edges values matrix when the matrix instance is in format 2.
     *
-    * Let n be the number of cities.
+    * Let n be the number of nodes.
     * Format 2: Symmetric matrix, where the first row is A1, A2 to A1, An. And the last row is An-1, An.
     * @author Matheus Paixao
     * @return the edges values matrix
-    * @see getNumberOfCitiesInMatrixFormat2
+    * @see getNumberOfNodesInMatrixFormat2
     */
    private double[][] getEdgesValuesMatrixInFormat2(){
-      int numberOfCities = getNumberOfCitiesInMatrixFormat2();
-      double edgesValuesMatrix[][] = new double[numberOfCities][numberOfCities];
+      int numberOfNodes = getNumberOfNodesInMatrixFormat2();
+      double edgesValuesMatrix[][] = new double[numberOfNodes][numberOfNodes];
 
       try{
          String instanceLine = null;
@@ -570,15 +570,15 @@ public class InstanceReader extends JFrame {
    }
 
    /**
-    * Method to get the number of cities when the instance is in distance matrix format 2.
+    * Method to get the number of nodes when the instance is in distance matrix format 2.
     *
-    * Let n be the number of cities.
+    * Let n be the number of nodes.
     * Format 2: Symmetric matrix, where the first row is A1, A2 to A1, An. And the last row is An-1, An.
     * @author Matheus Paixao
-    * @return the number of cities 
+    * @return the number of nodes 
     */
-   private int getNumberOfCitiesInMatrixFormat2(){
-      int numberOfCities = 0;
+   private int getNumberOfNodesInMatrixFormat2(){
+      int numberOfNodes = 0;
 
       try{
          String instanceLine = null;
@@ -592,15 +592,15 @@ public class InstanceReader extends JFrame {
 
             //if it isn't a text line and has numbers
             if((twoLettersMatcher.find() == false) && (numbersMatcher.find() == true)){
-               numberOfCities++;
+               numberOfNodes++;
             }
          }
       }
       catch(Exception e){
-         System.out.println("Error in get number of cities in matrix format");
+         System.out.println("Error in get number of nodes in matrix format");
       }
 
-      //in symmetric matrix the last line is the city An-1
-      return numberOfCities + 1;
+      //in symmetric matrix the last line is the node An-1
+      return numberOfNodes + 1;
    }
 }

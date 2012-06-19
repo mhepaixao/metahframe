@@ -5,75 +5,75 @@ import java.util.Arrays;
  * Class to describe the behavior of the agents, or ants, in the goal
  * to find best tours over the nodes.
  *
- * The initialCity variable stores the initial city of the agent. It's necessary when the agent 
+ * The initialNode variable stores the initial node of the agent. It's necessary when the agent 
  * finish its tour and has to go back to the beginning.
  *
- * The currentCity variable stores the current city of the agent. It's used in the state transition rule.
+ * The currentNode variable stores the current node of the agent. It's used in the state transition rule.
  *
- * Each agent has to know its nextCity to go before really go. It's used basically in AntQ class.
+ * Each agent has to know its nextNode to go before really go. It's used basically in AntQ class.
  *
- * The citiesToVisit array store the cities that the agent didn't visit yet. The null values represents the visited nodes.
+ * The nodesToVisit array store the nodes that the agent didn't visit yet. The null values represents the visited nodes.
  *
  * The tour array is the path, the sequency of nodes, done by the agent.
  *
  * @author Matheus Paixao
  */
 public class Agent {
-   private City initialCity;
-   private City currentCity;
-   private City nextCity;
-   private City citiesToVisit[];
+   private Node initialNode;
+   private Node currentNode;
+   private Node nextNode;
+   private Node nodesToVisit[];
    public Edge tour[];
 
    private Random random;
 
    /**
-    * Method to create an agent with its initial city.
+    * Method to create an agent with its initial node.
     *
-    * Create the citiesToVisit array with the same size of the cities array of AntQ.
-    * Create the tour array with the same size of the citiesToVisit.
-    * Fill the citiesToVisit array with City objects equals to the cities array of AntQ.
-    * Set the initial city the current city and remove the initial city of the cities to be visited.
+    * Create the nodesToVisit array with the same size of the nodes array of AntQ.
+    * Create the tour array with the same size of the nodesToVisit.
+    * Fill the nodesToVisit array with Node objects equals to the nodes array of AntQ.
+    * Set the initial node the current node and remove the initial node of the nodes to be visited.
     * @author Matheus Paixao
-    * @param initialCity the city that will be the initial city of the agent.
-    * @see loadCitiesToVisit
-    * @see removeCityFromCitiesToVisit
+    * @param initialNode the node that will be the initial node of the agent.
+    * @see loadNodesToVisit
+    * @see removeNodeFromNodesToVisit
     */
-   public Agent(City initialCity){
-      this.citiesToVisit = new City[AntQ.getCities().length];
-      tour = new Edge[getCitiesToVisit().length];
+   public Agent(Node initialNode){
+      this.nodesToVisit = new Node[AntQ.getNodes().length];
+      tour = new Edge[getNodesToVisit().length];
 
-      loadCitiesToVisit();
+      loadNodesToVisit();
 
-      this.initialCity = initialCity;
-      setCurrentCity(getInitialCity());
-      removeCityFromCitiesToVisit(getInitialCity());
+      this.initialNode = initialNode;
+      setCurrentNode(getInitialNode());
+      removeNodeFromNodesToVisit(getInitialNode());
 
       random = new Random();
    }
 
-   public City getInitialCity(){
-      return this.initialCity;
+   public Node getInitialNode(){
+      return this.initialNode;
    }
 
-   public City getCurrentCity(){
-      return this.currentCity;
+   public Node getCurrentNode(){
+      return this.currentNode;
    }
 
-   public void setNextCity(City city){
-      this.nextCity = citiesToVisit[city.getIndex()];
+   public void setNextNode(Node node){
+      this.nextNode = nodesToVisit[node.getIndex()];
    }
 
-   public City getNextCity(){
-      return this.nextCity;
+   public Node getNextNode(){
+      return this.nextNode;
    }
 
-   public City[] getCitiesToVisit(){
-      return this.citiesToVisit;
+   public Node[] getNodesToVisit(){
+      return this.nodesToVisit;
    }
 
-   public void setCurrentCity(City currentCity){
-      this.currentCity = citiesToVisit[currentCity.getIndex()];
+   public void setCurrentNode(Node currentNode){
+      this.currentNode = nodesToVisit[currentNode.getIndex()];
    }
 
    public Edge[] getTour(){
@@ -81,55 +81,55 @@ public class Agent {
    }
 
    /**
-    * Method to fill the citiesToVisit array with City objects that 
-    * are equal to the cities from the AntQ algorithm.
+    * Method to fill the nodesToVisit array with Node objects that 
+    * are equal to the nodes from the AntQ algorithm.
     *
     * @author Matheus Paixao
     */
-   public void loadCitiesToVisit(){
-      City cities[] = AntQ.getCities();
+   public void loadNodesToVisit(){
+      Node nodes[] = AntQ.getNodes();
 
-      for(int i = 0; i <= cities.length - 1; i++){
-         this.citiesToVisit[i] = cities[i];
+      for(int i = 0; i <= nodes.length - 1; i++){
+         this.nodesToVisit[i] = nodes[i];
       }
    }
 
    /**
-    * Method to remove a city from cities to be visited.
+    * Method to remove a node from nodes to be visited.
     *
-    * Get the index of the city in the cities array in AntQ and
-    * set the correspondent city in citiesToVisit to null.
+    * Get the index of the node in the nodes array in AntQ and
+    * set the correspondent node in nodesToVisit to null.
     * @author Matheus Paixao
-    * @param city the city to be removed from citiesToVisit.
+    * @param node the node to be removed from nodesToVisit.
     */
-   public void removeCityFromCitiesToVisit(City city){
-      citiesToVisit[city.getIndex()] = null;
+   public void removeNodeFromNodesToVisit(Node node){
+      nodesToVisit[node.getIndex()] = null;
    }
 
    /**
-    * Method to add the initial city to the cities to be visited.
+    * Method to add the initial node to the nodes to be visited.
     *
-    * Get the index of the initial city of the agent in the cities array in AntQ
-    * and set the correspondent position of the citiesToVisit with the initial city.
+    * Get the index of the initial node of the agent in the nodes array in AntQ
+    * and set the correspondent position of the nodesToVisit with the initial node.
     * It's used when the agent have visited all the nodes and has to go back to the first one.
     * @author Matheus Paixao
     */
-   public void addInitialCityToCitiesToVisit(){
-      City initialCity = getInitialCity();
-      citiesToVisit[initialCity.getIndex()] = initialCity;
+   public void addInitialNodeToNodesToVisit(){
+      Node initialNode = getInitialNode();
+      nodesToVisit[initialNode.getIndex()] = initialNode;
    }
 
    /**
-    * Method to add a new city to the tour.
+    * Method to add a new node to the tour.
     *
-    * Insert an edge where the city 1 is the current city and the city 2 is the city to be added.
+    * Insert an edge where the node 1 is the current node and the node 2 is the node to be added.
     * @author Matheus Paixao
-    * @param city city to be added to the tour.
+    * @param node node to be added to the tour.
     * @see insertEdge
     */
-   public void addCityToTour(City city){
+   public void addNodeToTour(Node node){
       Edge[][] edges = AntQ.getEdges();
-      insertEdge(edges[getCurrentCity().getIndex()][city.getIndex()]);
+      insertEdge(edges[getCurrentNode().getIndex()][node.getIndex()]);
    }
    
    /**
@@ -143,7 +143,7 @@ public class Agent {
    private void insertEdge(Edge edge){
       for(int i = 0; i <= tour.length - 1; i++){
          if(tour[i] == null){
-            tour[i] = new Edge(edge.getCity1(), edge.getCity2(), edge.getEdgeValue());
+            tour[i] = new Edge(edge.getNode1(), edge.getNode2(), edge.getEdgeValue());
             break;
          }
       }
@@ -171,7 +171,7 @@ public class Agent {
    /**
     * Method to clear the agent tour.
     *
-    * It's used when an agent finish a tour (visit all cities) and has to start another one.
+    * It's used when an agent finish a tour (visit all nodes) and has to start another one.
     * @author Matheus Paixao
     */
    public void clearTour(){
@@ -190,27 +190,27 @@ public class Agent {
     * 1) pseudo-random
     * 2) pseudo-random-proportional
     * @author Matheus Paixao
-    * @return the next city of a an agent
+    * @return the next node of a an agent
     * @see getRandomNumber
-    * @see getMaxActionChoiceCity
-    * @see getPseudoRandomProportionalCity
-    * @see getPseudoRandomCity
+    * @see getMaxActionChoiceNode
+    * @see getPseudoRandomProportionalNode
+    * @see getPseudoRandomNode
     */
-   public City chooseNextCity(){
+   public Node chooseNextNode(){
       double q = getRandomNumber();
-      City nextCity = null;
+      Node nextNode = null;
 
       if(q <= AntQ.getQ0()){
          //exploitation
-         nextCity = getMaxActionChoiceCity();
+         nextNode = getMaxActionChoiceNode();
       }
       else{
          //exploration
-         //nextCity = getPseudoRandomCity(); //method 1
-         nextCity = getPseudoRandomProportionalCity(); //method 2
+         //nextNode = getPseudoRandomNode(); //method 1
+         nextNode = getPseudoRandomProportionalNode(); //method 2
       }
 
-      return nextCity;
+      return nextNode;
    }
 
    /**
@@ -225,71 +225,71 @@ public class Agent {
    }
 
    /**
-    * Method to get the best possible city to go.
+    * Method to get the best possible node to go.
     *
     * How 'good' is an action is measured by it's action choice.
     * @author Matheus Paixao
-    * @return the best possible city to go.
-    * @see getFirstCityToVisit
+    * @return the best possible node to go.
+    * @see getFirstNodeToVisit
     * @see getActionChoice
     */
-   private City getMaxActionChoiceCity(){
-      City maxActionChoiceCity = getFirstCityToVisit();
-      City city = null;
+   private Node getMaxActionChoiceNode(){
+      Node maxActionChoiceNode = getFirstNodeToVisit();
+      Node node = null;
 
-      for(int i = 0; i <= citiesToVisit.length - 1; i++){
-         if(citiesToVisit[i] != null){
-            city = citiesToVisit[i];
-            if(AntQ.getActionChoice(getCurrentCity(), city, this) > AntQ.getActionChoice(getCurrentCity(), maxActionChoiceCity, this)){
-               maxActionChoiceCity = city;
+      for(int i = 0; i <= nodesToVisit.length - 1; i++){
+         if(nodesToVisit[i] != null){
+            node = nodesToVisit[i];
+            if(AntQ.getActionChoice(getCurrentNode(), node, this) > AntQ.getActionChoice(getCurrentNode(), maxActionChoiceNode, this)){
+               maxActionChoiceNode = node;
             }
          }
       }
 
-      return maxActionChoiceCity;
+      return maxActionChoiceNode;
    }
 
    /**
-    * Method to get the next agent city using the pseudo-random method.
+    * Method to get the next agent node using the pseudo-random method.
     * 
-    * In this method each possible city to go receive a random probability in (0,1) interval.
-    * The max probability city is choosen.
+    * In this method each possible node to go receive a random probability in (0,1) interval.
+    * The max probability node is choosen.
     * @author Matheus Paixao
-    * @return the next agent city using pseudo-random method.
+    * @return the next agent node using pseudo-random method.
     * @see getRandomNumber
     */
-   private City getPseudoRandomCity(){
-      double probabilities[] = new double[citiesToVisit.length];
+   private Node getPseudoRandomNode(){
+      double probabilities[] = new double[nodesToVisit.length];
       double maxProbability = 0;
-      City maxProbabilityCity = null;
+      Node maxProbabilityNode = null;
       
       for(int i = 0; i <= probabilities.length - 1; i++){
-         if(citiesToVisit[i] != null){
+         if(nodesToVisit[i] != null){
             probabilities[i] = getRandomNumber();
             if(probabilities[i] > maxProbability){
                maxProbability = probabilities[i];
-               maxProbabilityCity = citiesToVisit[i];
+               maxProbabilityNode = nodesToVisit[i];
             }
          }
       }
 
-      return maxProbabilityCity;
+      return maxProbabilityNode;
    }
 
    /**
-    * Method to get the next city using the pseudo-random-proportional method.
+    * Method to get the next node using the pseudo-random-proportional method.
     *
-    * Each possible city to go has a pseudo random proportional probability
+    * Each possible node to go has a pseudo random proportional probability
     * calculated in the getPseudoRandomProportionalProbabilities method.
     *
-    * Then a roulette selection method is runned to select the next city.
+    * Then a roulette selection method is runned to select the next node.
     * @author Matheus Paixao
-    * @return the next city using the pseudo-random-proportional method.
+    * @return the next node using the pseudo-random-proportional method.
     * @see getPseudoRandomProportionalProbabilities
     * @see getRouletteValue
     */
-   private City getPseudoRandomProportionalCity(){
-      City city = null;
+   private Node getPseudoRandomProportionalNode(){
+      Node node = null;
       double rouletteValue = 0;
       double probabilities[] = getPseudoRandomProportionalProbabilities();
 
@@ -297,31 +297,31 @@ public class Agent {
 
       for(int i = 0; i <= probabilities.length - 1; i++){
          if(rouletteValue == probabilities[i]){
-            city = citiesToVisit[i];
+            node = nodesToVisit[i];
             break;
          }
       }
 
-      return city;
+      return node;
    }
 
    /**
     * Method to calculate the pseudo random proportional probability of all the
-    * cities to be visited by the agent.
+    * nodes to be visited by the agent.
     *
-    * The pseudo random proportional probability of a city is calculated by 
+    * The pseudo random proportional probability of a node is calculated by 
     * the getPseudoRandomProportionalProbability method.
     * @author Matheus Paixao
-    * @return an array containing the pseudo random proportional probability of the cities to visit.
+    * @return an array containing the pseudo random proportional probability of the nodes to visit.
     * @see getPseudoRandomProportionalProbability
     */
    private double[] getPseudoRandomProportionalProbabilities(){
-      double probabilities[] = new double[citiesToVisit.length];
-      double actionChoiceSum = AntQ.getActionChoiceSum(getCurrentCity(), citiesToVisit, this);
+      double probabilities[] = new double[nodesToVisit.length];
+      double actionChoiceSum = AntQ.getActionChoiceSum(getCurrentNode(), nodesToVisit, this);
 
       for(int i = 0; i <= probabilities.length - 1; i++){
-         if(citiesToVisit[i] != null){
-            probabilities[i] = AntQ.getActionChoice(getCurrentCity(), citiesToVisit[i], this) / actionChoiceSum;
+         if(nodesToVisit[i] != null){
+            probabilities[i] = AntQ.getActionChoice(getCurrentNode(), nodesToVisit[i], this) / actionChoiceSum;
          }
          else{
             probabilities[i] = 0;
@@ -334,7 +334,7 @@ public class Agent {
    /**
     * Method to get the value of the probability selected by the roulette.
     *
-    * Higher the probability of a city, higher the chance to be choosen by the roulette.
+    * Higher the probability of a node, higher the chance to be choosen by the roulette.
     * For more information search for "roulette selection method".
     * @author Matheus Paixao
     * @param probabilities an array containing the probabilities for roulette selection.
@@ -367,21 +367,21 @@ public class Agent {
    }
 
    /**
-    * Method to get the first possible city to be visited by the agent.
+    * Method to get the first possible node to be visited by the agent.
     *
     * @author Matheus Paixao
-    * @return the first possible city (not null) to go in the cities to be visited array
+    * @return the first possible node (not null) to go in the nodes to be visited array
     */
-   private City getFirstCityToVisit(){
-      City firstCityToVisit = null;
+   private Node getFirstNodeToVisit(){
+      Node firstNodeToVisit = null;
 
-      for(int i = 0; i <= citiesToVisit.length - 1; i++){
-         if(citiesToVisit[i] != null){
-            firstCityToVisit = citiesToVisit[i];
+      for(int i = 0; i <= nodesToVisit.length - 1; i++){
+         if(nodesToVisit[i] != null){
+            firstNodeToVisit = nodesToVisit[i];
             break;
          }
       }
 
-      return firstCityToVisit;
+      return firstNodeToVisit;
    }
 }

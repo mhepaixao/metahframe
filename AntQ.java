@@ -6,7 +6,7 @@
  * to update the AQ Value (alfa and gamma), to make a exploration or a exploitation choice (q0) 
  * and to calculate the reinforcement learning value (w).
  *
- * The cities array stores all the cities of the instance.
+ * The nodes array stores all the nodes of the instance.
  *
  * The edges matrix stores all the edges of the instance (complete graph).
  * 
@@ -28,7 +28,7 @@ public class AntQ {
    private static final double q0 = 0.9;
    private static final double w = 10.0;
 
-   private static City cities[];
+   private static Node nodes[];
 
    private static Edge edges[][];
 
@@ -46,18 +46,18 @@ public class AntQ {
     * @author Matheus Paixao
     * @param args[0] the number of iterations (optional)
     * @see init
-    * @see chooseNextCity in Agent class
-    * @see setNextCity in Agent class
-    * @see getNextCity in Agent class
-    * @see addCityToTour in Agent class
-    * @see addInitialCityToCitiesToVisit in Agent class
-    * @see getInitialCity in Agent class
+    * @see chooseNextNode in Agent class
+    * @see setNextNode in Agent class
+    * @see getNextNode in Agent class
+    * @see addNodeToTour in Agent class
+    * @see addInitialNodeToNodesToVisit in Agent class
+    * @see getInitialNode in Agent class
     * @see getLastTourEdge in Agent class
     * @see getMaxAQValue
     * @see updateAQValue
-    * @see loadCitiesToVisit in Agent class
-    * @see setCurrentCity in Agent class
-    * @see removeCityFromCitiesToVisit in Agent class
+    * @see loadNodesToVisit in Agent class
+    * @see setCurrentNode in Agent class
+    * @see removeNodeFromNodesToVisit in Agent class
     * @see getIterationBestTour
     * @see clearTour in Agent class
     * @see updateReinforcementLearningValue
@@ -77,7 +77,7 @@ public class AntQ {
       double averageIterationTime = 0;
 
       Agent agent = null;
-      City nextCity = null;
+      Node nextNode = null;
       double reinforcementLearningValue = 0;
 
       Edge iterationBestTour[] = null; 
@@ -105,45 +105,45 @@ public class AntQ {
             //update the action choices of all edges
             updateActionChoices();
          }
-         //in this step all the agents chooses the next city to move to
-         //when all the agents have choosen the next city, they update the AQ value of the correspondent edge 
-         for(int i = 0; i <= cities.length - 1; i++){
-            //if the agent didn't visit all the cities yet
-            if(i != cities.length - 1){
+         //in this step all the agents chooses the next node to move to
+         //when all the agents have choosen the next node, they update the AQ value of the correspondent edge 
+         for(int i = 0; i <= nodes.length - 1; i++){
+            //if the agent didn't visit all the nodes yet
+            if(i != nodes.length - 1){
                for(int j = 0; j <= agents.length - 1; j++){
                   agent = agents[j];
-                  nextCity = agent.chooseNextCity();
-                  agent.setNextCity(nextCity);
-                  agent.addCityToTour(agent.getNextCity());
+                  nextNode = agent.chooseNextNode();
+                  agent.setNextNode(nextNode);
+                  agent.addNodeToTour(agent.getNextNode());
 
-                  //if the agent has choosen the last city to visit
-                  if(i == cities.length - 2){
-                     agent.addInitialCityToCitiesToVisit();
+                  //if the agent has choosen the last node to visit
+                  if(i == nodes.length - 2){
+                     agent.addInitialNodeToNodesToVisit();
                   }
                }
             }
-            //all the agents go back to their initial city
+            //all the agents go back to their initial node
             else{
                for(int j = 0; j <= agents.length - 1; j++){
                   agent = agents[j];
-                  nextCity = agent.getInitialCity();
-                  agent.setNextCity(nextCity);
-                  agent.addCityToTour(agent.getNextCity());
+                  nextNode = agent.getInitialNode();
+                  agent.setNextNode(nextNode);
+                  agent.addNodeToTour(agent.getNextNode());
                }
             }
 
             //all the agents update the AQ value of the last edge added to their tour
             for(int j = 0; j <= agents.length - 1; j++){
                agent = agents[j];
-               updateAQValue(agent.getLastTourEdge(), 0, getMaxAQValue(agent.getCitiesToVisit(), agent.getNextCity()));
+               updateAQValue(agent.getLastTourEdge(), 0, getMaxAQValue(agent.getNodesToVisit(), agent.getNextNode()));
 
                //if the agents has done the tour
-               if(i == cities.length - 1){
-                  agent.loadCitiesToVisit(); //prepare the cities to visit array for another tour
+               if(i == nodes.length - 1){
+                  agent.loadNodesToVisit(); //prepare the nodes to visit array for another tour
                }
 
-               agent.setCurrentCity(agent.getNextCity()); //move to the next choosed city
-               agent.removeCityFromCitiesToVisit(agent.getCurrentCity()); // remove the current city from the cities to visit
+               agent.setCurrentNode(agent.getNextNode()); //move to the next choosed node
+               agent.removeNodeFromNodesToVisit(agent.getCurrentNode()); // remove the current node from the nodes to visit
             }
          }
 
@@ -190,8 +190,8 @@ public class AntQ {
       return q0;
    }
 
-   public static City[] getCities(){
-      return cities;
+   public static Node[] getNodes(){
+      return nodes;
    }
 
    public static Edge[][] getEdges(){
@@ -206,7 +206,7 @@ public class AntQ {
     * Method to initialize the algorithm.
     *
     * @author Matheus Paixao
-    * @see getCitiesList in InstanceReader class
+    * @see getNodesList in InstanceReader class
     * @see createEdges
     * @see initAQValues
     * @see getAQ0
@@ -225,7 +225,7 @@ public class AntQ {
          //System.out.println("memory before edges");
          //printUsedMemory();
          if(instanceType == "coordinates"){
-            createCartesianCoordinatesEdges(instanceReader.getCitiesList());
+            createCartesianCoordinatesEdges(instanceReader.getNodesList());
          }
          else if(instanceType == "matrix"){
             createMatrixEdges(instanceReader.getEdgesValuesMatrix());
@@ -241,49 +241,49 @@ public class AntQ {
    }
 
    private static void createJSSPEdges(int numberOfJobs){
-      cities = new City[numberOfJobs];
+      nodes = new Node[numberOfJobs];
 
-      for(int i = 0; i <= cities.length - 1; i++){
-         cities[i] = new City(i);
+      for(int i = 0; i <= nodes.length - 1; i++){
+         nodes[i] = new Node(i);
       }
 
-      edges = new Edge[cities.length][cities.length];
-      for(int i = 0; i <= cities.length - 1; i++){
-         for(int j = 0; j <= cities.length - 1; j++){
-            edges[i][j] = new Edge(cities[i], cities[j]);
+      edges = new Edge[nodes.length][nodes.length];
+      for(int i = 0; i <= nodes.length - 1; i++){
+         for(int j = 0; j <= nodes.length - 1; j++){
+            edges[i][j] = new Edge(nodes[i], nodes[j]);
          }
       }
    }
 
    /**
-    * Method to create the edges from each city to each city.
+    * Method to create the edges from each node to each node.
     *
     * It's a complete graph.
     * @author Matheus Paixao
     */
-   private static void createCartesianCoordinatesEdges(City citiesList[]){
-      cities = citiesList;
-      edges = new Edge[cities.length][cities.length];
+   private static void createCartesianCoordinatesEdges(Node nodesList[]){
+      nodes = nodesList;
+      edges = new Edge[nodes.length][nodes.length];
 
-      for(int i = 0; i <= cities.length - 1; i++){
+      for(int i = 0; i <= nodes.length - 1; i++){
          System.out.println("line "+i);
-         for(int j = 0; j <= cities.length - 1; j++){
-            edges[i][j] = new Edge(cities[i], cities[j]);
+         for(int j = 0; j <= nodes.length - 1; j++){
+            edges[i][j] = new Edge(nodes[i], nodes[j]);
          }
       }
    }
 
    private static void createMatrixEdges(double edgesValuesMatrix[][]){
-      cities = new City[edgesValuesMatrix.length];
+      nodes = new Node[edgesValuesMatrix.length];
 
       for(int i = 0; i <= edgesValuesMatrix.length - 1; i++){
-         cities[i] = new City(i);
+         nodes[i] = new Node(i);
       }
 
-      edges = new Edge[cities.length][cities.length];
-      for(int i = 0; i <= cities.length - 1; i++){
-         for(int j = 0; j <= cities.length - 1; j++){
-            edges[i][j] = new Edge(cities[i], cities[j], edgesValuesMatrix[i][j]);
+      edges = new Edge[nodes.length][nodes.length];
+      for(int i = 0; i <= nodes.length - 1; i++){
+         for(int j = 0; j <= nodes.length - 1; j++){
+            edges[i][j] = new Edge(nodes[i], nodes[j], edgesValuesMatrix[i][j]);
          }
       }
    }
@@ -291,7 +291,7 @@ public class AntQ {
    /**
     * Method to get the initial AQ value for all edges.
     *
-    * The initial AQ value is composed by the average value of the edges and the number of cities.
+    * The initial AQ value is composed by the average value of the edges and the number of nodes.
     * @author Matheus Paixao
     * @return the initial AQ value for all edges.
     * @see getEdgeValue in Edge class
@@ -308,7 +308,7 @@ public class AntQ {
       }
       averageValueOfEdges = sumOfEdges / getNumberOfEdges();
       
-      return 1 / (averageValueOfEdges * cities.length);
+      return 1 / (averageValueOfEdges * nodes.length);
    }
 
    /**
@@ -321,8 +321,8 @@ public class AntQ {
    private static int getNumberOfEdges(){
       int numberOfEdges = 0;
 
-      for(int i = 0; i <= cities.length - 1; i++){
-         for(int j = 0; j <= cities.length - 1; j++){
+      for(int i = 0; i <= nodes.length - 1; i++){
+         for(int j = 0; j <= nodes.length - 1; j++){
             if(i != j){
                numberOfEdges++;
             }
@@ -356,16 +356,16 @@ public class AntQ {
    /**
     * Method to init the agents, or the ants.
     *
-    * One agent is put in each city of the instance.
+    * One agent is put in each node of the instance.
     * @author Matheus Paixao
     * @see Agent constructor in Agent class.
     */
    private static void initAgents(){
-      agents = new Agent[cities.length]; 
+      agents = new Agent[nodes.length]; 
       //agents = new Agent[1]; 
 
       for(int i = 0; i <= agents.length - 1; i++){
-         agents[i] = new Agent(cities[i]);
+         agents[i] = new Agent(nodes[i]);
       }
    }
 
@@ -401,18 +401,18 @@ public class AntQ {
     * Method to get the action choice of an edge.
     *
     * @author Matheus Paixao
-    * @param city1 the first city of the edge 
-    * @param city2 the second city of the edge 
+    * @param node1 the first node of the edge 
+    * @param node2 the second node of the edge 
     * @return the action choice of the edge
     */
-   public static double getActionChoice(City city1, City city2, Agent agent){
+   public static double getActionChoice(Node node1, Node node2, Agent agent){
       double actionChoice = 0;
 
       if(problem.equals("jssp")){
-         int[] nodes = getNodes(city1, city2, agent);
+         int[] nodes = getNodes(node1, node2, agent);
          double heuristicValue = 1 / getMakespan(nodes);
 
-         Edge edge = edges[city1.getIndex()][city2.getIndex()];
+         Edge edge = edges[node1.getIndex()][node2.getIndex()];
          actionChoice =  Math.pow(edge.getAQValue(), delta) * Math.pow(heuristicValue, beta);
 
          if(Double.isNaN(actionChoice) || actionChoice == Double.POSITIVE_INFINITY || actionChoice == Double.NEGATIVE_INFINITY){
@@ -420,7 +420,7 @@ public class AntQ {
          }
       }
       else{
-         actionChoice = actionChoices[city1.getIndex()][city2.getIndex()];
+         actionChoice = actionChoices[node1.getIndex()][node2.getIndex()];
       }
 
       return actionChoice;
@@ -438,24 +438,24 @@ public class AntQ {
       return nodesCounter + 2;
    }
 
-   private static int[] getNodes(City city1, City city2, Agent agent){
+   private static int[] getNodes(Node node1, Node node2, Agent agent){
       int[] nodes;
 
       Edge[] tour = agent.getTour();
       nodes = new int[getNumberOfNodes(tour)];
 
       if(tour[0] == null){
-         nodes[0] = city1.getIndex();
-         nodes[1] = city2.getIndex();
+         nodes[0] = node1.getIndex();
+         nodes[1] = node2.getIndex();
       }
       else{
          for(int i = 0; i <= tour.length - 1; i++){
             if(tour[i] != null){
-               nodes[i] = tour[i].getCity1().getIndex();
-               nodes[i+1] = tour[i].getCity2().getIndex();
+               nodes[i] = tour[i].getNode1().getIndex();
+               nodes[i+1] = tour[i].getNode2().getIndex();
             }
          }
-         nodes[nodes.length - 1] = city2.getIndex();
+         nodes[nodes.length - 1] = node2.getIndex();
       }
 
       return nodes;
@@ -482,18 +482,18 @@ public class AntQ {
    }
 
    /**
-    * Method to get the sum of action choices of all remaining cities to visit of an agent.
+    * Method to get the sum of action choices of all remaining nodes to visit of an agent.
     *
     * @author Matheus Paixao
-    * @return the sum of action choices of all remaining cities to visit of an agent.
+    * @return the sum of action choices of all remaining nodes to visit of an agent.
     * @see getActionChoice
     */
-   public static double getActionChoiceSum(City currentCity, City citiesToVisit[], Agent agent){
+   public static double getActionChoiceSum(Node currentNode, Node nodesToVisit[], Agent agent){
       double actionChoiceSum = 0;
 
-      for(int i = 0; i <= citiesToVisit.length - 1; i++){
-         if(citiesToVisit[i] != null){
-            actionChoiceSum += getActionChoice(currentCity, citiesToVisit[i], agent);
+      for(int i = 0; i <= nodesToVisit.length - 1; i++){
+         if(nodesToVisit[i] != null){
+            actionChoiceSum += getActionChoice(currentNode, nodesToVisit[i], agent);
          }
       }
 
@@ -501,26 +501,26 @@ public class AntQ {
    }
 
    /**
-    * Method to get the max AQ value of the next choosed city.
+    * Method to get the max AQ value of the next choosed node.
     *
-    * The method evaluates the AQ values of all the edges from the next choosed city
-    * to all the cities that the agent didn't visit yet.
+    * The method evaluates the AQ values of all the edges from the next choosed node
+    * to all the nodes that the agent didn't visit yet.
     * @author Matheus Paixao
-    * @param citiesToVisit array of the cities to be visited by the agent
-    * @param nextCity the next choosed city
-    * @return the max AQ value of the next choosed city.
-    * @see equals method in City class.
+    * @param nodesToVisit array of the nodes to be visited by the agent
+    * @param nextNode the next choosed node
+    * @return the max AQ value of the next choosed node.
+    * @see equals method in Node class.
     * @see getAQValue method in Edge class.
     */
-   public static double getMaxAQValue(City citiesToVisit[], City nextCity){
+   public static double getMaxAQValue(Node nodesToVisit[], Node nextNode){
       double maxAQValue = 0;
       double edgeAQValue = 0;
-      int nextCityIndex = nextCity.getIndex();
+      int nextNodeIndex = nextNode.getIndex();
 
-      for(int i = 0; i <= citiesToVisit.length - 1; i++){
-         //only evaluate the city if the agent didn't visit it yet and it is different of the next choosed city
-         if((citiesToVisit[i] != null) && (!nextCity.equals(citiesToVisit[i]))){
-            edgeAQValue = edges[nextCityIndex][citiesToVisit[i].getIndex()].getAQValue();
+      for(int i = 0; i <= nodesToVisit.length - 1; i++){
+         //only evaluate the node if the agent didn't visit it yet and it is different of the next choosed node
+         if((nodesToVisit[i] != null) && (!nextNode.equals(nodesToVisit[i]))){
+            edgeAQValue = edges[nextNodeIndex][nodesToVisit[i].getIndex()].getAQValue();
             if(edgeAQValue > maxAQValue){
                maxAQValue = edgeAQValue;
             }
@@ -534,19 +534,19 @@ public class AntQ {
     * Method to update the AQ value of the passed edge.
     *
     * To update the AQ value of an edge, it's used the reinforcement learning value of the edge
-    * and the max AQ value of the next choosed city.
+    * and the max AQ value of the next choosed node.
     * @author Matheus Paixao
     * @param edge the edge to update.
     * @param reinforcementLearningValue the reinforcement learning value of the edge.
-    * @param maxAQValue the max AQ value of the next choosed city.
+    * @param maxAQValue the max AQ value of the next choosed node.
     * @see getAQValue in Edge class.
     * @see getReinforcementLearningValue in Edge class.
     * @see setAQValue in Edge class.
     */
    private static void updateAQValue(Edge edge, double reinforcementLearningValue, double maxAQValue){
-      int city1Index = edge.getCity1().getIndex();
-      int city2Index = edge.getCity2().getIndex();
-      Edge edgeToUpdate = edges[city1Index][city2Index];
+      int node1Index = edge.getNode1().getIndex();
+      int node2Index = edge.getNode2().getIndex();
+      Edge edgeToUpdate = edges[node1Index][node2Index];
 
       edgeToUpdate.setAQValue((1 - alfa) * edgeToUpdate.getAQValue() + alfa * (reinforcementLearningValue + gamma * maxAQValue));
    }
@@ -598,7 +598,7 @@ public class AntQ {
          int[] nodes = new int[tour.length];
 
          for(int i = 0; i <= nodes.length - 1; i++){
-            nodes[i] = tour[i].getCity1().getIndex();
+            nodes[i] = tour[i].getNode1().getIndex();
          }
 
          tourValue = getMakespan(nodes);

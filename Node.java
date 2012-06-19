@@ -1,36 +1,36 @@
 /**
- * Class to represent the cities.
+ * Class to represent the nodes.
  * 
- * It's formed by the index in the cities array of AntQ algorithm, X and Y value of cartesian coordinates.
+ * It's formed by the index in the nodes array of AntQ algorithm, X and Y value of cartesian coordinates.
  * @author: Matheus Paixao 
  */
-public class City implements Comparable{
+public class Node implements Comparable{
    private int index;
    private double x;
    private double y;
 
    /**
-    * Method to create a city passing the index, X and Y coordinates.
+    * Method to create a node passing the index, X and Y coordinates.
     *
     * @author Matheus Paixao 
-    * @param index index of the city
+    * @param index index of the node
     * @param x X coordinate of the node. 
     * @param y Y coordinate of the node. 
     */
-   public City(int index, double x, double y){
+   public Node(int index, double x, double y){
       this.index = index;
       this.x = x;
       this.y = y;
    }
 
    /**
-    * Method to create a city passing only the index.
+    * Method to create a node passing only the index.
     *
     * The 'x' and 'y' values are set to 0.
     * @author Matheus Paixao 
-    * @param index index of the city
+    * @param index index of the node
     */
-   public City(int index){
+   public Node(int index){
       this.index = index;
       this.x = 0;
       this.y = 0;
@@ -53,22 +53,22 @@ public class City implements Comparable{
    }
 
    /**
-    * Method to compare if a city is equal to other one.
+    * Method to compare if a node is equal to other one.
     *
-    * A city is equal to other if they have the same index, if the index isn't the same then the x and y values are tested.
+    * A node is equal to other if they have the same index, if the index isn't the same then the x and y values are tested.
     * @author Matheus Paixao
-    * @param city A city to compare.
-    * @return true if the cities are equal, false if not.
+    * @param node A node to compare.
+    * @return true if the nodes are equal, false if not.
     */
-   public boolean equals(City city){
+   public boolean equals(Node node){
       boolean result = false;
 
-      if(city instanceof City){
-         if(city.getIndex() == this.getIndex()){
+      if(node instanceof Node){
+         if(node.getIndex() == this.getIndex()){
             result = true;
          }
          else{
-            if(city.getX() == this.getX() && city.getY() == this.getY()){
+            if(node.getX() == this.getX() && node.getY() == this.getY()){
                result = true;
             }
          }
@@ -78,23 +78,23 @@ public class City implements Comparable{
    }
 
    /**
-    * Method to compare two cities.
+    * Method to compare two nodes.
     *
-    * It's used to sort the list of cities. 
+    * It's used to sort the list of nodes. 
     * It's compared first the x value, if it is equal then the y value is compared.
     * @author Matheus Paixao
-    * @param object the city to compare (the compareTo method of Comparable interface receive a Object)
-    * @return -1 if the city is "lesser", 0 if equal and 1 if the city is "higher".
+    * @param object the node to compare (the compareTo method of Comparable interface receive a Object)
+    * @return -1 if the node is "lesser", 0 if equal and 1 if the node is "higher".
     */
    public int compareTo(Object object){
       int result = 0;
-      City city = null;
+      Node node = null;
 
-      if(object instanceof City){
-         city = (City) object;
+      if(object instanceof Node){
+         node = (Node) object;
 
-         if(this.getX() != city.getX()){
-            if(this.getX() > city.getX()){
+         if(this.getX() != node.getX()){
+            if(this.getX() > node.getX()){
                result = 1;
             }
             else{
@@ -102,7 +102,7 @@ public class City implements Comparable{
             }
          }
          else{
-            if(this.getY() > city.getY()){
+            if(this.getY() > node.getY()){
                result = 1;
             }
             else{
@@ -115,10 +115,10 @@ public class City implements Comparable{
    }
 
    /**
-    * Method to format the city in String format.
+    * Method to format the node in String format.
     *
     * @author Matheus Paixao.
-    * @return The city in String format.
+    * @return The node in String format.
     */
    public String toString(){
       return getIndex() + " " + "(" + getX() + " " + getY() + ")";
