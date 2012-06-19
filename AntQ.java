@@ -12,7 +12,7 @@
  * 
  * The actionChoices matrix stores the action choices of all edges.
  *
- * The agents array stores the agents, or ants, that are acting in the algorithm.  
+ * The ants array stores the ants, or ants, that are acting in the algorithm.  
  *
  * @author Matheus Paixao
  */
@@ -34,32 +34,32 @@ public class AntQ {
 
    public static double actionChoices[][];
 
-   private static Agent agents[];
+   private static Ant ants[];
 
    /**
     * Main method, where the Ant Q algorithm is runned.
     *
     * totalIterations and iterationsCounter are used to stop the algorithm after some iterations.
-    * iterationBestTour array is the best tour of all agents in a iteration.
-    * globalBestTour array is the best tour of all agents in all iterations.
+    * iterationBestTour array is the best tour of all ants in a iteration.
+    * globalBestTour array is the best tour of all ants in all iterations.
     *
     * @author Matheus Paixao
     * @param args[0] the number of iterations (optional)
     * @see init
-    * @see chooseNextNode in Agent class
-    * @see setNextNode in Agent class
-    * @see getNextNode in Agent class
-    * @see addNodeToTour in Agent class
-    * @see addInitialNodeToNodesToVisit in Agent class
-    * @see getInitialNode in Agent class
-    * @see getLastTourEdge in Agent class
+    * @see chooseNextNode in Ant class
+    * @see setNextNode in Ant class
+    * @see getNextNode in Ant class
+    * @see addNodeToTour in Ant class
+    * @see addInitialNodeToNodesToVisit in Ant class
+    * @see getInitialNode in Ant class
+    * @see getLastTourEdge in Ant class
     * @see getMaxAQValue
     * @see updateAQValue
-    * @see loadNodesToVisit in Agent class
-    * @see setCurrentNode in Agent class
-    * @see removeNodeFromNodesToVisit in Agent class
+    * @see loadNodesToVisit in Ant class
+    * @see setCurrentNode in Ant class
+    * @see removeNodeFromNodesToVisit in Ant class
     * @see getIterationBestTour
-    * @see clearTour in Agent class
+    * @see clearTour in Ant class
     * @see updateReinforcementLearningValue
     * @see clearReinforcementLearningValue
     * @see calculateTourValue
@@ -76,7 +76,7 @@ public class AntQ {
       double iterationTime = 0;
       double averageIterationTime = 0;
 
-      Agent agent = null;
+      Ant ant = null;
       Node nextNode = null;
       double reinforcementLearningValue = 0;
 
@@ -105,54 +105,54 @@ public class AntQ {
             //update the action choices of all edges
             updateActionChoices();
          }
-         //in this step all the agents chooses the next node to move to
-         //when all the agents have choosen the next node, they update the AQ value of the correspondent edge 
+         //in this step all the ants chooses the next node to move to
+         //when all the ants have choosen the next node, they update the AQ value of the correspondent edge 
          for(int i = 0; i <= nodes.length - 1; i++){
-            //if the agent didn't visit all the nodes yet
+            //if the ant didn't visit all the nodes yet
             if(i != nodes.length - 1){
-               for(int j = 0; j <= agents.length - 1; j++){
-                  agent = agents[j];
-                  nextNode = agent.chooseNextNode();
-                  agent.setNextNode(nextNode);
-                  agent.addNodeToTour(agent.getNextNode());
+               for(int j = 0; j <= ants.length - 1; j++){
+                  ant = ants[j];
+                  nextNode = ant.chooseNextNode();
+                  ant.setNextNode(nextNode);
+                  ant.addNodeToTour(ant.getNextNode());
 
-                  //if the agent has choosen the last node to visit
+                  //if the ant has choosen the last node to visit
                   if(i == nodes.length - 2){
-                     agent.addInitialNodeToNodesToVisit();
+                     ant.addInitialNodeToNodesToVisit();
                   }
                }
             }
-            //all the agents go back to their initial node
+            //all the ants go back to their initial node
             else{
-               for(int j = 0; j <= agents.length - 1; j++){
-                  agent = agents[j];
-                  nextNode = agent.getInitialNode();
-                  agent.setNextNode(nextNode);
-                  agent.addNodeToTour(agent.getNextNode());
+               for(int j = 0; j <= ants.length - 1; j++){
+                  ant = ants[j];
+                  nextNode = ant.getInitialNode();
+                  ant.setNextNode(nextNode);
+                  ant.addNodeToTour(ant.getNextNode());
                }
             }
 
-            //all the agents update the AQ value of the last edge added to their tour
-            for(int j = 0; j <= agents.length - 1; j++){
-               agent = agents[j];
-               updateAQValue(agent.getLastTourEdge(), 0, getMaxAQValue(agent.getNodesToVisit(), agent.getNextNode()));
+            //all the ants update the AQ value of the last edge added to their tour
+            for(int j = 0; j <= ants.length - 1; j++){
+               ant = ants[j];
+               updateAQValue(ant.getLastTourEdge(), 0, getMaxAQValue(ant.getNodesToVisit(), ant.getNextNode()));
 
-               //if the agents has done the tour
+               //if the ants has done the tour
                if(i == nodes.length - 1){
-                  agent.loadNodesToVisit(); //prepare the nodes to visit array for another tour
+                  ant.loadNodesToVisit(); //prepare the nodes to visit array for another tour
                }
 
-               agent.setCurrentNode(agent.getNextNode()); //move to the next choosed node
-               agent.removeNodeFromNodesToVisit(agent.getCurrentNode()); // remove the current node from the nodes to visit
+               ant.setCurrentNode(ant.getNextNode()); //move to the next choosed node
+               ant.removeNodeFromNodesToVisit(ant.getCurrentNode()); // remove the current node from the nodes to visit
             }
          }
 
          iterationBestTour = getIterationBestTour();
          iterationBestTourValue = calculateTourValue(iterationBestTour);
 
-         //all the agents clear their tours
-         for(int i = 0; i <= agents.length - 1; i++){
-            agents[i].clearTour();
+         //all the ants clear their tours
+         for(int i = 0; i <= ants.length - 1; i++){
+            ants[i].clearTour();
          }
 
          //in this step is calculated the reinforcement learning value and is updated the AQ value only 
@@ -210,7 +210,7 @@ public class AntQ {
     * @see createEdges
     * @see initAQValues
     * @see getAQ0
-    * @see initAgents
+    * @see initAnts
     */
    private static void init(){
       InstanceReader instanceReader = new InstanceReader();
@@ -237,7 +237,7 @@ public class AntQ {
          initAQValues(getAQ0());
       }
 
-      initAgents();
+      initAnts();
    }
 
    private static void createJSSPEdges(int numberOfJobs){
@@ -354,18 +354,18 @@ public class AntQ {
    }
 
    /**
-    * Method to init the agents, or the ants.
+    * Method to init the ants, or the ants.
     *
-    * One agent is put in each node of the instance.
+    * One ant is put in each node of the instance.
     * @author Matheus Paixao
-    * @see Agent constructor in Agent class.
+    * @see Ant constructor in Ant class.
     */
-   private static void initAgents(){
-      agents = new Agent[nodes.length]; 
-      //agents = new Agent[1]; 
+   private static void initAnts(){
+      ants = new Ant[nodes.length]; 
+      //ants = new Ant[1]; 
 
-      for(int i = 0; i <= agents.length - 1; i++){
-         agents[i] = new Agent(nodes[i]);
+      for(int i = 0; i <= ants.length - 1; i++){
+         ants[i] = new Ant(nodes[i]);
       }
    }
 
@@ -405,11 +405,11 @@ public class AntQ {
     * @param node2 the second node of the edge 
     * @return the action choice of the edge
     */
-   public static double getActionChoice(Node node1, Node node2, Agent agent){
+   public static double getActionChoice(Node node1, Node node2, Ant ant){
       double actionChoice = 0;
 
       if(problem.equals("jssp")){
-         int[] nodes = getNodes(node1, node2, agent);
+         int[] nodes = getNodes(node1, node2, ant);
          double heuristicValue = 1 / getMakespan(nodes);
 
          Edge edge = edges[node1.getIndex()][node2.getIndex()];
@@ -438,10 +438,10 @@ public class AntQ {
       return nodesCounter + 2;
    }
 
-   private static int[] getNodes(Node node1, Node node2, Agent agent){
+   private static int[] getNodes(Node node1, Node node2, Ant ant){
       int[] nodes;
 
-      Edge[] tour = agent.getTour();
+      Edge[] tour = ant.getTour();
       nodes = new int[getNumberOfNodes(tour)];
 
       if(tour[0] == null){
@@ -482,18 +482,18 @@ public class AntQ {
    }
 
    /**
-    * Method to get the sum of action choices of all remaining nodes to visit of an agent.
+    * Method to get the sum of action choices of all remaining nodes to visit of an ant.
     *
     * @author Matheus Paixao
-    * @return the sum of action choices of all remaining nodes to visit of an agent.
+    * @return the sum of action choices of all remaining nodes to visit of an ant.
     * @see getActionChoice
     */
-   public static double getActionChoiceSum(Node currentNode, Node nodesToVisit[], Agent agent){
+   public static double getActionChoiceSum(Node currentNode, Node nodesToVisit[], Ant ant){
       double actionChoiceSum = 0;
 
       for(int i = 0; i <= nodesToVisit.length - 1; i++){
          if(nodesToVisit[i] != null){
-            actionChoiceSum += getActionChoice(currentNode, nodesToVisit[i], agent);
+            actionChoiceSum += getActionChoice(currentNode, nodesToVisit[i], ant);
          }
       }
 
@@ -504,9 +504,9 @@ public class AntQ {
     * Method to get the max AQ value of the next choosed node.
     *
     * The method evaluates the AQ values of all the edges from the next choosed node
-    * to all the nodes that the agent didn't visit yet.
+    * to all the nodes that the ant didn't visit yet.
     * @author Matheus Paixao
-    * @param nodesToVisit array of the nodes to be visited by the agent
+    * @param nodesToVisit array of the nodes to be visited by the ant
     * @param nextNode the next choosed node
     * @return the max AQ value of the next choosed node.
     * @see equals method in Node class.
@@ -518,7 +518,7 @@ public class AntQ {
       int nextNodeIndex = nextNode.getIndex();
 
       for(int i = 0; i <= nodesToVisit.length - 1; i++){
-         //only evaluate the node if the agent didn't visit it yet and it is different of the next choosed node
+         //only evaluate the node if the ant didn't visit it yet and it is different of the next choosed node
          if((nodesToVisit[i] != null) && (!nextNode.equals(nodesToVisit[i]))){
             edgeAQValue = edges[nextNodeIndex][nodesToVisit[i].getIndex()].getAQValue();
             if(edgeAQValue > maxAQValue){
@@ -552,23 +552,23 @@ public class AntQ {
    }
 
    /**
-    * Method to get the best tour, of all agents, of an iteration.
+    * Method to get the best tour, of all ants, of an iteration.
     *
     * It's used an auxiliary array to create a new array with the same elements. 
     * @author Matheus Paixao
     * @return the iteration best tour
-    * @see getTour in Agent class
+    * @see getTour in Ant class
     * @see calculateTourValue
     */
    private static Edge[] getIterationBestTour(){
-      Edge iterationBestTourTemp[] = agents[0].getTour();
+      Edge iterationBestTourTemp[] = ants[0].getTour();
       Edge iterationBestTour[] = new Edge[iterationBestTourTemp.length];
       Edge tour[] = null;
       double iterationBestTourValue = calculateTourValue(iterationBestTourTemp);
       double tourValue = 0;
 
-      for(int i = 0; i <= agents.length - 1; i++){
-         tour = agents[i].getTour();
+      for(int i = 0; i <= ants.length - 1; i++){
+         tour = ants[i].getTour();
          tourValue = calculateTourValue(tour);
          if(calculateTourValue(tour) < iterationBestTourValue){
             iterationBestTourValue = tourValue;

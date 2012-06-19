@@ -2,23 +2,23 @@ import java.util.Random;
 import java.util.Arrays;
 
 /**
- * Class to describe the behavior of the agents, or ants, in the goal
+ * Class to describe the behavior of the ants, or ants, in the goal
  * to find best tours over the nodes.
  *
- * The initialNode variable stores the initial node of the agent. It's necessary when the agent 
+ * The initialNode variable stores the initial node of the ant. It's necessary when the ant 
  * finish its tour and has to go back to the beginning.
  *
- * The currentNode variable stores the current node of the agent. It's used in the state transition rule.
+ * The currentNode variable stores the current node of the ant. It's used in the state transition rule.
  *
- * Each agent has to know its nextNode to go before really go. It's used basically in AntQ class.
+ * Each ant has to know its nextNode to go before really go. It's used basically in AntQ class.
  *
- * The nodesToVisit array store the nodes that the agent didn't visit yet. The null values represents the visited nodes.
+ * The nodesToVisit array store the nodes that the ant didn't visit yet. The null values represents the visited nodes.
  *
- * The tour array is the path, the sequency of nodes, done by the agent.
+ * The tour array is the path, the sequency of nodes, done by the ant.
  *
  * @author Matheus Paixao
  */
-public class Agent {
+public class Ant {
    private Node initialNode;
    private Node currentNode;
    private Node nextNode;
@@ -28,18 +28,18 @@ public class Agent {
    private Random random;
 
    /**
-    * Method to create an agent with its initial node.
+    * Method to create an ant with its initial node.
     *
     * Create the nodesToVisit array with the same size of the nodes array of AntQ.
     * Create the tour array with the same size of the nodesToVisit.
     * Fill the nodesToVisit array with Node objects equals to the nodes array of AntQ.
     * Set the initial node the current node and remove the initial node of the nodes to be visited.
     * @author Matheus Paixao
-    * @param initialNode the node that will be the initial node of the agent.
+    * @param initialNode the node that will be the initial node of the ant.
     * @see loadNodesToVisit
     * @see removeNodeFromNodesToVisit
     */
-   public Agent(Node initialNode){
+   public Ant(Node initialNode){
       this.nodesToVisit = new Node[AntQ.getNodes().length];
       tour = new Edge[getNodesToVisit().length];
 
@@ -109,9 +109,9 @@ public class Agent {
    /**
     * Method to add the initial node to the nodes to be visited.
     *
-    * Get the index of the initial node of the agent in the nodes array in AntQ
+    * Get the index of the initial node of the ant in the nodes array in AntQ
     * and set the correspondent position of the nodesToVisit with the initial node.
-    * It's used when the agent have visited all the nodes and has to go back to the first one.
+    * It's used when the ant have visited all the nodes and has to go back to the first one.
     * @author Matheus Paixao
     */
    public void addInitialNodeToNodesToVisit(){
@@ -133,11 +133,11 @@ public class Agent {
    }
    
    /**
-    * Method to insert an edge to the agent tour.
+    * Method to insert an edge to the ant tour.
     *
     * Insert an edge equal to the edge from the AntQ algorihtm. The edge is inserted in the last null position of the tour.
     * @author Matheus Paixao
-    * @param edge the edge from the edges matrix of AntQ algorithm to be inserted in the agent's tour.
+    * @param edge the edge from the edges matrix of AntQ algorithm to be inserted in the ant's tour.
     * @see Edge constructor
     */
    private void insertEdge(Edge edge){
@@ -150,10 +150,10 @@ public class Agent {
    }
 
    /**
-    * Method to get the last edge added to the agent tour.
+    * Method to get the last edge added to the ant tour.
     *
     * @author Matheus Paixao
-    * @return the last edge added to the agent tour.
+    * @return the last edge added to the ant tour.
     */
    public Edge getLastTourEdge(){
       Edge lastTourEdge = null;
@@ -169,9 +169,9 @@ public class Agent {
    }
 
    /**
-    * Method to clear the agent tour.
+    * Method to clear the ant tour.
     *
-    * It's used when an agent finish a tour (visit all nodes) and has to start another one.
+    * It's used when an ant finish a tour (visit all nodes) and has to start another one.
     * @author Matheus Paixao
     */
    public void clearTour(){
@@ -184,13 +184,13 @@ public class Agent {
     * Method that implements the AntQ transition rule.
     *
     * It's generated a random number q in the interval (0,1). Then q is compared 
-    * with the initialization parameter q0, this test will define if the agent will
+    * with the initialization parameter q0, this test will define if the ant will
     * choose the best possible action (exploitation) or a random action (exploration).
     * The exploration choice can be done by two methods:
     * 1) pseudo-random
     * 2) pseudo-random-proportional
     * @author Matheus Paixao
-    * @return the next node of a an agent
+    * @return the next node of a an ant
     * @see getRandomNumber
     * @see getMaxActionChoiceNode
     * @see getPseudoRandomProportionalNode
@@ -250,12 +250,12 @@ public class Agent {
    }
 
    /**
-    * Method to get the next agent node using the pseudo-random method.
+    * Method to get the next ant node using the pseudo-random method.
     * 
     * In this method each possible node to go receive a random probability in (0,1) interval.
     * The max probability node is choosen.
     * @author Matheus Paixao
-    * @return the next agent node using pseudo-random method.
+    * @return the next ant node using pseudo-random method.
     * @see getRandomNumber
     */
    private Node getPseudoRandomNode(){
@@ -307,7 +307,7 @@ public class Agent {
 
    /**
     * Method to calculate the pseudo random proportional probability of all the
-    * nodes to be visited by the agent.
+    * nodes to be visited by the ant.
     *
     * The pseudo random proportional probability of a node is calculated by 
     * the getPseudoRandomProportionalProbability method.
@@ -367,7 +367,7 @@ public class Agent {
    }
 
    /**
-    * Method to get the first possible node to be visited by the agent.
+    * Method to get the first possible node to be visited by the ant.
     *
     * @author Matheus Paixao
     * @return the first possible node (not null) to go in the nodes to be visited array
