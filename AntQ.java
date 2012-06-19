@@ -20,8 +20,6 @@ public class AntQ {
    private static String problem = "";
    private static double[][] times;
 
-   private static double[][] objectivesMatrix;
-
    //constant initialization parameters
    private static final double delta = 1;
    private static final double beta = 2;
@@ -103,7 +101,7 @@ public class AntQ {
 
       while(iterationsCounter <= totalIterations){
          initialTime = System.currentTimeMillis();
-         if(!problem.equals("jssp") && !problem.equals("requirements")){
+         if(!problem.equals("jssp")){
             //update the action choices of all edges
             updateActionChoices();
          }
@@ -222,11 +220,6 @@ public class AntQ {
          times = instanceReader.getTimesMatrix();
          initAQValues(0.01);
       }
-      else if(problem.equals("requirements")){
-         int numberOfRequirements = instanceReader.getNumberOfRequirements();
-         createRequirementsEdges(numberOfRequirements);
-         objectivesMatrix = instanceReader.getObjectivesMatrix(numberOfRequirements);
-      }
       else{
          String instanceType = instanceReader.getInstanceType();
          //System.out.println("memory before edges");
@@ -249,21 +242,6 @@ public class AntQ {
 
    private static void createJSSPEdges(int numberOfJobs){
       cities = new City[numberOfJobs];
-
-      for(int i = 0; i <= cities.length - 1; i++){
-         cities[i] = new City(i);
-      }
-
-      edges = new Edge[cities.length][cities.length];
-      for(int i = 0; i <= cities.length - 1; i++){
-         for(int j = 0; j <= cities.length - 1; j++){
-            edges[i][j] = new Edge(cities[i], cities[j]);
-         }
-      }
-   }
-
-   private static void createRequirementsEdges(int numberOfRequirements){
-      cities = new City[numberOfRequirements];
 
       for(int i = 0; i <= cities.length - 1; i++){
          cities[i] = new City(i);
@@ -383,16 +361,12 @@ public class AntQ {
     * @see Agent constructor in Agent class.
     */
    private static void initAgents(){
-      //agents = new Agent[cities.length]; 
-      agents = new Agent[1]; 
+      agents = new Agent[cities.length]; 
+      //agents = new Agent[1]; 
 
-      //System.out.println("memory before agents");
-      //printUsedMemory();
       for(int i = 0; i <= agents.length - 1; i++){
          agents[i] = new Agent(cities[i]);
       }
-      //System.out.println("memory after agents");
-      //printUsedMemory();
    }
 
    /**
@@ -444,10 +418,6 @@ public class AntQ {
          if(Double.isNaN(actionChoice) || actionChoice == Double.POSITIVE_INFINITY || actionChoice == Double.NEGATIVE_INFINITY){
             actionChoice = 0;
          }
-      }
-      else if(problem.equals("requirements")){
-         int[] nodes = getNodes(city1, city2, agent);
-
       }
       else{
          actionChoice = actionChoices[city1.getIndex()][city2.getIndex()];

@@ -25,6 +25,8 @@ public class Agent {
    private City citiesToVisit[];
    public Edge tour[];
 
+   private Random random;
+
    /**
     * Method to create an agent with its initial city.
     *
@@ -46,6 +48,8 @@ public class Agent {
       this.initialCity = initialCity;
       setCurrentCity(getInitialCity());
       removeCityFromCitiesToVisit(getInitialCity());
+
+      random = new Random();
    }
 
    public City getInitialCity(){
@@ -217,7 +221,6 @@ public class Agent {
     * @see nextDouble method in Random class
     */
    private double getRandomNumber(){
-      Random random = new Random();
       return random.nextDouble();
    }
 
