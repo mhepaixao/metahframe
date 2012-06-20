@@ -1,6 +1,11 @@
+import java.io.File;
+
 public class JSSPAntQ extends AntQ{
-   public JSSPAntQ(int numberOfIterations){
+   private JSSPInstanceReader jsspInstanceReader;
+
+   public JSSPAntQ(File instance, int numberOfIterations){
       super(numberOfIterations);
+      jsspInstanceReader = new JSSPInstanceReader(instance);
    }
 
    public double calculateSolutionValue(Edge[] solution){

@@ -1,8 +1,13 @@
+import java.io.File;
+
 public class App{
    public static void main(String[] args){
       String problem = null;
       int numberOfIterations = 0;
       Algorithm algorithm = null;
+
+      InstanceChooser instanceChooser = new InstanceChooser();
+      File instance = instanceChooser.getInstance();
 
       if(args.length >= 1){
          problem = args[0];
@@ -16,7 +21,7 @@ public class App{
       }
 
       if(problem.equals("tsp")){
-         algorithm = new TSPAntQ(numberOfIterations);
+         algorithm = new TSPAntQ(instance, numberOfIterations);
 
          System.out.println("Best Solution: "+algorithm.getSolution());
          System.out.println("Time elapsed: "+algorithm.getTotalTime());
@@ -24,7 +29,7 @@ public class App{
       }
       else{
          if(problem.equals("jssp")){
-            algorithm = new JSSPAntQ(numberOfIterations);
+            algorithm = new JSSPAntQ(instance, numberOfIterations);
 
             System.out.println("Best Solution: "+algorithm.getSolution());
             System.out.println("Time elapsed: "+algorithm.getTotalTime());

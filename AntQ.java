@@ -57,8 +57,7 @@ public class AntQ implements Algorithm{
       initialTime = System.currentTimeMillis();
       while(iterationsCounter <= getNumberOfIterations() - 1){
          iterationSolution = getIterationSolution();
-         //iterationSolutionValue = calculateSolutionValue(iterationSolution);
-         iterationSolutionValue = calculateTourValue(iterationSolution);
+         iterationSolutionValue = calculateSolutionValue(iterationSolution);
 
          if(bestSolution != null){
             if(isSolutionBest(iterationSolutionValue, bestSolutionValue) == true){
