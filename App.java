@@ -20,6 +20,7 @@ public class App{
 
          System.out.println("Best Solution: "+algorithm.getSolution());
          System.out.println("Time elapsed: "+algorithm.getTotalTime());
+         System.exit(0);
       }
       else{
          if(problem.equals("jssp")){
@@ -27,6 +28,7 @@ public class App{
 
             System.out.println("Best Solution: "+algorithm.getSolution());
             System.out.println("Time elapsed: "+algorithm.getTotalTime());
+            System.exit(0);
          }
       }
    }

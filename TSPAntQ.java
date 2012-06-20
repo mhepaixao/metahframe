@@ -12,7 +12,10 @@ public class TSPAntQ extends AntQ{
 
    public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
       boolean result = false;
-      System.out.println("tsp is solution best");
+
+      if(iterationSolutionValue < bestSolutionValue){
+         result = true;
+      }
 
       return result;
    }

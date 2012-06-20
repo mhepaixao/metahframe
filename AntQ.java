@@ -52,10 +52,13 @@ public class AntQ implements Algorithm{
 
       int iterationsCounter = 0;
 
+      init();
+
       initialTime = System.currentTimeMillis();
       while(iterationsCounter <= getNumberOfIterations() - 1){
          iterationSolution = getIterationSolution();
-         iterationSolutionValue = calculateSolutionValue(iterationSolution);
+         //iterationSolutionValue = calculateSolutionValue(iterationSolution);
+         iterationSolutionValue = calculateTourValue(iterationSolution);
 
          if(bestSolution != null){
             if(isSolutionBest(iterationSolutionValue, bestSolutionValue) == true){
@@ -67,6 +70,8 @@ public class AntQ implements Algorithm{
             bestSolution = iterationSolution;
             bestSolutionValue = iterationSolutionValue;
          }
+
+         iterationsCounter++;
       }
       finalTime = System.currentTimeMillis();
 
@@ -77,6 +82,73 @@ public class AntQ implements Algorithm{
 
    private Edge[] getIterationSolution(){
       Edge[] iterationSolution = null;
+      double iterationSolutionValue = 0;
+
+      Ant ant = null;
+      Node nextNode = null;
+      double reinforcementLearningValue = 0;
+
+      //initialization of the algorithm
+      //init();
+
+      //update the action choices of all edges
+      updateActionChoices();
+      //in this step all the ants chooses the next node to move to
+      //when all the ants have choosen the next node, they update the AQ value of the correspondent edge 
+      for(int i = 0; i <= nodes.length - 1; i++){
+         //if the ant didn't visit all the nodes yet
+         if(i != nodes.length - 1){
+            for(int j = 0; j <= ants.length - 1; j++){
+               ant = ants[j];
+               nextNode = ant.chooseNextNode();
+               ant.setNextNode(nextNode);
+               ant.addNodeToTour(ant.getNextNode());
+
+               //if the ant has choosen the last node to visit
+               if(i == nodes.length - 2){
+                  ant.addInitialNodeToNodesToVisit();
+               }
+            }
+         }
+         //all the ants go back to their initial node
+         else{
+            for(int j = 0; j <= ants.length - 1; j++){
+               ant = ants[j];
+               nextNode = ant.getInitialNode();
+               ant.setNextNode(nextNode);
+               ant.addNodeToTour(ant.getNextNode());
+            }
+         }
+
+         //all the ants update the AQ value of the last edge added to their tour
+         for(int j = 0; j <= ants.length - 1; j++){
+            ant = ants[j];
+            updateAQValue(ant.getLastTourEdge(), 0, getMaxAQValue(ant.getNodesToVisit(), ant.getNextNode()));
+
+            //if the ants has done the tour
+            if(i == nodes.length - 1){
+               ant.loadNodesToVisit(); //prepare the nodes to visit array for another tour
+            }
+
+            ant.setCurrentNode(ant.getNextNode()); //move to the next choosed node
+            ant.removeNodeFromNodesToVisit(ant.getCurrentNode()); // remove the current node from the nodes to visit
+         }
+      }
+
+      iterationSolution = getIterationBestTour();
+      iterationSolutionValue = calculateTourValue(iterationSolution);
+
+      //all the ants clear their tours
+      for(int i = 0; i <= ants.length - 1; i++){
+         ants[i].clearTour();
+      }
+
+      //in this step is calculated the reinforcement learning value and is updated the AQ value only 
+      //the edges belonging to the iterationBestTour
+      reinforcementLearningValue = w / iterationSolutionValue;
+      for(int i = 0; i <= iterationSolution.length - 1; i++){
+         updateAQValue(iterationSolution[i], reinforcementLearningValue, 0);
+      }
 
       return iterationSolution;
    }
