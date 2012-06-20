@@ -16,17 +16,17 @@ public class App{
       }
 
       if(problem.equals("tsp")){
-         algorithm = new TSPAntQ();
+         algorithm = new TSPAntQ(numberOfIterations);
 
          System.out.println("Best Solution: "+algorithm.getSolution());
-         System.out.println("Time elapsed: "+algorithm.getTimeElapsed());
+         System.out.println("Time elapsed: "+algorithm.getTotalTime());
       }
       else{
          if(problem.equals("jssp")){
-            algorithm = new JSSPAntQ();
+            algorithm = new JSSPAntQ(numberOfIterations);
 
             System.out.println("Best Solution: "+algorithm.getSolution());
-            System.out.println("Time elapsed: "+algorithm.getTimeElapsed());
+            System.out.println("Time elapsed: "+algorithm.getTotalTime());
          }
       }
    }

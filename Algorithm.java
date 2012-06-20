@@ -1,5 +1,5 @@
 public interface Algorithm{
    public double getSolution();
 
-   public double getTimeElapsed();
+   public double getTotalTime();
 }

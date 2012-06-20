@@ -17,14 +17,78 @@
  * @author Matheus Paixao
  */
 public class AntQ implements Algorithm{
-   public double getSolution(){
-      return 0;
+   private int numberOfIterations;
+   private double totalTime;
+
+   public AntQ(int numberOfIterations){
+      setNumberOfIterations(numberOfIterations);
+      setTotalTime(0);
    }
-   
-   public double getTimeElapsed(){
+
+   public int getNumberOfIterations(){
+      return this.numberOfIterations;
+   }
+
+   public void setNumberOfIterations(int numberOfIterations){
+      this.numberOfIterations = numberOfIterations;
+   }
+
+   public double getTotalTime(){
+      return this.totalTime;
+   }
+
+   public void setTotalTime(double totalTime){
+      this.totalTime = totalTime;
+   }
+
+   public double getSolution(){
+      double initialTime = 0;
+      double finalTime = 0;
+
+      Edge[] iterationSolution = null;
+      double iterationSolutionValue = 0;
+      Edge[] bestSolution = null;
+      double bestSolutionValue = 0;
+
+      int iterationsCounter = 0;
+
+      initialTime = System.currentTimeMillis();
+      while(iterationsCounter <= getNumberOfIterations() - 1){
+         iterationSolution = getIterationSolution();
+         iterationSolutionValue = calculateSolutionValue(iterationSolution);
+
+         if(bestSolution != null){
+            if(isSolutionBest(iterationSolutionValue, bestSolutionValue) == true){
+               bestSolution = iterationSolution;
+               bestSolutionValue = iterationSolutionValue;
+            }
+         }
+         else{
+            bestSolution = iterationSolution;
+            bestSolutionValue = iterationSolutionValue;
+         }
+      }
+      finalTime = System.currentTimeMillis();
+
+      setTotalTime(finalTime - initialTime);
+
+      return bestSolutionValue;
+   }
+
+   private Edge[] getIterationSolution(){
+      Edge[] iterationSolution = null;
+
+      return iterationSolution;
+   }
+
+   public double calculateSolutionValue(Edge[] solution){
       return 0;
    }
 
+   public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
+      return false;
+   }
+   
    private static String problem = "";
    private static double[][] times;
 
