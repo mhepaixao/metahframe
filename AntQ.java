@@ -52,7 +52,7 @@ public class AntQ implements Algorithm{
 
       int iterationsCounter = 0;
 
-      init();
+      initAntQ();
 
       initialTime = System.currentTimeMillis();
       while(iterationsCounter <= getNumberOfIterations() - 1){
@@ -79,6 +79,38 @@ public class AntQ implements Algorithm{
       return bestSolutionValue;
    }
 
+   private void initAntQ(){
+      InstanceReader instanceReader = new InstanceReader();
+
+      if(problem.equals("jssp")){
+         createJSSPEdges(instanceReader.getNumberOfJobs());
+         times = instanceReader.getTimesMatrix();
+         initAQValues(0.01);
+      }
+      else{
+         String instanceType = instanceReader.getInstanceType();
+         //System.out.println("memory before edges");
+         //printUsedMemory();
+         if(instanceType == "coordinates"){
+            createCartesianCoordinatesEdges(instanceReader.getNodesList());
+         }
+         else if(instanceType == "matrix"){
+            createMatrixEdges(instanceReader.getEdgesValuesMatrix());
+         }
+         //System.out.println("memory after edges");
+         //printUsedMemory();
+
+         actionChoices = new double[edges.length][edges.length];
+         initAQValues(getInitialPheromone());
+      }
+
+      initAnts();
+   }
+
+   public double getInitialPheromone(){
+      return 0;
+   }
+
    private Edge[] getIterationSolution(){
       Edge[] iterationSolution = null;
       double iterationSolutionValue = 0;
@@ -86,9 +118,6 @@ public class AntQ implements Algorithm{
       Ant ant = null;
       Node nextNode = null;
       double reinforcementLearningValue = 0;
-
-      //initialization of the algorithm
-      //init();
 
       //update the action choices of all edges
       updateActionChoices();
