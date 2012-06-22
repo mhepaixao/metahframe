@@ -148,7 +148,7 @@ public class Ant {
    private void insertEdge(Edge edge){
       for(int i = 0; i <= tour.length - 1; i++){
          if(tour[i] == null){
-            tour[i] = new Edge(edge.getNode1(), edge.getNode2(), edge.getEdgeValue());
+            tour[i] = new Edge(edge.getNode1(), edge.getNode2());
             break;
          }
       }

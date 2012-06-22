@@ -192,8 +192,8 @@ public abstract class AntQ implements Algorithm{
          }
       }
 
-      iterationSolution = getIterationBestTour();
-      iterationSolutionValue = calculateTourValue(iterationSolution);
+      iterationSolution = getIterationBestSolution();
+      iterationSolutionValue = calculateSolutionValue(iterationSolution);
 
       //all the ants clear their tours
       for(int i = 0; i <= ants.length - 1; i++){
@@ -276,6 +276,38 @@ public abstract class AntQ implements Algorithm{
       int n2Index = edge.getNode2().getIndex();
 
       pheromone[n1Index][n2Index] = ((1 - alfa) * pheromone[n1Index][n2Index] + alfa * (reinforcementLearningValue + gamma * maxPheromoneValue));
+   }
+
+   /**
+    * Method to get the best solution, of all ants, of an iteration.
+    *
+    * It's used an auxiliary array to create a new array with the same elements. 
+    * @author Matheus Paixao
+    * @return the iteration best solution
+    * @see getTour in Ant class
+    * @see calculateSolutionValue
+    */
+   private Edge[] getIterationBestSolution(){
+      Edge iterationBestSolutionTemp[] = ants[0].getTour();
+      Edge iterationBestSolution[] = new Edge[iterationBestSolutionTemp.length];
+      Edge solution[] = null;
+      double iterationBestSolutionValue = calculateSolutionValue(iterationBestSolutionTemp);
+      double solutionValue = 0;
+
+      for(int i = 0; i <= ants.length - 1; i++){
+         solution = ants[i].getTour();
+         solutionValue = calculateSolutionValue(solution);
+         if(isSolutionBest(solutionValue, iterationBestSolutionValue) == true){
+            iterationBestSolutionValue = solutionValue;
+            iterationBestSolutionTemp = solution;
+         }
+      }
+
+      for(int i = 0; i <= iterationBestSolutionTemp.length - 1; i++){
+         iterationBestSolution[i] = iterationBestSolutionTemp[i];
+      }
+
+      return iterationBestSolution;
    }
 
    private static String problem = "";
@@ -528,7 +560,7 @@ public abstract class AntQ implements Algorithm{
       edges = new Edge[nodes.length][nodes.length];
       for(int i = 0; i <= nodes.length - 1; i++){
          for(int j = 0; j <= nodes.length - 1; j++){
-            edges[i][j] = new Edge(nodes[i], nodes[j], edgesValuesMatrix[i][j]);
+            edges[i][j] = new Edge(nodes[i], nodes[j]);
          }
       }
    }

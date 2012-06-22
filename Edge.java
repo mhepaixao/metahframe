@@ -15,20 +15,6 @@ public class Edge {
    private double AQValue;
 
    /**
-    * Method to create an edge passing two nodes.
-    *
-    * This method calculates the edge value and call the other Edge constructor.
-    * @author Matheus Paixao 
-    * @param node1 First node of the edge. 
-    * @param node2 Second node of the edge. 
-    * @see calculateEdgeValue
-    * @see Edge other constructor
-    */
-   public Edge(Node node1, Node node2){
-      this(node1, node2, calculateEdgeValue(node1, node2));
-   }
-
-   /**
     * Method to create an edge passing two nodes and the edge value.
     *
     * The edge heuristic value is calculated only in the creation of the edge.
@@ -39,13 +25,9 @@ public class Edge {
     * @param edgeValue the value of the edge (distance between the two nodes)
     * @see calculateEdgeHeuristicValue
     */
-   public Edge(Node node1, Node node2, double edgeValue){
+   public Edge(Node node1, Node node2){
       this.node1 = node1;
       this.node2 = node2;
-
-      this.edgeValue = edgeValue;
-
-      this.AQValue = 0;
    }
 
    public Node getNode1(){
