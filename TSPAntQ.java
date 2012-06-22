@@ -75,4 +75,8 @@ public class TSPAntQ extends AntQ{
 
       return numberOfEdges;
    }
+
+   public double getHeuristicValue(Node node1, Node node2){
+      return 1 / distancesMatrix[node1.getIndex()][node2.getIndex()];
+   }
 }

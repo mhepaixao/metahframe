@@ -25,6 +25,8 @@ public class Ant {
    private Node nodesToVisit[];
    public Edge tour[];
 
+   private AntQ antQ;
+
    private Random random;
 
    /**
@@ -39,7 +41,8 @@ public class Ant {
     * @see loadNodesToVisit
     * @see removeNodeFromNodesToVisit
     */
-   public Ant(Node initialNode){
+   //public Ant(Node initialNode){
+   public Ant(AntQ antQ, Node initialNode){
       this.nodesToVisit = new Node[AntQ.getNodes().length];
       tour = new Edge[getNodesToVisit().length];
 
@@ -49,7 +52,9 @@ public class Ant {
       setCurrentNode(getInitialNode());
       removeNodeFromNodesToVisit(getInitialNode());
 
-      random = new Random();
+      this.random = new Random();
+
+      this.antQ = antQ;
    }
 
    public Node getInitialNode(){
@@ -240,7 +245,8 @@ public class Ant {
       for(int i = 0; i <= nodesToVisit.length - 1; i++){
          if(nodesToVisit[i] != null){
             node = nodesToVisit[i];
-            if(AntQ.getActionChoice(getCurrentNode(), node, this) > AntQ.getActionChoice(getCurrentNode(), maxActionChoiceNode, this)){
+            //if(AntQ.getActionChoice(getCurrentNode(), node, this) > AntQ.getActionChoice(getCurrentNode(), maxActionChoiceNode, this)){
+            if(antQ.getActionChoice2(getCurrentNode(), node) > antQ.getActionChoice2(getCurrentNode(), maxActionChoiceNode)){
                maxActionChoiceNode = node;
             }
          }
@@ -317,11 +323,13 @@ public class Ant {
     */
    private double[] getPseudoRandomProportionalProbabilities(){
       double probabilities[] = new double[nodesToVisit.length];
-      double actionChoiceSum = AntQ.getActionChoiceSum(getCurrentNode(), nodesToVisit, this);
+      //double actionChoiceSum = AntQ.getActionChoiceSum(getCurrentNode(), nodesToVisit, this);
+      double actionChoiceSum = antQ.getActionChoiceSum2(getCurrentNode(), nodesToVisit);
 
       for(int i = 0; i <= probabilities.length - 1; i++){
          if(nodesToVisit[i] != null){
-            probabilities[i] = AntQ.getActionChoice(getCurrentNode(), nodesToVisit[i], this) / actionChoiceSum;
+            //probabilities[i] = AntQ.getActionChoice(getCurrentNode(), nodesToVisit[i], this) / actionChoiceSum;
+            probabilities[i] = antQ.getActionChoice2(getCurrentNode(), nodesToVisit[i]) / actionChoiceSum;
          }
          else{
             probabilities[i] = 0;

@@ -20,6 +20,8 @@ public class AntQ implements Algorithm{
    private int numberOfIterations;
    private double totalTime;
 
+   private double[][] pheromone;
+
    public AntQ(int numberOfIterations){
       setNumberOfIterations(numberOfIterations);
       setTotalTime(0);
@@ -119,8 +121,6 @@ public class AntQ implements Algorithm{
       Node nextNode = null;
       double reinforcementLearningValue = 0;
 
-      //update the action choices of all edges
-      updateActionChoices();
       //in this step all the ants chooses the next node to move to
       //when all the ants have choosen the next node, they update the AQ value of the correspondent edge 
       for(int i = 0; i <= nodes.length - 1; i++){
@@ -179,6 +179,32 @@ public class AntQ implements Algorithm{
       }
 
       return iterationSolution;
+   }
+
+   public double getActionChoice2(Node node1, Node node2){
+      double actionChoice =  Math.pow(edges[node1.getIndex()][node2.getIndex()].getAQValue(), delta) * Math.pow(getHeuristicValue(node1, node2), beta);
+
+      if((Double.isNaN(actionChoice)) || (Double.POSITIVE_INFINITY == actionChoice) || (Double.NEGATIVE_INFINITY == actionChoice)){
+         actionChoice = 0;
+      }
+
+      return actionChoice;
+   }
+
+   public double getActionChoiceSum2(Node currentNode, Node nodesToVisit[]){
+      double actionChoiceSum = 0;
+
+      for(int i = 0; i <= nodesToVisit.length - 1; i++){
+         if(nodesToVisit[i] != null){
+            actionChoiceSum += getActionChoice2(currentNode, nodesToVisit[i]);
+         }
+      }
+
+      return actionChoiceSum;
+   }
+
+   public double getHeuristicValue(Node node1, Node node2){
+      return 0;
    }
 
    public double calculateSolutionValue(Edge[] solution){
@@ -409,7 +435,7 @@ public class AntQ implements Algorithm{
          initAQValues(getAQ0());
       }
 
-      initAnts();
+      //initAnts();
    }
 
    private static void createJSSPEdges(int numberOfJobs){
@@ -532,12 +558,14 @@ public class AntQ implements Algorithm{
     * @author Matheus Paixao
     * @see Ant constructor in Ant class.
     */
-   private static void initAnts(){
+   //private static void initAnts(){
+   private void initAnts(){
       ants = new Ant[nodes.length]; 
       //ants = new Ant[1]; 
 
       for(int i = 0; i <= ants.length - 1; i++){
-         ants[i] = new Ant(nodes[i]);
+         //ants[i] = new Ant(nodes[i]);
+         ants[i] = new Ant(this, nodes[i]);
       }
    }
 
