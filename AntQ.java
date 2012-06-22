@@ -17,10 +17,25 @@
  * @author Matheus Paixao
  */
 public class AntQ implements Algorithm{
+   //constant initialization parameters
+   private static final double delta = 1;
+   private static final double beta = 2;
+   private static final double alfa = 0.1;
+   private static final double gamma = 0.3;
+   private static final double q0 = 0.9;
+   private static final double w = 10.0;
+
    private int numberOfIterations;
    private double totalTime;
 
+   private static Node nodes[];
    private double[][] pheromone;
+
+   private static Edge edges[][];
+
+   public static double actionChoices[][];
+
+   private static Ant ants[];
 
    public AntQ(int numberOfIterations){
       setNumberOfIterations(numberOfIterations);
@@ -102,11 +117,26 @@ public class AntQ implements Algorithm{
          //System.out.println("memory after edges");
          //printUsedMemory();
 
-         actionChoices = new double[edges.length][edges.length];
+         pheromone = new double[getNumberOfNodes()][getNumberOfNodes()];
+         initPheromoneValues(getInitialPheromone());
          initAQValues(getInitialPheromone());
       }
 
       initAnts();
+   }
+
+   public int getNumberOfNodes(){
+      return 0;
+   }
+
+   private void initPheromoneValues(double initialPheromone){
+      for(int i = 0; i <= pheromone.length - 1; i++){
+         for(int j = 0; j <= pheromone[0].length - 1; j++){
+            if(i != j){
+               pheromone[i][j] = initialPheromone;
+            }
+         }
+      }
    }
 
    public double getInitialPheromone(){
@@ -151,7 +181,7 @@ public class AntQ implements Algorithm{
          //all the ants update the AQ value of the last edge added to their tour
          for(int j = 0; j <= ants.length - 1; j++){
             ant = ants[j];
-            updateAQValue(ant.getLastTourEdge(), 0, getMaxAQValue(ant.getNodesToVisit(), ant.getNextNode()));
+            updatePheromoneValue(ant.getLastTourEdge(), 0, getMaxAQValue(ant.getNodesToVisit(), ant.getNextNode()));
 
             //if the ants has done the tour
             if(i == nodes.length - 1){
@@ -175,14 +205,14 @@ public class AntQ implements Algorithm{
       //the edges belonging to the iterationBestTour
       reinforcementLearningValue = w / iterationSolutionValue;
       for(int i = 0; i <= iterationSolution.length - 1; i++){
-         updateAQValue(iterationSolution[i], reinforcementLearningValue, 0);
+         updatePheromoneValue(iterationSolution[i], reinforcementLearningValue, 0);
       }
 
       return iterationSolution;
    }
 
    public double getActionChoice2(Node node1, Node node2){
-      double actionChoice =  Math.pow(edges[node1.getIndex()][node2.getIndex()].getAQValue(), delta) * Math.pow(getHeuristicValue(node1, node2), beta);
+      double actionChoice =  Math.pow(pheromone[node1.getIndex()][node2.getIndex()], delta) * Math.pow(getHeuristicValue(node1, node2), beta);
 
       if((Double.isNaN(actionChoice)) || (Double.POSITIVE_INFINITY == actionChoice) || (Double.NEGATIVE_INFINITY == actionChoice)){
          actionChoice = 0;
@@ -207,6 +237,23 @@ public class AntQ implements Algorithm{
       return 0;
    }
 
+   /**
+    * Method to update the pheromone value of the passed edge.
+    *
+    * To update the pheromone value of an edge, it's used the reinforcement learning value of the edge
+    * and the max pheromone value of the next choosed node.
+    * @author Matheus Paixao
+    * @param edge the edge to update.
+    * @param reinforcementLearningValue the reinforcement learning value of the edge.
+    * @param maxPheromoneValue the max pheromone value of the next choosed node.
+    */
+   private void updatePheromoneValue(Edge edge, double reinforcementLearningValue, double maxPheromoneValue){
+      int n1Index = edge.getNode1().getIndex();
+      int n2Index = edge.getNode2().getIndex();
+
+      pheromone[n1Index][n2Index] = ((1 - alfa) * pheromone[n1Index][n2Index] + alfa * (reinforcementLearningValue + gamma * maxPheromoneValue));
+   }
+
    public double calculateSolutionValue(Edge[] solution){
       return 0;
    }
@@ -217,22 +264,6 @@ public class AntQ implements Algorithm{
    
    private static String problem = "";
    private static double[][] times;
-
-   //constant initialization parameters
-   private static final double delta = 1;
-   private static final double beta = 2;
-   private static final double alfa = 0.1;
-   private static final double gamma = 0.3;
-   private static final double q0 = 0.9;
-   private static final double w = 10.0;
-
-   private static Node nodes[];
-
-   private static Edge edges[][];
-
-   public static double actionChoices[][];
-
-   private static Ant ants[];
 
    /**
     * Main method, where the Ant Q algorithm is runned.
