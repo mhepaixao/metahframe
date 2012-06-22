@@ -16,7 +16,7 @@
  *
  * @author Matheus Paixao
  */
-public class AntQ implements Algorithm{
+public abstract class AntQ implements Algorithm{
    //constant initialization parameters
    private static final double delta = 1;
    private static final double beta = 2;
@@ -36,6 +36,13 @@ public class AntQ implements Algorithm{
    public static double actionChoices[][];
 
    private static Ant ants[];
+
+   //abstract methods:
+   public abstract int getNumberOfNodes();
+   public abstract double getInitialPheromone();
+   public abstract double getHeuristicValue(Node node1, Node node2);
+   public abstract double calculateSolutionValue(Edge[] solution);
+   public abstract boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue);
 
    public AntQ(int numberOfIterations){
       setNumberOfIterations(numberOfIterations);
@@ -125,10 +132,6 @@ public class AntQ implements Algorithm{
       initAnts();
    }
 
-   public int getNumberOfNodes(){
-      return 0;
-   }
-
    private void initPheromoneValues(double initialPheromone){
       for(int i = 0; i <= pheromone.length - 1; i++){
          for(int j = 0; j <= pheromone[0].length - 1; j++){
@@ -137,10 +140,6 @@ public class AntQ implements Algorithm{
             }
          }
       }
-   }
-
-   public double getInitialPheromone(){
-      return 0;
    }
 
    private Edge[] getIterationSolution(){
@@ -233,10 +232,6 @@ public class AntQ implements Algorithm{
       return actionChoiceSum;
    }
 
-   public double getHeuristicValue(Node node1, Node node2){
-      return 0;
-   }
-
    /**
     * Method to update the pheromone value of the passed edge.
     *
@@ -254,14 +249,6 @@ public class AntQ implements Algorithm{
       pheromone[n1Index][n2Index] = ((1 - alfa) * pheromone[n1Index][n2Index] + alfa * (reinforcementLearningValue + gamma * maxPheromoneValue));
    }
 
-   public double calculateSolutionValue(Edge[] solution){
-      return 0;
-   }
-
-   public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
-      return false;
-   }
-   
    private static String problem = "";
    private static double[][] times;
 

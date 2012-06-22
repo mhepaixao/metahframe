@@ -8,6 +8,18 @@ public class JSSPAntQ extends AntQ{
       jsspInstanceReader = new JSSPInstanceReader(instance);
    }
 
+   public int getNumberOfNodes(){
+      return 0;
+   }
+
+   public double getInitialPheromone(){
+      return 0;
+   }
+
+   public double getHeuristicValue(Node node1, Node node2){
+      return 0;
+   }
+
    public double calculateSolutionValue(Edge[] solution){
       double solutionValue = 0;
 
