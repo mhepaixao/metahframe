@@ -180,7 +180,7 @@ public abstract class AntQ implements Algorithm{
          //all the ants update the AQ value of the last edge added to their tour
          for(int j = 0; j <= ants.length - 1; j++){
             ant = ants[j];
-            updatePheromoneValue(ant.getLastTourEdge(), 0, getMaxAQValue(ant.getNodesToVisit(), ant.getNextNode()));
+            updatePheromoneValue(ant.getLastTourEdge(), 0, getMaxPheromoneValue(ant.getNodesToVisit(), ant.getNextNode()));
 
             //if the ants has done the tour
             if(i == nodes.length - 1){
@@ -208,6 +208,35 @@ public abstract class AntQ implements Algorithm{
       }
 
       return iterationSolution;
+   }
+
+   /**
+    * Method to get the max pheromone value of the next choosed node.
+    *
+    * The method evaluates the pheromone values of all the edges from the next choosed node
+    * to all the nodes that the ant didn't visit yet.
+    * @author Matheus Paixao
+    * @param nodesToVisit array of the nodes to be visited by the ant
+    * @param nextNode the next choosed node
+    * @return the max pheromone value of the next choosed node.
+    * @see equals method in Node class.
+    */
+   public double getMaxPheromoneValue(Node nodesToVisit[], Node nextNode){
+      double maxPheromoneValue = 0;
+      double edgePheromoneValue = 0;
+      int nextNodeIndex = nextNode.getIndex();
+
+      for(int i = 0; i <= nodesToVisit.length - 1; i++){
+         //only evaluate the node if the ant didn't visit it yet and it is different of the next choosed node
+         if((nodesToVisit[i] != null) && (!nextNode.equals(nodesToVisit[i]))){
+            edgePheromoneValue = pheromone[nextNode.getIndex()][nodesToVisit[i].getIndex()];
+            if(edgePheromoneValue > maxPheromoneValue){
+               maxPheromoneValue = edgePheromoneValue;
+            }
+         }
+      }
+
+      return maxPheromoneValue;
    }
 
    public double getActionChoice2(Node node1, Node node2){
