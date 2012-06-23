@@ -250,8 +250,7 @@ public class Ant {
       for(int i = 0; i <= nodesToVisit.length - 1; i++){
          if(nodesToVisit[i] != null){
             node = nodesToVisit[i];
-            //if(AntQ.getActionChoice(getCurrentNode(), node, this) > AntQ.getActionChoice(getCurrentNode(), maxActionChoiceNode, this)){
-            if(antQ.getActionChoice2(getCurrentNode(), node) > antQ.getActionChoice2(getCurrentNode(), maxActionChoiceNode)){
+            if(antQ.getActionChoice(getCurrentNode(), node) > antQ.getActionChoice(getCurrentNode(), maxActionChoiceNode)){
                maxActionChoiceNode = node;
             }
          }
@@ -328,13 +327,11 @@ public class Ant {
     */
    private double[] getPseudoRandomProportionalProbabilities(){
       double probabilities[] = new double[nodesToVisit.length];
-      //double actionChoiceSum = AntQ.getActionChoiceSum(getCurrentNode(), nodesToVisit, this);
-      double actionChoiceSum = antQ.getActionChoiceSum2(getCurrentNode(), nodesToVisit);
+      double actionChoiceSum = antQ.getActionChoiceSum(getCurrentNode(), nodesToVisit);
 
       for(int i = 0; i <= probabilities.length - 1; i++){
          if(nodesToVisit[i] != null){
-            //probabilities[i] = AntQ.getActionChoice(getCurrentNode(), nodesToVisit[i], this) / actionChoiceSum;
-            probabilities[i] = antQ.getActionChoice2(getCurrentNode(), nodesToVisit[i]) / actionChoiceSum;
+            probabilities[i] = antQ.getActionChoice(getCurrentNode(), nodesToVisit[i]) / actionChoiceSum;
          }
          else{
             probabilities[i] = 0;
