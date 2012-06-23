@@ -49,6 +49,10 @@ public abstract class AntQ implements Algorithm{
       setTotalTime(0);
    }
 
+   public double getQ0(){
+      return this.q0;
+   }
+
    public int getNumberOfIterations(){
       return this.numberOfIterations;
    }
@@ -64,6 +68,15 @@ public abstract class AntQ implements Algorithm{
    public void setTotalTime(double totalTime){
       this.totalTime = totalTime;
    }
+
+   public static Node[] getNodes(){
+      return nodes;
+   }
+
+   public static Edge[][] getEdges(){
+      return edges;
+   }
+
 
    public double getSolution(){
       double initialTime = 0;
@@ -463,18 +476,6 @@ public abstract class AntQ implements Algorithm{
       System.exit(0);
    }
    
-   public static double getQ0(){
-      return q0;
-   }
-
-   public static Node[] getNodes(){
-      return nodes;
-   }
-
-   public static Edge[][] getEdges(){
-      return edges;
-   }
-
    public static double getGamma(){
       return gamma;
    }
@@ -637,14 +638,12 @@ public abstract class AntQ implements Algorithm{
     * @author Matheus Paixao
     * @see Ant constructor in Ant class.
     */
-   //private static void initAnts(){
    private void initAnts(){
       ants = new Ant[nodes.length]; 
       //ants = new Ant[1]; 
 
       for(int i = 0; i <= ants.length - 1; i++){
-         //ants[i] = new Ant(nodes[i]);
-         ants[i] = new Ant(this, nodes[i]);
+         ants[i] = new Ant(this, getQ0(), nodes[i]);
       }
    }
 

@@ -26,6 +26,7 @@ public class Ant {
    public Edge tour[];
 
    private AntQ antQ;
+   private double q0;
 
    private Random random;
 
@@ -41,8 +42,7 @@ public class Ant {
     * @see loadNodesToVisit
     * @see removeNodeFromNodesToVisit
     */
-   //public Ant(Node initialNode){
-   public Ant(AntQ antQ, Node initialNode){
+   public Ant(AntQ antQ, double q0, Node initialNode){
       this.nodesToVisit = new Node[AntQ.getNodes().length];
       tour = new Edge[getNodesToVisit().length];
 
@@ -55,6 +55,7 @@ public class Ant {
       this.random = new Random();
 
       this.antQ = antQ;
+      this.q0 = q0;
    }
 
    public Node getInitialNode(){
@@ -83,6 +84,10 @@ public class Ant {
 
    public Edge[] getTour(){
       return this.tour;
+   }
+
+   private double getQ0(){
+      return this.q0;
    }
 
    /**
@@ -205,7 +210,7 @@ public class Ant {
       double q = getRandomNumber();
       Node nextNode = null;
 
-      if(q <= AntQ.getQ0()){
+      if(q <= getQ0()){
          //exploitation
          nextNode = getMaxActionChoiceNode();
       }
