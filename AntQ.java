@@ -77,7 +77,6 @@ public abstract class AntQ implements Algorithm{
       return edges;
    }
 
-
    public double getSolution(){
       double initialTime = 0;
       double finalTime = 0;
@@ -117,32 +116,32 @@ public abstract class AntQ implements Algorithm{
    }
 
    private void initAntQ(){
-      InstanceReader instanceReader = new InstanceReader();
+      createNodes();
+      createEdges();
 
-      if(problem.equals("jssp")){
-         createJSSPEdges(instanceReader.getNumberOfJobs());
-         times = instanceReader.getTimesMatrix();
-         initAQValues(0.01);
-      }
-      else{
-         String instanceType = instanceReader.getInstanceType();
-         //System.out.println("memory before edges");
-         //printUsedMemory();
-         if(instanceType == "coordinates"){
-            createCartesianCoordinatesEdges(instanceReader.getNodesList());
-         }
-         else if(instanceType == "matrix"){
-            createMatrixEdges(instanceReader.getEdgesValuesMatrix());
-         }
-         //System.out.println("memory after edges");
-         //printUsedMemory();
-
-         pheromone = new double[getNumberOfNodes()][getNumberOfNodes()];
-         initPheromoneValues(getInitialPheromone());
-         initAQValues(getInitialPheromone());
-      }
+      pheromone = new double[getNumberOfNodes()][getNumberOfNodes()];
+      initPheromoneValues(getInitialPheromone());
+      initAQValues(getInitialPheromone());
 
       initAnts();
+   }
+
+   private void createNodes(){
+      nodes = new Node[getNumberOfNodes()];
+
+      for(int i = 0; i <= nodes.length - 1; i++){
+         nodes[i] = new Node(i);
+      }
+   }
+
+   private void createEdges(){
+      edges = new Edge[nodes.length][nodes.length];
+
+      for(int i = 0; i <= edges.length - 1; i++){
+         for(int j = 0; j <= edges[0].length - 1; j++){
+            edges[i][j] = new Edge(nodes[i], nodes[j]);
+         }
+      }
    }
 
    private void initPheromoneValues(double initialPheromone){
