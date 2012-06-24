@@ -34,6 +34,7 @@ public abstract class AntQ implements Algorithm{
    private Edge[][] edges;
 
    private Ant[] ants;
+   protected Ant currentAnt;
 
    //abstract methods:
    public abstract int getNumberOfNodes();
@@ -73,6 +74,14 @@ public abstract class AntQ implements Algorithm{
 
    public Edge[][] getEdges(){
       return this.edges;
+   }
+
+   protected Ant getCurrentAnt(){
+      return this.currentAnt;
+   }
+
+   private void setCurrentAnt(Ant ant){
+      this.currentAnt = ant;
    }
 
    public double getSolution(){
@@ -221,7 +230,9 @@ public abstract class AntQ implements Algorithm{
          //if the ant didn't visit all the nodes yet
          if(i != nodes.length - 1){
             for(int j = 0; j <= ants.length - 1; j++){
-               ant = ants[j];
+               setCurrentAnt(ants[j]);
+
+               ant = getCurrentAnt();
                nextNode = ant.chooseNextNode();
                ant.setNextNode(nextNode);
                ant.addNodeToTour(ant.getNextNode());

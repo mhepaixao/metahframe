@@ -3,18 +3,18 @@ import java.io.File;
 public class TSPAntQ extends AntQ{
    private TSPInstanceReader tspInstanceReader;
 
-   private int numberOfNodes;
+   private int numberOfCities;
    private double[][] distancesMatrix;
 
    public TSPAntQ(File instance, int numberOfIterations){
       super(numberOfIterations);
       this.tspInstanceReader = new TSPInstanceReader(instance);
       this.distancesMatrix = tspInstanceReader.getDistancesMatrix();
-      this.numberOfNodes = distancesMatrix.length; 
+      this.numberOfCities = distancesMatrix.length; 
    }
 
    public int getNumberOfNodes(){
-      return this.numberOfNodes;
+      return this.numberOfCities;
    }
 
    public double calculateSolutionValue(Edge[] solution){
