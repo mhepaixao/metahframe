@@ -43,7 +43,12 @@ public class Ant {
     * @see removeNodeFromNodesToVisit
     */
    public Ant(AntQ antQ, double q0, Node initialNode){
-      this.nodesToVisit = new Node[AntQ.getNodes().length];
+      this.random = new Random();
+
+      this.antQ = antQ;
+      this.q0 = q0;
+
+      this.nodesToVisit = new Node[antQ.getNodes().length];
       tour = new Edge[getNodesToVisit().length];
 
       loadNodesToVisit();
@@ -51,11 +56,6 @@ public class Ant {
       this.initialNode = initialNode;
       setCurrentNode(getInitialNode());
       removeNodeFromNodesToVisit(getInitialNode());
-
-      this.random = new Random();
-
-      this.antQ = antQ;
-      this.q0 = q0;
    }
 
    public Node getInitialNode(){
@@ -97,7 +97,7 @@ public class Ant {
     * @author Matheus Paixao
     */
    public void loadNodesToVisit(){
-      Node nodes[] = AntQ.getNodes();
+      Node[] nodes = antQ.getNodes();
 
       for(int i = 0; i <= nodes.length - 1; i++){
          this.nodesToVisit[i] = nodes[i];
@@ -138,7 +138,7 @@ public class Ant {
     * @see insertEdge
     */
    public void addNodeToTour(Node node){
-      Edge[][] edges = AntQ.getEdges();
+      Edge[][] edges = antQ.getEdges();
       insertEdge(edges[getCurrentNode().getIndex()][node.getIndex()]);
    }
    

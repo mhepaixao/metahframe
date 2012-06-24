@@ -28,14 +28,12 @@ public abstract class AntQ implements Algorithm{
    private int numberOfIterations;
    private double totalTime;
 
-   private static Node nodes[];
+   private Node[] nodes;
    private double[][] pheromone;
 
-   private static Edge edges[][];
+   private Edge[][] edges;
 
-   public static double actionChoices[][];
-
-   private static Ant ants[];
+   private Ant[] ants;
 
    //abstract methods:
    public abstract int getNumberOfNodes();
@@ -69,12 +67,12 @@ public abstract class AntQ implements Algorithm{
       this.totalTime = totalTime;
    }
 
-   public static Node[] getNodes(){
-      return nodes;
+   public Node[] getNodes(){
+      return this.nodes;
    }
 
-   public static Edge[][] getEdges(){
-      return edges;
+   public Edge[][] getEdges(){
+      return this.edges;
    }
 
    public double getSolution(){
@@ -136,10 +134,10 @@ public abstract class AntQ implements Algorithm{
    }
 
    private void createNodes(){
-      nodes = new Node[getNumberOfNodes()];
+      this.nodes = new Node[getNumberOfNodes()];
 
       for(int i = 0; i <= nodes.length - 1; i++){
-         nodes[i] = new Node(i);
+         this.nodes[i] = new Node(i);
       }
    }
 
@@ -167,6 +165,22 @@ public abstract class AntQ implements Algorithm{
                pheromone[i][j] = initialPheromone;
             }
          }
+      }
+   }
+
+   /**
+    * Method to init the ants.
+    *
+    * One ant is put in each node of the instance.
+    * @author Matheus Paixao
+    * @see Ant constructor in Ant class.
+    */
+   private void initAnts(){
+      this.ants = new Ant[nodes.length]; 
+      //this.ants = new Ant[1]; 
+
+      for(int i = 0; i <= this.ants.length - 1; i++){
+         this.ants[i] = new Ant(this, getQ0(), nodes[i]);
       }
    }
 
@@ -374,21 +388,5 @@ public abstract class AntQ implements Algorithm{
       }
 
       return iterationBestSolution;
-   }
-
-   /**
-    * Method to init the ants.
-    *
-    * One ant is put in each node of the instance.
-    * @author Matheus Paixao
-    * @see Ant constructor in Ant class.
-    */
-   private void initAnts(){
-      ants = new Ant[nodes.length]; 
-      //ants = new Ant[1]; 
-
-      for(int i = 0; i <= ants.length - 1; i++){
-         ants[i] = new Ant(this, getQ0(), nodes[i]);
-      }
    }
 }
