@@ -22,19 +22,16 @@ public class App{
 
       if(problem.equals("tsp")){
          algorithm = new TSPAntQ(instance, numberOfIterations);
-
-         System.out.println("Best Solution: "+algorithm.getSolution());
-         System.out.println("Time elapsed: "+algorithm.getTotalTime());
-         System.exit(0);
       }
-      else{
-         if(problem.equals("jssp")){
-            algorithm = new JSSPAntQ(instance, numberOfIterations);
-
-            System.out.println("Best Solution: "+algorithm.getSolution());
-            System.out.println("Time elapsed: "+algorithm.getTotalTime());
-            System.exit(0);
-         }
+      else if(problem.equals("jssp")){
+         algorithm = new JSSPAntQ(instance, numberOfIterations);
       }
+      else if(problem.equals("rpp")){
+         algorithm = new RPPAntQ(instance, numberOfIterations);
+      }
+
+      System.out.println("Best Solution: "+algorithm.getSolution());
+      System.out.println("Time elapsed: "+algorithm.getTotalTime());
+      System.exit(0);
    }
 }
