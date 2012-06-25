@@ -1,15 +1,15 @@
 import java.io.File;
 
-public class RPPAntQ extends AntQ{
-   RPPInstanceReader rppInstanceReader;
+public class SRPPAntQ extends AntQ{
+   SRPPInstanceReader srppInstanceReader;
 
    double[][] objectivesValues;
    int numberOfRequirements;
 
-   public RPPAntQ(File instance, int numberOfIterations){
+   public SRPPAntQ(File instance, int numberOfIterations){
       super(numberOfIterations);
-      rppInstanceReader = new RPPInstanceReader(instance);
-      objectivesValues = rppInstanceReader.getObjectiveValues();
+      srppInstanceReader = new SRPPInstanceReader(instance);
+      objectivesValues = srppInstanceReader.getObjectiveValues();
    }
 
    public int getNumberOfNodes(){

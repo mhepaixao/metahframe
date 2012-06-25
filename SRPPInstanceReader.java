@@ -2,11 +2,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
 
-public class RPPInstanceReader{
+public class SRPPInstanceReader{
    File instance;
    String[] instanceLines;
 
-   public RPPInstanceReader(File instance){
+   public SRPPInstanceReader(File instance){
       this.instance = instance;
       instanceLines = getInstanceLines();
    }

@@ -26,8 +26,8 @@ public class App{
       else if(problem.equals("jssp")){
          algorithm = new JSSPAntQ(instance, numberOfIterations);
       }
-      else if(problem.equals("rpp")){
-         algorithm = new RPPAntQ(instance, numberOfIterations);
+      else if(problem.equals("srpp")){
+         algorithm = new SRPPAntQ(instance, numberOfIterations);
       }
 
       System.out.println("Best Solution: "+algorithm.getSolution());
