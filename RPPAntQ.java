@@ -3,11 +3,13 @@ import java.io.File;
 public class RPPAntQ extends AntQ{
    RPPInstanceReader rppInstanceReader;
 
+   double[][] objectivesValues;
    int numberOfRequirements;
 
    public RPPAntQ(File instance, int numberOfIterations){
       super(numberOfIterations);
       rppInstanceReader = new RPPInstanceReader(instance);
+      objectivesValues = rppInstanceReader.getObjectiveValues();
    }
 
    public int getNumberOfNodes(){
