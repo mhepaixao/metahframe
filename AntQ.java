@@ -104,6 +104,7 @@ public abstract class AntQ implements Algorithm{
 
          if(bestSolution != null){
             if(isSolutionBest(iterationSolutionValue, bestSolutionValue) == true){
+               System.out.println("found best solution");
                bestSolution = iterationSolution;
                bestSolutionValue = iterationSolutionValue;
             }
