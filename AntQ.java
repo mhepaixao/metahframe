@@ -33,7 +33,7 @@ public abstract class AntQ implements Algorithm{
 
    private Edge[][] edges;
 
-   private Ant[] ants;
+   protected Ant[] ants;
    protected Ant currentAnt;
 
    //abstract methods:
@@ -185,12 +185,12 @@ public abstract class AntQ implements Algorithm{
     * @author Matheus Paixao
     * @see Ant constructor in Ant class.
     */
-   private void initAnts(){
+   protected void initAnts(){
       this.ants = new Ant[nodes.length]; 
       //this.ants = new Ant[5]; 
 
       for(int i = 0; i <= this.ants.length - 1; i++){
-         this.ants[i] = new Ant(this, getQ0(), nodes[i]);
+         this.ants[i] = new Ant(this, getQ0(), new Node(i));
       }
    }
 
@@ -234,9 +234,11 @@ public abstract class AntQ implements Algorithm{
                setCurrentAnt(ants[j]);
 
                ant = getCurrentAnt();
-               nextNode = ant.chooseNextNode();
-               ant.setNextNode(nextNode);
-               ant.addNodeToTour(ant.getNextNode());
+               if(ant.isTourFinished() == false){
+                  nextNode = ant.chooseNextNode();
+                  ant.setNextNode(nextNode);
+                  ant.addNodeToTour(ant.getNextNode());
+               }
 
                //if the ant has choosen the last node to visit
                if(i == nodes.length - 2){
@@ -247,7 +249,9 @@ public abstract class AntQ implements Algorithm{
          //all the ants go back to their initial node
          else{
             for(int j = 0; j <= ants.length - 1; j++){
-               ant = ants[j];
+               setCurrentAnt(ants[j]);
+
+               ant = getCurrentAnt();
                nextNode = ant.getInitialNode();
                ant.setNextNode(nextNode);
                ant.addNodeToTour(ant.getNextNode());

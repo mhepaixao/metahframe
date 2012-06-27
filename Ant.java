@@ -178,6 +178,10 @@ public class Ant {
       return lastTourEdge;
    }
 
+   public boolean isTourFinished(){
+      return false;
+   }
+
    /**
     * Method to clear the ant tour.
     *

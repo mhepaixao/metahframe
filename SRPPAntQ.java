@@ -25,6 +25,23 @@ public class SRPPAntQ extends AntQ{
       return 0.01;
    }
 
+   /**
+    * Method to init the precedence constrained ants.
+    *
+    * One ant is put in each requirement of the instance.
+    * @author Matheus Paixao
+    * @see PrecedenceConstrainedAnt constructor in PrecedenceConstrainedAnt class.
+    */
+   protected void initAnts(){
+      this.ants = new Ant[getNumberOfNodes()]; 
+      //this.ants = new Ant[5]; 
+
+      System.out.println("using precedence constrained ants");
+      for(int i = 0; i <= this.ants.length - 1; i++){
+         this.ants[i] = new PrecedenceConstrainedAnt(this, getQ0(), new Node(i));
+      }
+   }
+
    private double getMaxPossibleHeuristicValue(){
       double maxPossibleHeuristicValue = 0;
 
