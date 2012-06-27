@@ -62,7 +62,7 @@ public class SRPPInstanceReader{
       return objecivesValues;
    }
 
-   private int getNumberOfRequirements(){
+   public int getNumberOfRequirements(){
       //the number of requirements is in the 3rd line of the instance
       return Integer.parseInt(instanceLines[2]);
    }
@@ -106,7 +106,7 @@ public class SRPPInstanceReader{
       return clientsImportances;
    }
 
-   private int getNumberOfClients(){
+   public int getNumberOfClients(){
       return Integer.parseInt(instanceLines[3]);
    }
 

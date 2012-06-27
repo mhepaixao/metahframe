@@ -187,7 +187,7 @@ public abstract class AntQ implements Algorithm{
     */
    private void initAnts(){
       this.ants = new Ant[nodes.length]; 
-      //this.ants = new Ant[1]; 
+      //this.ants = new Ant[5]; 
 
       for(int i = 0; i <= this.ants.length - 1; i++){
          this.ants[i] = new Ant(this, getQ0(), nodes[i]);
@@ -257,7 +257,7 @@ public abstract class AntQ implements Algorithm{
          //all the ants update the AQ value of the last edge added to their tour
          for(int j = 0; j <= ants.length - 1; j++){
             ant = ants[j];
-            updatePheromoneValue(ant.getLastTourEdge(), 0, getMaxPheromoneValue(ant.getNodesToVisit(), ant.getNextNode()));
+            updatePheromoneValue(ant.getLastTourEdge(), 0);
 
             //if the ants has done the tour
             if(i == nodes.length - 1){
@@ -281,7 +281,7 @@ public abstract class AntQ implements Algorithm{
       //the edges belonging to the iterationBestTour
       reinforcementLearningValue = w / iterationSolutionValue;
       for(int i = 0; i <= iterationSolution.length - 1; i++){
-         updatePheromoneValue(iterationSolution[i], reinforcementLearningValue, 0);
+         updatePheromoneValue(iterationSolution[i], reinforcementLearningValue);
       }
 
       return iterationSolution;
@@ -363,11 +363,11 @@ public abstract class AntQ implements Algorithm{
     * @param reinforcementLearningValue the reinforcement learning value of the edge.
     * @param maxPheromoneValue the max pheromone value of the next choosed node.
     */
-   private void updatePheromoneValue(Edge edge, double reinforcementLearningValue, double maxPheromoneValue){
+   private void updatePheromoneValue(Edge edge, double reinforcementLearningValue){
       int n1Index = edge.getNode1().getIndex();
       int n2Index = edge.getNode2().getIndex();
 
-      pheromone[n1Index][n2Index] = ((1 - alfa) * pheromone[n1Index][n2Index] + alfa * (reinforcementLearningValue + gamma * maxPheromoneValue));
+      pheromone[n1Index][n2Index] = ((1 - alfa) * pheromone[n1Index][n2Index] + alfa * (reinforcementLearningValue + gamma * getInitialPheromone()));
    }
 
    /**

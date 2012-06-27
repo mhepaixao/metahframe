@@ -5,16 +5,22 @@ public class TSPAntQ extends AntQ{
 
    private int numberOfCities;
    private double[][] distancesMatrix;
+   private double initialPheromone;
 
    public TSPAntQ(File instance, int numberOfIterations){
       super(numberOfIterations);
       this.tspInstanceReader = new TSPInstanceReader(instance);
       this.distancesMatrix = tspInstanceReader.getDistancesMatrix();
       this.numberOfCities = distancesMatrix.length; 
+      this.initialPheromone = calculateInitialPheromone();
    }
 
    public int getNumberOfNodes(){
       return this.numberOfCities;
+   }
+
+   public double getInitialPheromone(){
+      return this.initialPheromone;
    }
 
    public double calculateSolutionValue(Edge[] solution){
@@ -47,7 +53,7 @@ public class TSPAntQ extends AntQ{
     * @return the initial AQ value for all edges.
     * @see getNumberOfEdges
     */
-   public double getInitialPheromone(){
+   public double calculateInitialPheromone(){
       double sumOfDistances = 0;
       double distancesAverage = 0;
 
