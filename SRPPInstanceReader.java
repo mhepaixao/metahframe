@@ -5,14 +5,20 @@ import java.io.BufferedReader;
 public class SRPPInstanceReader{
    File instance;
    String[] instanceLines;
+   int[][] precedencesMatrix;
 
    public SRPPInstanceReader(File instance){
       this.instance = instance;
       instanceLines = getInstanceLines();
+      this.precedencesMatrix = parsePrecedencesMatrix();
    }
 
    private File getInstance(){
       return this.instance;
+   }
+
+   public int[][] getPrecedencesMatrix(){
+      return this.precedencesMatrix;
    }
 
    private String[] getInstanceLines(){
@@ -60,6 +66,20 @@ public class SRPPInstanceReader{
       objecivesValues[1] = getObjective2Values();
 
       return objecivesValues;
+   }
+
+   public int[][] parsePrecedencesMatrix(){
+      int[][] precedencesMatrix = new int[getNumberOfRequirements()][getNumberOfRequirements()];
+      String[] precedenceMatrixStringRow = null;
+
+      for(int i = 0; i <= getNumberOfRequirements() - 1; i++){
+         precedenceMatrixStringRow = instanceLines[instanceLines.length - getNumberOfRequirements() + i].split(" ");
+         for(int j = 0; j <= precedenceMatrixStringRow.length - 1; j++){
+            precedencesMatrix[i][j] = Integer.parseInt(precedenceMatrixStringRow[j]);
+         }
+      }
+
+      return precedencesMatrix;
    }
 
    public int getNumberOfRequirements(){

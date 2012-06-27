@@ -34,11 +34,11 @@ public class SRPPAntQ extends AntQ{
     */
    protected void initAnts(){
       this.ants = new Ant[getNumberOfNodes()]; 
-      //this.ants = new Ant[5]; 
+      //this.ants = new Ant[1]; 
 
       System.out.println("using precedence constrained ants");
       for(int i = 0; i <= this.ants.length - 1; i++){
-         this.ants[i] = new PrecedenceConstrainedAnt(this, getQ0(), new Node(i));
+         this.ants[i] = new PrecedenceConstrainedAnt(this, getQ0(), new Node(i), srppInstanceReader.getPrecedencesMatrix());
       }
    }
 
