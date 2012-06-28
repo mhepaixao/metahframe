@@ -57,6 +57,10 @@ public class PrecedenceConstrainedAnt extends Ant{
    }
 
    private void addPredecessor(Node predecessor){
+      if(hasPrecedecessorInNodesToVisit(predecessor) == true){
+         addAllPredecessors(predecessor);
+      }
+
       addNodeToTour(predecessor);
       setCurrentNode(predecessor);
       removeNodeFromNodesToVisit(predecessor);
