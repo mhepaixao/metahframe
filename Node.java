@@ -121,6 +121,6 @@ public class Node implements Comparable{
     * @return The node in String format.
     */
    public String toString(){
-      return getIndex() + " " + "(" + getX() + " " + getY() + ")";
+      return getIndex() + "";
    }
 }

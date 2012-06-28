@@ -99,6 +99,6 @@ public class Edge {
     * @see equals method of Node class.
     */
    public String toString(){
-      return getNode1().toString() + " " + getNode2().toString();
+      return "(" + getNode1().toString() + " " + getNode2().toString() + ")";
    }
 }
