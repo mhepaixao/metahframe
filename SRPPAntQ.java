@@ -7,6 +7,7 @@ public class SRPPAntQ extends AntQ{
    int numberOfRequirements;
    int numberOfClients;
    double maxPossibleHeuristicValue;
+   int[][] precedencesMatrix;
 
    public SRPPAntQ(File instance, int numberOfIterations){
       super(numberOfIterations);
@@ -15,6 +16,7 @@ public class SRPPAntQ extends AntQ{
       this.numberOfRequirements = srppInstanceReader.getNumberOfRequirements();
       this.numberOfClients = srppInstanceReader.getNumberOfClients();
       this.maxPossibleHeuristicValue = getMaxPossibleHeuristicValue();
+      this.precedencesMatrix = srppInstanceReader.getPrecedencesMatrix();
    }
 
    public int getNumberOfNodes(){
@@ -33,13 +35,30 @@ public class SRPPAntQ extends AntQ{
     * @see PrecedenceConstrainedAnt constructor in PrecedenceConstrainedAnt class.
     */
    protected void initAnts(){
-      this.ants = new Ant[getNumberOfNodes()]; 
+      this.ants = new Ant[srppInstanceReader.getNumberOfRequirementsWithNoPrecedence()]; 
       //this.ants = new Ant[1]; 
+      Node initialNode = null;
 
       System.out.println("using precedence constrained ants");
       for(int i = 0; i <= this.ants.length - 1; i++){
-         this.ants[i] = new PrecedenceConstrainedAnt(this, getQ0(), new Node(i), srppInstanceReader.getPrecedencesMatrix());
+         initialNode = new Node(i);
+         if(hasPrecedecessor(initialNode) == false){
+            this.ants[i] = new PrecedenceConstrainedAnt(this, getQ0(), new Node(i), srppInstanceReader.getPrecedencesMatrix());
+         }
       }
+   }
+
+   private boolean hasPrecedecessor(Node requirement){
+      boolean result = false;
+
+      for(int i = 0; i <= precedencesMatrix[requirement.getIndex()].length - 1; i++){
+         if(precedencesMatrix[requirement.getIndex()][i] == 1){
+            result = true;
+            break;
+         }
+      }
+
+      return result;
    }
 
    private double getMaxPossibleHeuristicValue(){

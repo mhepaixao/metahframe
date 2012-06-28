@@ -22,7 +22,7 @@ public class Ant {
    private Node initialNode;
    private Node currentNode;
    private Node nextNode;
-   private Node nodesToVisit[];
+   protected Node nodesToVisit[];
    public Edge tour[];
 
    private AntQ antQ;
@@ -397,5 +397,13 @@ public class Ant {
       }
 
       return firstNodeToVisit;
+   }
+
+   public void printTour(){
+      for(int i = 0; i <= tour.length - 1; i++){
+         System.out.print(tour[i] + " ");
+      }
+      System.out.println(" ");
+      System.out.println(" ");
    }
 }

@@ -6,10 +6,12 @@ public class SRPPInstanceReader{
    File instance;
    String[] instanceLines;
    int[][] precedencesMatrix;
+   int numberOfRequirementsWithNoPrecedence;
 
    public SRPPInstanceReader(File instance){
       this.instance = instance;
       instanceLines = getInstanceLines();
+      this.numberOfRequirementsWithNoPrecedence = 0;
       this.precedencesMatrix = parsePrecedencesMatrix();
    }
 
@@ -19,6 +21,10 @@ public class SRPPInstanceReader{
 
    public int[][] getPrecedencesMatrix(){
       return this.precedencesMatrix;
+   }
+
+   public int getNumberOfRequirementsWithNoPrecedence(){
+      return this.numberOfRequirementsWithNoPrecedence;
    }
 
    private String[] getInstanceLines(){
@@ -81,6 +87,9 @@ public class SRPPInstanceReader{
             for(int j = 1; j <= numberOfPredecessors; j++){
                precedencesMatrix[i][Integer.parseInt(precedenceMatrixStringRow[j]) - 1] = 1;
             }
+         }
+         else{
+            this.numberOfRequirementsWithNoPrecedence++;
          }
       }
 

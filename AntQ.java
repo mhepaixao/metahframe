@@ -269,7 +269,9 @@ public abstract class AntQ implements Algorithm{
             }
 
             ant.setCurrentNode(ant.getNextNode()); //move to the next choosed node
-            ant.removeNodeFromNodesToVisit(ant.getCurrentNode()); // remove the current node from the nodes to visit
+            if((ant.isTourFinished() == false) || ant.getCurrentNode().getIndex() == ant.getInitialNode().getIndex()){
+               ant.removeNodeFromNodesToVisit(ant.getCurrentNode()); // remove the current node from the nodes to visit
+            }
          }
       }
 
