@@ -71,11 +71,16 @@ public class SRPPInstanceReader{
    public int[][] parsePrecedencesMatrix(){
       int[][] precedencesMatrix = new int[getNumberOfRequirements()][getNumberOfRequirements()];
       String[] precedenceMatrixStringRow = null;
+      int numberOfPredecessors = 0;
 
       for(int i = 0; i <= getNumberOfRequirements() - 1; i++){
          precedenceMatrixStringRow = instanceLines[instanceLines.length - getNumberOfRequirements() + i].split(" ");
-         for(int j = 0; j <= precedenceMatrixStringRow.length - 1; j++){
-            precedencesMatrix[i][j] = Integer.parseInt(precedenceMatrixStringRow[j]);
+
+         numberOfPredecessors = Integer.parseInt(precedenceMatrixStringRow[0]);
+         if(numberOfPredecessors != 0){
+            for(int j = 1; j <= numberOfPredecessors; j++){
+               precedencesMatrix[i][Integer.parseInt(precedenceMatrixStringRow[j]) - 1] = 1;
+            }
          }
       }
 
