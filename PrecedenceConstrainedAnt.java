@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class PrecedenceConstrainedAnt extends Ant{
    int[][] precedencesMatrix;
 
@@ -40,20 +42,23 @@ public class PrecedenceConstrainedAnt extends Ant{
    }
 
    private void addAllPredecessors(Node requirement){
-      addPredecessor(getPredecessor(requirement));
+      ArrayList<Node> predecessors = getPredecessors(requirement);
+
+      for(int i = 0; i <= predecessors.size() - 1; i++){
+         addPredecessor(predecessors.get(i));
+      }
    }
 
-   private Node getPredecessor(Node requirement){
-      Node predecessor = null;
+   private ArrayList<Node> getPredecessors(Node requirement){
+      ArrayList<Node> predecessors = new ArrayList<Node>();
 
       for(int i = 0; i <= precedencesMatrix[requirement.getIndex()].length - 1; i++){
-         if(precedencesMatrix[requirement.getIndex()][i] == 1){
-            predecessor = nodesToVisit[i];
-            break;
+         if(precedencesMatrix[requirement.getIndex()][i] == 1 && nodesToVisit[i] != null){
+            predecessors.add(nodesToVisit[i]);
          }
       }
 
-      return predecessor;
+      return predecessors;
    }
 
    private void addPredecessor(Node predecessor){

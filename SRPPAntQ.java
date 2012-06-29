@@ -39,11 +39,10 @@ public class SRPPAntQ extends AntQ{
       //this.ants = new Ant[1]; 
       Node initialNode = null;
 
-      System.out.println("using precedence constrained ants");
-      for(int i = 0; i <= this.ants.length - 1; i++){
+      for(int i = 0; i <= srppInstanceReader.getNumberOfRequirements() - 1; i++){
          initialNode = new Node(i);
          if(hasPrecedecessor(initialNode) == false){
-            this.ants[i] = new PrecedenceConstrainedAnt(this, getQ0(), new Node(i), srppInstanceReader.getPrecedencesMatrix());
+            addAnt(new PrecedenceConstrainedAnt(this, getQ0(), new Node(i), srppInstanceReader.getPrecedencesMatrix()));
          }
       }
    }
@@ -59,6 +58,15 @@ public class SRPPAntQ extends AntQ{
       }
 
       return result;
+   }
+
+   private void addAnt(Ant ant){
+      for(int i = 0; i <= this.ants.length - 1; i++){
+         if(this.ants[i] == null){
+            this.ants[i] = ant;
+            break;
+         }
+      }
    }
 
    private double getMaxPossibleHeuristicValue(){
@@ -80,7 +88,7 @@ public class SRPPAntQ extends AntQ{
       int[] nodes = getNodes(solution);
 
       for(int i = 0; i <= nodes.length - 1; i++){
-         solutionValue += ((nodes.length) - i) * getObjectivesSum(nodes[i]);
+         solutionValue += (nodes.length - i) * getObjectivesSum(nodes[i]);
       }
 
       return solutionValue;
@@ -90,7 +98,7 @@ public class SRPPAntQ extends AntQ{
       int[] nodes = new int[solution.length];
 
       for(int i = 0; i <= nodes.length - 1; i++){
-         nodes[i] = solution[i].getNode2().getIndex();
+         nodes[i] = solution[i].getNode1().getIndex();
       }
 
       return nodes;

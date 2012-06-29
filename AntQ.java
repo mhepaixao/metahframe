@@ -21,9 +21,11 @@ public abstract class AntQ implements Algorithm{
    private static final double delta = 1;
    private static final double beta = 2;
    private static final double alfa = 0.1;
-   private static final double gamma = 0.3;
+   //private static final double gamma = 0.3;
+   private static final double gamma = 1;
    private static final double q0 = 0.9;
-   private static final double w = 10.0;
+   //private static final double w = 10.0;
+   private static final double w = 0.000000001;
 
    private int numberOfIterations;
    private double totalTime;
@@ -100,7 +102,9 @@ public abstract class AntQ implements Algorithm{
       initialTime = System.currentTimeMillis();
       while(iterationsCounter <= getNumberOfIterations() - 1){
          iterationSolution = getIterationSolution();
+
          iterationSolutionValue = calculateSolutionValue(iterationSolution);
+         System.out.println("iteration "+ iterationsCounter+ " solution value: "+iterationSolutionValue);
 
          if(bestSolution != null){
             if(isSolutionBest(iterationSolutionValue, bestSolutionValue) == true){
