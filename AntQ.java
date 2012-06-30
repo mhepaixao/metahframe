@@ -117,6 +117,7 @@ public abstract class AntQ implements Algorithm{
       while(iterationsCounter <= getNumberOfIterations() - 1){
          iterationSolution = getIterationSolution2();
 
+         System.out.println("here");
          iterationSolutionValue = calculateSolutionValue(iterationSolution, 3);
          System.out.println("iteration "+ iterationsCounter+ " solution value: "+iterationSolutionValue);
 
@@ -152,7 +153,7 @@ public abstract class AntQ implements Algorithm{
       initAnts2();
    }
 
-   private void initAnts2(){}
+   protected void initAnts2(){}
 
    private void initPheromoneValues2(double initialPheromone){
       for(int i = 0; i <= pheromone1.length - 1; i++){
@@ -218,7 +219,7 @@ public abstract class AntQ implements Algorithm{
 
          //all the ants update the AQ value of the last edge added to their tour
          for(int j = 0; j <= ants1.length - 1; j++){
-            ant = ants[j];
+            ant = ants1[j];
             updatePheromoneValue2(ant.getLastTourEdge(), 0.0, 1);
 
             //if the ants has done the tour
@@ -236,9 +237,11 @@ public abstract class AntQ implements Algorithm{
       iterationSolutionObjective1 = getIterationBestSolution2(1);
 
       for(int i = 0; i <= iterationSolutionObjective1.length - 1; i++){
-         System.out.print(iterationSolutionObjective1[i] +" ");
+         System.out.print(iterationSolutionObjective1[i].getNode1().getIndex() +" ");
       }
       System.out.println(" ");
+      System.out.println(" ");
+      System.out.println("iterationSolutionObjective1 value: "+calculateSolutionValue(iterationSolutionObjective1, 1));
 
       //iterationSolutionValue = calculateSolutionValue(iterationSolution, 3);
 
@@ -249,10 +252,10 @@ public abstract class AntQ implements Algorithm{
 
       //in this step is calculated the reinforcement learning value and is updated the AQ value only 
       //the edges belonging to the iterationBestTour
-      reinforcementLearningValue = w / iterationSolutionValue;
-      for(int i = 0; i <= iterationSolution.length - 1; i++){
-         updatePheromoneValue2(iterationSolution[i], reinforcementLearningValue);
-      }
+      //reinforcementLearningValue = w / iterationSolutionValue;
+      //for(int i = 0; i <= iterationSolution.length - 1; i++){
+         //updatePheromoneValue2(iterationSolution[i], reinforcementLearningValue);
+      //}
 
       return iterationSolution;
    }

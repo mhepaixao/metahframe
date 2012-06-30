@@ -329,7 +329,7 @@ public class Ant {
     * @return an array containing the pseudo random proportional probability of the nodes to visit.
     * @see getPseudoRandomProportionalProbability
     */
-   private double[] getPseudoRandomProportionalProbabilities(){
+   protected double[] getPseudoRandomProportionalProbabilities(){
       double probabilities[] = new double[nodesToVisit.length];
       double actionChoiceSum = antQ.getActionChoiceSum(getCurrentNode(), nodesToVisit);
 

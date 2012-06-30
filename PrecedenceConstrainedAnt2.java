@@ -89,7 +89,7 @@ public class PrecedenceConstrainedAnt2 extends Ant{
       return maxActionChoiceNode;
    }
 
-   private double[] getPseudoRandomProportionalProbabilities(){
+   protected double[] getPseudoRandomProportionalProbabilities(){
       double probabilities[] = new double[nodesToVisit.length];
       double actionChoiceSum = antQ.getActionChoiceSum2(getCurrentNode(), nodesToVisit, objective);
 
