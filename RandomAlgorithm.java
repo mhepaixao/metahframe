@@ -32,6 +32,10 @@ public abstract class RandomAlgorithm implements Algorithm{
       this.totalTime = totalTime;
    }
 
+   public double getSolution2(){
+      return 0;
+   }
+
    public double getSolution(){
       loadDynamicListOfNodes();
 

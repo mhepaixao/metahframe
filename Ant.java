@@ -25,7 +25,7 @@ public class Ant {
    protected Node nodesToVisit[];
    public Edge tour[];
 
-   private AntQ antQ;
+   protected AntQ antQ;
    private double q0;
 
    private Random random;
@@ -247,7 +247,7 @@ public class Ant {
     * @see getFirstNodeToVisit
     * @see getActionChoice
     */
-   private Node getMaxActionChoiceNode(){
+   public Node getMaxActionChoiceNode(){
       Node maxActionChoiceNode = getFirstNodeToVisit();
       Node node = null;
 
@@ -386,7 +386,7 @@ public class Ant {
     * @author Matheus Paixao
     * @return the first possible node (not null) to go in the nodes to be visited array
     */
-   private Node getFirstNodeToVisit(){
+   protected Node getFirstNodeToVisit(){
       Node firstNodeToVisit = null;
 
       for(int i = 0; i <= nodesToVisit.length - 1; i++){

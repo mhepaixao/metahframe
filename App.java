@@ -25,12 +25,27 @@ public class App{
       if(algorithm.equals("antq")){
          if(problem.equals("tsp")){
             adaptedAlgorithm = new TSPAntQ(instance, numberOfIterations);
+
+            System.out.println("Best Solution: "+adaptedAlgorithm.getSolution());
+            System.out.println("Time elapsed: "+adaptedAlgorithm.getTotalTime());
+            System.exit(0);
          }
          else if(problem.equals("jssp")){
             adaptedAlgorithm = new JSSPAntQ(instance, numberOfIterations);
          }
          else if(problem.equals("srpp")){
             adaptedAlgorithm = new SRPPAntQ(instance, numberOfIterations);
+
+            System.out.println("Best Solution: "+adaptedAlgorithm.getSolution());
+            System.out.println("Time elapsed: "+adaptedAlgorithm.getTotalTime());
+            System.exit(0);
+         }
+         else if(problem.equals("srpp2")){
+            adaptedAlgorithm = new SRPPAntQ2(instance, numberOfIterations);
+
+            System.out.println("Best Solution: "+adaptedAlgorithm.getSolution2());
+            System.out.println("Time elapsed: "+adaptedAlgorithm.getTotalTime());
+            System.exit(0);
          }
       }
       else if(algorithm.equals("random")){
@@ -42,8 +57,8 @@ public class App{
          }
       }
 
-      System.out.println("Best Solution: "+adaptedAlgorithm.getSolution());
-      System.out.println("Time elapsed: "+adaptedAlgorithm.getTotalTime());
-      System.exit(0);
+      //System.out.println("Best Solution: "+adaptedAlgorithm.getSolution2());
+      //System.out.println("Time elapsed: "+adaptedAlgorithm.getTotalTime());
+      //System.exit(0);
    }
 }

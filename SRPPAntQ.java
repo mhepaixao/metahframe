@@ -82,6 +82,10 @@ public class SRPPAntQ extends AntQ{
    public double getHeuristicValue(Node node1, Node node2){
       return getObjectivesSum(node2.getIndex()) / maxPossibleHeuristicValue;
    }
+   
+   public double getHeuristicValue(Node node1, Node node2, int objective){
+      return getObjectivesSum(node2.getIndex()) / maxPossibleHeuristicValue;
+   }
 
    public double calculateSolutionValue(Edge[] solution){
       double solutionValue = 0;

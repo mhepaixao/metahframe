@@ -1,6 +1,11 @@
 import java.io.File;
 
 public class JSSPAntQ extends AntQ{
+
+   public double getHeuristicValue(Node node1, Node node2, int objective){
+      return 0;
+   }
+
    private JSSPInstanceReader jsspInstanceReader;
 
    private int numberOfJobs;
