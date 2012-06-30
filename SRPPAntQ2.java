@@ -48,8 +48,8 @@ public class SRPPAntQ2 extends AntQ{
          }
       }
 
-      //this.ants2 = new Ant[srppInstanceReader.getNumberOfRequirementsWithNoPrecedence()]; 
-      this.ants2 = new Ant[1]; 
+      this.ants2 = new Ant[srppInstanceReader.getNumberOfRequirementsWithNoPrecedence()]; 
+      //this.ants2 = new Ant[1]; 
       initialNode = null;
 
       for(int i = 0; i <= srppInstanceReader.getNumberOfRequirements() - 1; i++){

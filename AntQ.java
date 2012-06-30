@@ -117,9 +117,10 @@ public abstract class AntQ implements Algorithm{
       while(iterationsCounter <= getNumberOfIterations() - 1){
          iterationSolution = getIterationSolution2();
 
-         System.out.println("here");
-         iterationSolutionValue = calculateSolutionValue(iterationSolution, 3);
+         //iterationSolutionValue = calculateSolutionValue(iterationSolution, 3);
          System.out.println("iteration "+ iterationsCounter+ " solution value: "+iterationSolutionValue);
+         System.out.println("");
+         System.out.println("");
 
          if(bestSolution != null){
             if(isSolutionBest(iterationSolutionValue, bestSolutionValue) == true){
@@ -240,14 +241,81 @@ public abstract class AntQ implements Algorithm{
          System.out.print(iterationSolutionObjective1[i].getNode1().getIndex() +" ");
       }
       System.out.println(" ");
-      System.out.println(" ");
       System.out.println("iterationSolutionObjective1 value: "+calculateSolutionValue(iterationSolutionObjective1, 1));
-
-      //iterationSolutionValue = calculateSolutionValue(iterationSolution, 3);
+      System.out.println(" ");
 
       //all the ants clear their tours
       for(int i = 0; i <= ants1.length - 1; i++){
          ants1[i].clearTour();
+      }
+
+
+      //objective 2
+      ant = null;
+      nextNode = null;
+
+      for(int i = 0; i <= nodes.length - 1; i++){
+         //if the ant didn't visit all the nodes yet
+         if(i != nodes.length - 1){
+            for(int j = 0; j <= ants2.length - 1; j++){
+               setCurrentAnt(ants2[j]);
+
+               ant = getCurrentAnt();
+               if(ant.isTourFinished() == false){
+                  nextNode = ant.chooseNextNode();
+                  ant.setNextNode(nextNode);
+                  ant.addNodeToTour(ant.getNextNode());
+               }
+
+               //if the ant has choosen the last node to visit
+               if(i == nodes.length - 2){
+                  ant.addInitialNodeToNodesToVisit();
+               }
+            }
+         }
+         //all the ants go back to their initial node
+         else{
+            for(int j = 0; j <= ants2.length - 1; j++){
+               setCurrentAnt(ants2[j]);
+
+               ant = getCurrentAnt();
+               nextNode = ant.getInitialNode();
+               ant.setNextNode(nextNode);
+               ant.addNodeToTour(ant.getNextNode());
+            }
+         }
+
+         //all the ants update the AQ value of the last edge added to their tour
+         for(int j = 0; j <= ants2.length - 1; j++){
+            ant = ants2[j];
+            updatePheromoneValue2(ant.getLastTourEdge(), 0.0, 2);
+
+            //if the ants has done the tour
+            if(i == nodes.length - 1){
+               ant.loadNodesToVisit(); //prepare the nodes to visit array for another tour
+            }
+
+            ant.setCurrentNode(ant.getNextNode()); //move to the next choosed node
+            if((ant.isTourFinished() == false) || ant.getCurrentNode().getIndex() == ant.getInitialNode().getIndex()){
+               ant.removeNodeFromNodesToVisit(ant.getCurrentNode()); // remove the current node from the nodes to visit
+            }
+         }
+      }
+
+      iterationSolutionObjective2 = getIterationBestSolution2(2);
+
+      for(int i = 0; i <= iterationSolutionObjective2.length - 1; i++){
+         System.out.print(iterationSolutionObjective2[i].getNode1().getIndex() +" ");
+      }
+      System.out.println(" ");
+      System.out.println("iterationSolutionObjective2 value: "+calculateSolutionValue(iterationSolutionObjective1, 2));
+      System.out.println(" ");
+
+      //iterationSolutionValue = calculateSolutionValue(iterationSolution, 3);
+
+      //all the ants clear their tours
+      for(int i = 0; i <= ants2.length - 1; i++){
+         ants2[i].clearTour();
       }
 
       //in this step is calculated the reinforcement learning value and is updated the AQ value only 
