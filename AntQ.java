@@ -117,21 +117,29 @@ public abstract class AntQ implements Algorithm{
       while(iterationsCounter <= getNumberOfIterations() - 1){
          iterationSolution = getIterationSolution2();
 
-         //iterationSolutionValue = calculateSolutionValue(iterationSolution, 3);
+         iterationSolutionValue = calculateSolutionValue(iterationSolution, 3);
          System.out.println("iteration "+ iterationsCounter+ " solution value: "+iterationSolutionValue);
-         System.out.println("");
-         System.out.println("");
 
          if(bestSolution != null){
             if(isSolutionBest(iterationSolutionValue, bestSolutionValue) == true){
-               System.out.println("found best solution");
+               //System.out.println("found best solution");
                bestSolution = iterationSolution;
                bestSolutionValue = iterationSolutionValue;
+
+               for(int i = 0; i <= bestSolution.length - 1; i++){
+                  System.out.print(bestSolution[i].getNode1().getIndex() + " ");
+               }
+               System.out.println(" ");
             }
          }
          else{
             bestSolution = iterationSolution;
             bestSolutionValue = iterationSolutionValue;
+
+            for(int i = 0; i <= bestSolution.length - 1; i++){
+               System.out.print(bestSolution[i].getNode1().getIndex() + " ");
+            }
+            System.out.println(" ");
          }
 
          iterationsCounter++;
@@ -140,6 +148,10 @@ public abstract class AntQ implements Algorithm{
 
       setTotalTime(finalTime - initialTime);
 
+      for(int i = 0; i <= bestSolution.length - 1; i++){
+         System.out.print(bestSolution[i].getNode1().getIndex() + " ");
+      }
+      System.out.println(" ");
       return bestSolutionValue;
    }
 
@@ -237,12 +249,12 @@ public abstract class AntQ implements Algorithm{
 
       iterationSolutionObjective1 = getIterationBestSolution2(1);
 
-      for(int i = 0; i <= iterationSolutionObjective1.length - 1; i++){
-         System.out.print(iterationSolutionObjective1[i].getNode1().getIndex() +" ");
-      }
-      System.out.println(" ");
-      System.out.println("iterationSolutionObjective1 value: "+calculateSolutionValue(iterationSolutionObjective1, 1));
-      System.out.println(" ");
+      //for(int i = 0; i <= iterationSolutionObjective1.length - 1; i++){
+         //System.out.print(iterationSolutionObjective1[i].getNode1().getIndex() +" ");
+      //}
+      //System.out.println(" ");
+      //System.out.println("iterationSolutionObjective1 value: "+calculateSolutionValue(iterationSolutionObjective1, 1));
+      //System.out.println(" ");
 
       //all the ants clear their tours
       for(int i = 0; i <= ants1.length - 1; i++){
@@ -304,19 +316,20 @@ public abstract class AntQ implements Algorithm{
 
       iterationSolutionObjective2 = getIterationBestSolution2(2);
 
-      for(int i = 0; i <= iterationSolutionObjective2.length - 1; i++){
-         System.out.print(iterationSolutionObjective2[i].getNode1().getIndex() +" ");
-      }
-      System.out.println(" ");
-      System.out.println("iterationSolutionObjective2 value: "+calculateSolutionValue(iterationSolutionObjective1, 2));
-      System.out.println(" ");
-
-      //iterationSolutionValue = calculateSolutionValue(iterationSolution, 3);
+      //for(int i = 0; i <= iterationSolutionObjective2.length - 1; i++){
+         //System.out.print(iterationSolutionObjective2[i].getNode1().getIndex() +" ");
+      //}
+      //System.out.println(" ");
+      //System.out.println("iterationSolutionObjective2 value: "+calculateSolutionValue(iterationSolutionObjective1, 2));
+      //System.out.println(" ");
 
       //all the ants clear their tours
       for(int i = 0; i <= ants2.length - 1; i++){
          ants2[i].clearTour();
       }
+
+      iterationSolution = mergeSolutions(iterationSolutionObjective1, iterationSolutionObjective2);
+      iterationSolutionValue = calculateSolutionValue(iterationSolution, 3);
 
       //in this step is calculated the reinforcement learning value and is updated the AQ value only 
       //the edges belonging to the iterationBestTour
@@ -425,6 +438,10 @@ public abstract class AntQ implements Algorithm{
       return 0;
    }
 
+   public Edge[] mergeSolutions(Edge[] solutionObjective1, Edge[] solutionObjective2){
+      return new Edge[1];
+   }
+
    public double getSolution(){
       double initialTime = 0;
       double finalTime = 0;
@@ -443,18 +460,28 @@ public abstract class AntQ implements Algorithm{
          iterationSolution = getIterationSolution();
 
          iterationSolutionValue = calculateSolutionValue(iterationSolution);
-         System.out.println("iteration "+ iterationsCounter+ " solution value: "+iterationSolutionValue);
+         //System.out.println("iteration "+ iterationsCounter+ " solution value: "+iterationSolutionValue);
 
          if(bestSolution != null){
             if(isSolutionBest(iterationSolutionValue, bestSolutionValue) == true){
-               System.out.println("found best solution");
+               //System.out.println("found best solution");
                bestSolution = iterationSolution;
                bestSolutionValue = iterationSolutionValue;
+
+               //for(int i = 0; i <= bestSolution.length - 1; i++){
+                  //System.out.print(bestSolution[i].getNode1().getIndex() + " ");
+               //}
+               //System.out.println(" ");
             }
          }
          else{
             bestSolution = iterationSolution;
             bestSolutionValue = iterationSolutionValue;
+
+            //for(int i = 0; i <= bestSolution.length - 1; i++){
+               //System.out.print(bestSolution[i].getNode1().getIndex() + " ");
+            //}
+            //System.out.println(" ");
          }
 
          iterationsCounter++;
@@ -463,6 +490,10 @@ public abstract class AntQ implements Algorithm{
 
       setTotalTime(finalTime - initialTime);
 
+      //for(int i = 0; i <= bestSolution.length - 1; i++){
+         //System.out.print(bestSolution[i].getNode1().getIndex() + " ");
+      //}
+      //System.out.println(" ");
       return bestSolutionValue;
    }
 

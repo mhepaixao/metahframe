@@ -1,5 +1,7 @@
 import java.io.File;
 
+import java.util.Arrays;
+
 public class SRPPAntQ2 extends AntQ{
    SRPPInstanceReader srppInstanceReader;
 
@@ -168,6 +170,73 @@ public class SRPPAntQ2 extends AntQ{
       }
 
       return objectivesSum;
+   }
+
+   public Edge[] mergeSolutions(Edge[] solutionObjective1, Edge[] solutionObjective2){
+      int[] mergedSolution = new int[solutionObjective1.length];
+      int[] solution1 = getNodes(solutionObjective1);
+      int[] solution2 = getNodes(solutionObjective2);
+      double[] requirementsPositions = new double[mergedSolution.length];
+
+      for(int i = 0; i <= mergedSolution.length - 1; i++){
+         requirementsPositions[i] = getPosition(solution1, i) + getPosition(solution2, i);
+      }
+
+      for(int i = 0; i <= mergedSolution.length - 1; i++){
+         mergedSolution[i] = getIndexOfMaxElement(requirementsPositions);
+         requirementsPositions[mergedSolution[i]] = 0;
+      }
+
+      return getSolutionEdges(mergedSolution);
+   }
+
+   private double getPosition(int[] solution, int requirement){
+      double position = 0;
+
+      for(int i = 0; i <= solution.length - 1; i++){
+         if(solution[i] == requirement){
+            position = solution.length - i;
+         }
+      }
+
+      return position;
+   }
+
+   private int getIndexOfMaxElement(double[] array){
+      int indexOfMaxElement = 0;
+      double maxElement = getMaxElement(array);
+
+      for(int i = 0; i <= array.length - 1; i++){
+         if(array[i] == maxElement){
+            indexOfMaxElement = i;
+            break;
+         }
+      }
+
+      return indexOfMaxElement;
+   }
+
+   private double getMaxElement(double[] array){
+      double[] sortedArray = new double[array.length];
+
+      for(int i = 0; i <= sortedArray.length - 1; i++){
+         sortedArray[i] = array[i];
+      }
+
+      Arrays.sort(sortedArray);
+
+      return sortedArray[sortedArray.length - 1];
+   }
+
+   private Edge[] getSolutionEdges(int[] nodes){
+      Edge[] mergedSolution = new Edge[nodes.length];
+
+      for(int i = 0; i <= mergedSolution.length - 2; i++){
+         mergedSolution[i] = new Edge(new Node(nodes[i]), new Node(nodes[i + 1]));
+      }
+      mergedSolution[mergedSolution.length - 1] = new Edge(new Node(nodes[mergedSolution.length - 1]), new Node(nodes[0]));
+
+      return mergedSolution;
    }
    
    public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
