@@ -3,6 +3,11 @@ import javax.swing.JFrame;
 
 import java.io.File;
 
+/**
+ * Class used to choose the instance that will be used by the algorithm.
+ *
+ * @author Matheus Paixao
+ */
 public class InstanceChooser extends JFrame{
 
    /**

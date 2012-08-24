@@ -1,5 +1,13 @@
 import java.io.File;
 
+/**
+ * Class used to run the application.
+ * @author Matheus Paixao
+ *
+ * How to run:
+ * java App <algorithm> <problem> <number of iterations>
+ * Only the last parameter is optional. If not specified, will be runned 200 iterations
+ */
 public class App{
    public static void main(String[] args){
       String problem = null;
@@ -8,13 +16,13 @@ public class App{
       Algorithm adaptedAlgorithm = null;
 
       InstanceChooser instanceChooser = new InstanceChooser();
-      File instance = instanceChooser.getInstance();
+      File instance = instanceChooser.getInstance(); //choose the instance to be used by the algorithm
 
       if(args.length >= 1){
-         algorithm = args[0];
-         problem = args[1];
+         algorithm = args[0]; //first parameter is the algorithm to be used
+         problem = args[1]; //second parameter is the problem to be solved
 
-         if(args.length >= 3){
+         if(args.length >= 3){ //third parameter is the number of iterations, it's optional
             numberOfIterations = Integer.parseInt(args[2]);
          }
          else{

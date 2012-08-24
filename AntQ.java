@@ -3,16 +3,14 @@
  *
  * The constants are the initialization parameters of the algorithm.
  * They are used to calculate the action choice value (delta and beta), 
- * to update the AQ Value (alfa and gamma), to make a exploration or a exploitation choice (q0) 
+ * to update the pheromone Value (alfa and gamma), to make a exploration or a exploitation choice (q0) 
  * and to calculate the reinforcement learning value (w).
  *
  * The nodes array stores all the nodes of the instance.
  *
  * The edges matrix stores all the edges of the instance (complete graph).
  * 
- * The actionChoices matrix stores the action choices of all edges.
- *
- * The ants array stores the ants, or ants, that are acting in the algorithm.  
+ * The ants array stores the ants that are acting in the algorithm.  
  *
  * @author Matheus Paixao
  */
@@ -37,16 +35,6 @@ public abstract class AntQ implements Algorithm{
 
    protected Ant[] ants;
    protected Ant currentAnt;
-
-   //new algorithm
-   private Edge[][] edges1;
-   private Edge[][] edges2;
-
-   private double[][] pheromone1;
-   private double[][] pheromone2;
-
-   protected Ant[] ants1;
-   protected Ant[] ants2;
 
    //abstract methods:
    public abstract int getNumberOfNodes();
@@ -96,6 +84,16 @@ public abstract class AntQ implements Algorithm{
       this.currentAnt = ant;
    }
 
+   /**
+    * Method to get the solution of the algorithm and to set the total time spended.
+    *
+    * @author Matheus Paixao
+    * @see initAntQ
+    * @see getNumberOfIterations
+    * @see getIterationSolution
+    * @see calculateSolutionValue
+    * @see isSolutionBest
+    */
    public double getSolution(){
       double initialTime = 0;
       double finalTime = 0;
@@ -157,6 +155,13 @@ public abstract class AntQ implements Algorithm{
       initAnts();
    }
 
+   /**
+    * Method to create the nodes array.
+    *
+    * @author Matheus Paixao
+    * @see getNumberOfNodes
+    * @see Node class constructor
+    */
    private void createNodes(){
       this.nodes = new Node[getNumberOfNodes()];
 
@@ -165,6 +170,12 @@ public abstract class AntQ implements Algorithm{
       }
    }
 
+   /**
+    * Method to create the edges matrix.
+    *
+    * @author Matheus Paixao
+    * @see Edge class constructor
+    */
    private void createEdges(){
       edges = new Edge[nodes.length][nodes.length];
 
@@ -197,6 +208,7 @@ public abstract class AntQ implements Algorithm{
     *
     * One ant is put in each node of the instance.
     * @author Matheus Paixao
+    * @see getQ0
     * @see Ant constructor in Ant class.
     */
    protected void initAnts(){
