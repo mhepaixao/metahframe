@@ -8,13 +8,26 @@ import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Class used to read the TSP instance.
+ *
+ * @author Matheus Paixao
+ */
 public class TSPInstanceReader{
    private File instance;
 
+   //regex matchers
    private Matcher twoLettersMatcher;
    private Matcher numbersMatcher;
    private Matcher spacesMatcher;
 
+   /**
+    * Method to create a TSPInstanceReader.
+    *
+    * @author Matheus Paixao
+    * @param instance the instance to read
+    * @see setInstance
+    */
    public TSPInstanceReader(File instance){
       setInstance(instance);
    }
@@ -27,6 +40,14 @@ public class TSPInstanceReader{
       this.instance = instance;
    }
 
+   /**
+    * Method to get the distances matrix.
+    *
+    * @author Matheus Paixao
+    * @return the distances matrix
+    * @see getNodesList
+    * @see calculateDistance
+    */
    public double[][] getDistancesMatrix(){
       Node[] nodes = getNodesList();
       double[][] distancesMatrix = new double[nodes.length][nodes.length];
@@ -45,8 +66,8 @@ public class TSPInstanceReader{
     *
     * It is used an auxiliary object. dynamicListOfNodes is an ArrayList of Node
     * and is used to create the nodes in a dynamic form. The AntQ algorithm uses an 
-    * array of nodes. So, after create all the nodes the dynamicListOfNodes is casted
-    * to a simple Node array.
+    * array of nodes. So, after create all the nodes the dynamicListOfNodes is sorted,
+    * the duplicate nodes are removed and the ArrayList is casted to a simple Node array.
     *
     * The cartesian coordinates have to be in one of the formats that follows:
     * 1) n Xe+P Ye+P, where n is the line number, X is the x cartesian value x*(10^P) and Y is the y cartesian value y*(10^P)  
@@ -57,7 +78,9 @@ public class TSPInstanceReader{
     * @author Matheus Paixao
     * @return a Node array containing all the nodes of the instance.
     * @see getInstance
-    * @see toArray method from ArrayList class
+    * @see getCartesianNode
+    * @see removeDuplicatedNodes
+    * @see setNodesIndexes
     */
    private Node[] getNodesList(){
       Node[] nodes = null; //array to return
@@ -136,20 +159,18 @@ public class TSPInstanceReader{
     *
     * The list of nodes must be sorted.
     * @author Matheus Paixao
-    * @param dynamicListOfNodes the list of nodes to delete duplicated nodes.
+    * @param dynamicListOfNodes the list of nodes to remove duplicated nodes.
     */
    private void removeDuplicatedNodes(ArrayList<Node> dynamicListOfNodes){
       Node node = null;
       Node nextNode = null;
 
-      for(int i = 0; i <= dynamicListOfNodes.size() - 1; i++){
-         if(i != dynamicListOfNodes.size() - 1){
-            node = dynamicListOfNodes.get(i);
-            nextNode = dynamicListOfNodes.get(i + 1);
+      for(int i = 0; i <= dynamicListOfNodes.size() - 2; i++){
+         node = dynamicListOfNodes.get(i);
+         nextNode = dynamicListOfNodes.get(i + 1);
 
-            if(node.equals(nextNode)){
-               dynamicListOfNodes.remove(i);
-            }
+         if(node.equals(nextNode)){
+            dynamicListOfNodes.remove(i);
          }
       }
    }
@@ -159,7 +180,7 @@ public class TSPInstanceReader{
     *
     * After sort and delete duplicate nodes, it's necessary set new indexes.
     * @author Matheus Paixao
-    * @param dynamicListOfNodes the list od nodes to set a new index
+    * @param dynamicListOfNodes the list of nodes to set a new index
     * @see setIndex in Node class
     */
    private void setNodesIndexes(ArrayList<Node> dynamicListOfNodes){
