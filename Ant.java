@@ -178,6 +178,13 @@ public class Ant {
       return lastTourEdge;
    }
 
+   /**
+    * Method to return if the ant have finished it's tour or not.
+    *
+    * In the problems majority (generic ant), the tour only finishes in the (nodes - 1) iteration.
+    * In other kinds of problem (more specific ant) the tour could finish earlier than that.
+    * @author Matheus Paixao
+    */
    public boolean isTourFinished(){
       return false;
    }

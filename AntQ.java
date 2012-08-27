@@ -36,13 +36,21 @@ public abstract class AntQ implements Algorithm{
    protected Ant[] ants;
    protected Ant currentAnt;
 
-   //abstract methods:
+   //abstract methods that each problem to be solved with antQ must implement:
    public abstract int getNumberOfNodes();
    public abstract double getInitialPheromone();
    public abstract double getHeuristicValue(Node node1, Node node2);
-   public abstract double calculateSolutionValue(Edge[] solution);
-   public abstract boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue);
+   public abstract double calculateSolutionValue(Edge[] solution); //fitness function value
+   public abstract boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue); //depends on a max or min problem
 
+   /**
+    * Method to create an AntQ object passing the number of iterations
+    * that it will run.
+    *
+    * @author Matheus Paixao
+    * @see setNumberOfIterations
+    * @see setTotalTime
+    */
    public AntQ(int numberOfIterations){
       setNumberOfIterations(numberOfIterations);
       setTotalTime(0);
@@ -213,7 +221,7 @@ public abstract class AntQ implements Algorithm{
     */
    protected void initAnts(){
       this.ants = new Ant[nodes.length]; 
-      //this.ants = new Ant[5]; 
+      //this.ants = new Ant[1]; 
 
       for(int i = 0; i <= this.ants.length - 1; i++){
          this.ants[i] = new Ant(this, getQ0(), new Node(i));
@@ -223,25 +231,25 @@ public abstract class AntQ implements Algorithm{
    /**
     * Method to get the solution of an iteration, method where the AntQ algorithm is runned.
     *
-    * iterationBestSolution array is the best solution of all ants in an iteration.
-    *
     * @author Matheus Paixao
+    * @return the best solution founded in an iteration
+    * @see setCurrentAnt
+    * @see getCurrentAnt
+    * @see isTourFinished in Ant class
     * @see chooseNextNode in Ant class
     * @see setNextNode in Ant class
     * @see getNextNode in Ant class
     * @see addNodeToTour in Ant class
     * @see addInitialNodeToNodesToVisit in Ant class
-    * @see addNodeToTour in Ant class
     * @see getInitialNode in Ant class
     * @see getLastTourEdge in Ant class
-    * @see getMaxPheromoneValue
     * @see updatePheromoneValue
     * @see loadNodesToVisit in Ant class
     * @see setCurrentNode in Ant class
     * @see removeNodeFromNodesToVisit in Ant class
     * @see getIterationBestSolution
-    * @see clearTour in Ant class
     * @see calculateSolutionValue
+    * @see clearTour in Ant class
     */
    private Edge[] getIterationSolution(){
       Edge[] iterationSolution = null;
@@ -252,7 +260,7 @@ public abstract class AntQ implements Algorithm{
       double reinforcementLearningValue = 0;
 
       //in this step all the ants chooses the next node to move to
-      //when all the ants have choosen the next node, they update the AQ value of the correspondent edge 
+      //when all the ants have choosen the next node, they update the pheromone value of the correspondent edge 
       for(int i = 0; i <= nodes.length - 1; i++){
          //if the ant didn't visit all the nodes yet
          if(i != nodes.length - 1){
@@ -284,7 +292,7 @@ public abstract class AntQ implements Algorithm{
             }
          }
 
-         //all the ants update the AQ value of the last edge added to their tour
+         //all the ants update the pheromone value of the last edge added to their tour
          for(int j = 0; j <= ants.length - 1; j++){
             ant = ants[j];
             updatePheromoneValue(ant.getLastTourEdge(), 0);
@@ -295,7 +303,8 @@ public abstract class AntQ implements Algorithm{
             }
 
             ant.setCurrentNode(ant.getNextNode()); //move to the next choosed node
-            if((ant.isTourFinished() == false) || ant.getCurrentNode().getIndex() == ant.getInitialNode().getIndex()){
+            //the seconde clause can occur when the tour could finish before the (nodes - 1) iteration
+            if((ant.isTourFinished() == false) || ant.getCurrentNode().equals(ant.getInitialNode())){
                ant.removeNodeFromNodesToVisit(ant.getCurrentNode()); // remove the current node from the nodes to visit
             }
          }
@@ -309,43 +318,14 @@ public abstract class AntQ implements Algorithm{
          ants[i].clearTour();
       }
 
-      //in this step is calculated the reinforcement learning value and is updated the AQ value only 
-      //the edges belonging to the iterationBestTour
+      //in this step is calculated the reinforcement learning value and is updated the pheromone value only 
+      //of the edges belonging to the iterationSolution
       reinforcementLearningValue = w / iterationSolutionValue;
       for(int i = 0; i <= iterationSolution.length - 1; i++){
          updatePheromoneValue(iterationSolution[i], reinforcementLearningValue);
       }
 
       return iterationSolution;
-   }
-
-   /**
-    * Method to get the max pheromone value of the next choosed node.
-    *
-    * The method evaluates the pheromone values of all the edges from the next choosed node
-    * to all the nodes that the ant didn't visit yet.
-    * @author Matheus Paixao
-    * @param nodesToVisit array of the nodes to be visited by the ant
-    * @param nextNode the next choosed node
-    * @return the max pheromone value of the next choosed node.
-    * @see equals method in Node class.
-    */
-   public double getMaxPheromoneValue(Node nodesToVisit[], Node nextNode){
-      double maxPheromoneValue = 0;
-      double edgePheromoneValue = 0;
-      int nextNodeIndex = nextNode.getIndex();
-
-      for(int i = 0; i <= nodesToVisit.length - 1; i++){
-         //only evaluate the node if the ant didn't visit it yet and it is different of the next choosed node
-         if((nodesToVisit[i] != null) && (!nextNode.equals(nodesToVisit[i]))){
-            edgePheromoneValue = pheromone[nextNode.getIndex()][nodesToVisit[i].getIndex()];
-            if(edgePheromoneValue > maxPheromoneValue){
-               maxPheromoneValue = edgePheromoneValue;
-            }
-         }
-      }
-
-      return maxPheromoneValue;
    }
 
    /**
@@ -356,8 +336,8 @@ public abstract class AntQ implements Algorithm{
     * @param node2 the second node of the edge 
     * @return the action choice of the edge
     */
-   public double getActionChoice(Node node1, Node node2){
-      double actionChoice =  Math.pow(pheromone[node1.getIndex()][node2.getIndex()], delta) * Math.pow(getHeuristicValue(node1, node2), beta);
+   public double getActionChoice(Node n1, Node n2){
+      double actionChoice =  Math.pow(pheromone[n1.getIndex()][n2.getIndex()], delta) * Math.pow(getHeuristicValue(n1, n2), beta);
 
       if((Double.isNaN(actionChoice)) || (Double.POSITIVE_INFINITY == actionChoice) || (Double.NEGATIVE_INFINITY == actionChoice)){
          actionChoice = 0;
@@ -370,6 +350,8 @@ public abstract class AntQ implements Algorithm{
     * Method to get the sum of action choices of all remaining nodes to visit of an ant.
     *
     * @author Matheus Paixao
+    * @param currentNode the current node of the ant
+    * @param nodesToVisit array of the nodes still to be visited by the ant
     * @return the sum of action choices of all remaining nodes to visit of an ant.
     * @see getActionChoice
     */
@@ -389,23 +371,23 @@ public abstract class AntQ implements Algorithm{
     * Method to update the pheromone value of the passed edge.
     *
     * To update the pheromone value of an edge, it's used the reinforcement learning value of the edge
-    * and the max pheromone value of the next choosed node.
+    * and the initial pheromone value.
     * @author Matheus Paixao
     * @param edge the edge to update.
     * @param reinforcementLearningValue the reinforcement learning value of the edge.
-    * @param maxPheromoneValue the max pheromone value of the next choosed node.
+    * @see getInitialPheromone
     */
    private void updatePheromoneValue(Edge edge, double reinforcementLearningValue){
-      int n1Index = edge.getNode1().getIndex();
-      int n2Index = edge.getNode2().getIndex();
+      int n1Ix = edge.getNode1().getIndex(); //node 1 index
+      int n2Ix = edge.getNode2().getIndex(); //node 2 index
 
-      pheromone[n1Index][n2Index] = ((1 - alfa) * pheromone[n1Index][n2Index] + alfa * (reinforcementLearningValue + gamma * getInitialPheromone()));
+      pheromone[n1Ix][n2Ix] = ((1 - alfa) * pheromone[n1Ix][n2Ix] + alfa * (reinforcementLearningValue + gamma * getInitialPheromone()));
    }
 
    /**
     * Method to get the best solution, of all ants, of an iteration.
     *
-    * It's used an auxiliary array to create a new array with the same elements. 
+    * It's used an temporary array to create a new array with the same elements. 
     * @author Matheus Paixao
     * @return the iteration best solution
     * @see getTour in Ant class
