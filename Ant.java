@@ -2,7 +2,7 @@ import java.util.Random;
 import java.util.Arrays;
 
 /**
- * Class to describe the behavior of the ants, or ants, in the goal
+ * Class to describe the behavior of the ants, in the goal
  * to find best tours over the nodes.
  *
  * The initialNode variable stores the initial node of the ant. It's necessary when the ant 
@@ -25,8 +25,8 @@ public class Ant {
    protected Node nodesToVisit[];
    public Edge tour[];
 
-   protected AntQ antQ;
-   private double q0;
+   protected AntQ antQ; //used to call some antQ methods
+   private double q0; //used in chooseNextNode method
 
    private Random random;
 
@@ -38,6 +38,8 @@ public class Ant {
     * Fill the nodesToVisit array with Node objects equals to the nodes array of AntQ.
     * Set the initial node the current node and remove the initial node of the nodes to be visited.
     * @author Matheus Paixao
+    * @param antQ the AntQ object
+    * @param q0 the q0 value used in the transition rule
     * @param initialNode the node that will be the initial node of the ant.
     * @see loadNodesToVisit
     * @see removeNodeFromNodesToVisit
@@ -62,6 +64,10 @@ public class Ant {
       return this.initialNode;
    }
 
+   public void setCurrentNode(Node currentNode){
+      this.currentNode = nodesToVisit[currentNode.getIndex()];
+   }
+
    public Node getCurrentNode(){
       return this.currentNode;
    }
@@ -76,10 +82,6 @@ public class Ant {
 
    public Node[] getNodesToVisit(){
       return this.nodesToVisit;
-   }
-
-   public void setCurrentNode(Node currentNode){
-      this.currentNode = nodesToVisit[currentNode.getIndex()];
    }
 
    public Edge[] getTour(){
@@ -107,8 +109,6 @@ public class Ant {
    /**
     * Method to remove a node from nodes to be visited.
     *
-    * Get the index of the node in the nodes array in AntQ and
-    * set the correspondent node in nodesToVisit to null.
     * @author Matheus Paixao
     * @param node the node to be removed from nodesToVisit.
     */
@@ -119,9 +119,7 @@ public class Ant {
    /**
     * Method to add the initial node to the nodes to be visited.
     *
-    * Get the index of the initial node of the ant in the nodes array in AntQ
-    * and set the correspondent position of the nodesToVisit with the initial node.
-    * It's used when the ant have visited all the nodes and has to go back to the first one.
+    * It's used when the ant have visited all the nodes and have to go back to the first one.
     * @author Matheus Paixao
     */
    public void addInitialNodeToNodesToVisit(){
@@ -132,7 +130,6 @@ public class Ant {
    /**
     * Method to add a new node to the tour.
     *
-    * Insert an edge where the node 1 is the current node and the node 2 is the node to be added.
     * @author Matheus Paixao
     * @param node node to be added to the tour.
     * @see insertEdge
@@ -160,7 +157,7 @@ public class Ant {
    }
 
    /**
-    * Method to get the last edge added to the ant tour.
+    * Method to get the last edge added to the tour.
     *
     * @author Matheus Paixao
     * @return the last edge added to the ant tour.
@@ -192,7 +189,7 @@ public class Ant {
    /**
     * Method to clear the ant tour.
     *
-    * It's used when an ant finish a tour (visit all nodes) and has to start another one.
+    * It's used when an ant finishes a tour (visit all nodes) and has to start another one.
     * @author Matheus Paixao
     */
    public void clearTour(){
@@ -214,8 +211,8 @@ public class Ant {
     * @return the next node of a an ant
     * @see getRandomNumber
     * @see getMaxActionChoiceNode
-    * @see getPseudoRandomProportionalNode
     * @see getPseudoRandomNode
+    * @see getPseudoRandomProportionalNode
     */
    public Node chooseNextNode(){
       double q = getRandomNumber();
@@ -330,8 +327,6 @@ public class Ant {
     * Method to calculate the pseudo random proportional probability of all the
     * nodes to be visited by the ant.
     *
-    * The pseudo random proportional probability of a node is calculated by 
-    * the getPseudoRandomProportionalProbability method.
     * @author Matheus Paixao
     * @return an array containing the pseudo random proportional probability of the nodes to visit.
     * @see getPseudoRandomProportionalProbability
@@ -404,13 +399,5 @@ public class Ant {
       }
 
       return firstNodeToVisit;
-   }
-
-   public void printTour(){
-      for(int i = 0; i <= tour.length - 1; i++){
-         System.out.print(tour[i] + " ");
-      }
-      System.out.println(" ");
-      System.out.println(" ");
    }
 }
