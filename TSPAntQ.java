@@ -1,17 +1,27 @@
 import java.io.File;
 
+/**
+ * Class to implement the AntQ class to the Travel Salesman Problem.
+ *
+ * @author Matheus Paixao
+ */
 public class TSPAntQ extends AntQ{
-
-   public double getHeuristicValue(Node node1, Node node2, int objective){
-      return 0;
-   }
-
    private TSPInstanceReader tspInstanceReader;
 
    private int numberOfCities;
    private double[][] distancesMatrix;
    private double initialPheromone;
 
+   /**
+    * Method to create the TSPAntQ object, receive the instance to read and
+    * the number of iterations is passed to AntQ constructor.
+    *
+    * @author Matheus Paixao
+    * @see AntQ constructor
+    * @see TSPInstanceReader constructor
+    * @see getDistancesMatrix
+    * @see calculateInitialPheromone
+    */
    public TSPAntQ(File instance, int numberOfIterations){
       super(numberOfIterations);
       this.tspInstanceReader = new TSPInstanceReader(instance);
@@ -28,6 +38,13 @@ public class TSPAntQ extends AntQ{
       return this.initialPheromone;
    }
 
+   /**
+    * Method that implements the fitness function of TSP problem.
+    *
+    * @author Matheus Paixao
+    * @param solution the array o edges that corresponds to the solution founded by the algorithm
+    * @return fitness value of the solution
+    */
    public double calculateSolutionValue(Edge[] solution){
       double solutionValue = 0;
 
@@ -40,6 +57,14 @@ public class TSPAntQ extends AntQ{
       return solutionValue;
    }
 
+   /**
+    * Method to comprare if a solution value is better than another one.
+    *
+    * In TSP as smaller fitness value as better.
+    * @author Matheus Paixao
+    * @param iterationSolutionValue the fitness value of some solution
+    * @param bestSolutionValue the best fitness value of an iteration
+    */
    public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
       boolean result = false;
 
@@ -51,11 +76,11 @@ public class TSPAntQ extends AntQ{
    }
 
    /**
-    * Method to get the initial AQ value for all edges.
+    * Method to get the initial pheromone value for all edges.
     *
-    * The initial AQ value is composed with the distances average and the number of nodes.
+    * The initial pheromone value is composed with the distances average and the number of nodes.
     * @author Matheus Paixao
-    * @return the initial AQ value for all edges.
+    * @return the initial pheromone value for all edges.
     * @see getNumberOfEdges
     */
    public double calculateInitialPheromone(){
@@ -93,6 +118,15 @@ public class TSPAntQ extends AntQ{
       return numberOfEdges;
    }
 
+   /**
+    * Method to get the heuristic value of an edge.
+    *
+    * In TSP as smaller the distance, higher is the heuristic value.
+    * @author Matheus Paixao
+    * @param node1 the first node of the edge
+    * @param node2 the second node of the edge
+    * @return the heuristic value of the edge composed by the two passed nodes
+    */
    public double getHeuristicValue(Node node1, Node node2){
       return 1 / distancesMatrix[node1.getIndex()][node2.getIndex()];
    }
