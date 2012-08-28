@@ -17,9 +17,11 @@ public class TSPAntQ extends AntQ{
     * the number of iterations is passed to AntQ constructor.
     *
     * @author Matheus Paixao
+    * @param instance the instance to read
+    * @param numberOfIterations number of iterations to be runned
     * @see AntQ constructor
     * @see TSPInstanceReader constructor
-    * @see getDistancesMatrix
+    * @see getDistancesMatrix in TSPInstanceReader
     * @see calculateInitialPheromone
     */
    public TSPAntQ(File instance, int numberOfIterations){
@@ -42,7 +44,7 @@ public class TSPAntQ extends AntQ{
     * Method that implements the fitness function of TSP problem.
     *
     * @author Matheus Paixao
-    * @param solution the array o edges that corresponds to the solution founded by the algorithm
+    * @param solution the array of edges that corresponds to the solution founded by the algorithm
     * @return fitness value of the solution
     */
    public double calculateSolutionValue(Edge[] solution){
