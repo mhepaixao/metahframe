@@ -60,12 +60,13 @@ public class TSPAntQ extends AntQ{
    }
 
    /**
-    * Method to comprare if a solution value is better than another one.
+    * Method to compare if a solution value is better than another one.
     *
     * In TSP as smaller fitness value as better.
     * @author Matheus Paixao
     * @param iterationSolutionValue the fitness value of some solution
     * @param bestSolutionValue the best fitness value of an iteration
+    * @return true if the first fitness value is best than the other one
     */
    public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
       boolean result = false;

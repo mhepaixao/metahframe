@@ -57,6 +57,7 @@ public class TSPRandomAlgorithm extends RandomAlgorithm{
     * @author Matheus Paixao
     * @param iterationSolutionValue the fitness value of some solution
     * @param bestSolutionValue the best fitness value of an iteration
+    * @return true if the first fitness value is best than the other one
     */
    public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
       boolean result =  false;
