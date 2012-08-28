@@ -1,8 +1,8 @@
 /**
  * Class to represent the nodes.
  * 
- * It's formed by the index in the nodes array of AntQ algorithm, X and Y value of cartesian coordinates.
- * @author: Matheus Paixao 
+ * It's formed by the index, X and Y value of cartesian coordinates.
+ * @author Matheus Paixao 
  */
 public class Node implements Comparable{
    private int index;
