@@ -96,6 +96,7 @@ public abstract class AntQ implements Algorithm{
     * Method to get the solution of the algorithm and to set the total time spended.
     *
     * @author Matheus Paixao
+    * @return solution founded by the algorithm
     * @see initAntQ
     * @see getNumberOfIterations
     * @see getIterationSolution

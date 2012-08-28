@@ -25,7 +25,6 @@ public class TSPRandomAlgorithm extends RandomAlgorithm{
       }
       solutionValue += distancesMatrix[solution.length - 1][0];
 
-      System.out.println("solution vlue: "+solutionValue);
       return solutionValue;
    }
 
