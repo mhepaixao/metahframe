@@ -20,7 +20,7 @@ public class JSSPAntQ extends AntQ{
     * @param numberOfIterations number of iterations to be runned
     * @see AntQ constructor
     * @see JSSPInstanceReader constructor
-    * @see getTimesMatrix in TSPInstanceReader
+    * @see getTimesMatrix in JSSPInstanceReader
     */
    public JSSPAntQ(File instance, int numberOfIterations){
       super(numberOfIterations);
