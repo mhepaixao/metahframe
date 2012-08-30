@@ -18,6 +18,7 @@ public abstract class RandomAlgorithm implements Algorithm{
    //abstract methods that each problem to be solved with this random algorithm must implement:
    public abstract double calculateSolutionValue(int[] solution); //fitness function value
    public abstract boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue); //depends on a max or min problem
+   public abstract boolean satisfyAllRestrictions(int[] solution); //if the founded solution broke some restriction
    public abstract int getNumberOfNodes();
    
    /**
@@ -108,21 +109,40 @@ public abstract class RandomAlgorithm implements Algorithm{
    }
 
    /**
-    * Method to get the solution of an iteration, method where the random search is runned.
+    * Method to get the solution of an iteration.
     *
     * @author Matheus Paixao
     * @return the solution founded in an iteration
-    * @see getNumberOfNodes
-    * @see shuffle method in Collections class
+    * @see getRandomSolution
+    * @see satisfyAllRestrictions
     */
    private int[] getIterationSolution(){
-      int[] iterationSolution = new int[getNumberOfNodes()];
-      Collections.shuffle(dynamicListOfNodes);
+      int[] iterationSolution = getRandomSolution();
 
-      for(int i = 0; i <= iterationSolution.length - 1; i++){
-         iterationSolution[i] = dynamicListOfNodes.get(i);
+      while(satisfyAllRestrictions(iterationSolution) == false){
+         iterationSolution = getRandomSolution();
       }
 
       return iterationSolution;
+   }
+
+   /**
+    * Method to get a random solution.
+    *
+    * @author Matheus Paixao
+    * @return a random solution
+    * @see getNumberOfNodes
+    * @see shuffle method of the Collections class
+    */
+   private int[] getRandomSolution(){
+      int[] randomSolution = new int[getNumberOfNodes()];
+
+      Collections.shuffle(dynamicListOfNodes);
+
+      for(int i = 0; i <= randomSolution.length - 1; i++){
+         randomSolution[i] = dynamicListOfNodes.get(i);
+      }
+
+      return randomSolution;
    }
 }

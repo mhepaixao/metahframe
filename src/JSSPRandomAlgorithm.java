@@ -91,4 +91,14 @@ public class JSSPRandomAlgorithm extends RandomAlgorithm{
 
       return makespan[timesMatrix[0].length - 1];
    }
+
+   /**
+    * Method to test if the founded solution broke some restriction.
+    *
+    * In JSSP there's no job sequence restriction.
+    * @author Matheus Paixao
+    */
+   public boolean satisfyAllRestrictions(int[] solution){
+      return true;
+   }
 }

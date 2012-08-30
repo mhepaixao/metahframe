@@ -68,7 +68,7 @@ public class SRPPAntQ extends AntQ{
     * @see getNumberOfRequirementsWithNoPrecedence in SRPPInstanceReader class
     * @see getNumberOfRequirements
     * @see Node constructor in Node class
-    * @see hasPrecedecessor
+    * @see hasPredecessor
     * @see addAnt
     * @see PrecedenceConstrainedAnt constructor in PrecedenceConstrainedAnt class.
     * @see getQ0 in Ant class
@@ -81,7 +81,7 @@ public class SRPPAntQ extends AntQ{
 
       for(int i = 0; i <= getNumberOfRequirements() - 1; i++){
          initialNode = new Node(i);
-         if(hasPrecedecessor(initialNode) == false){
+         if(hasPredecessor(initialNode) == false){
             addAnt(new PrecedenceConstrainedAnt(this, getQ0(), new Node(i), getPrecedencesMatrix()));
          }
       }
@@ -94,7 +94,7 @@ public class SRPPAntQ extends AntQ{
     * @param requirement the requirement to test the predecessors
     * @return true if the requirement has some predecessor, false if don't
     */
-   private boolean hasPrecedecessor(Node requirement){
+   private boolean hasPredecessor(Node requirement){
       boolean result = false;
 
       for(int i = 0; i <= precedencesMatrix[requirement.getIndex()].length - 1; i++){

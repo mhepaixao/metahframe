@@ -68,4 +68,14 @@ public class TSPRandomAlgorithm extends RandomAlgorithm{
 
       return result;
    }
+
+   /**
+    * Method to test if the founded solution broke some restriction.
+    *
+    * In TSP there's no city sequence restriction.
+    * @author Matheus Paixao
+    */
+   public boolean satisfyAllRestrictions(int[] solution){
+      return true;
+   }
 }
