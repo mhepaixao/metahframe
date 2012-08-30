@@ -304,8 +304,7 @@ public abstract class AntQ implements Algorithm{
             }
 
             ant.setCurrentNode(ant.getNextNode()); //move to the next choosed node
-            //the seconde clause can occur when the tour could finish before the (nodes - 1) iteration
-            if((ant.isTourFinished() == false) || ant.getCurrentNode().equals(ant.getInitialNode())){
+            if((ant.isTourFinished() == false)){
                ant.removeNodeFromNodesToVisit(ant.getCurrentNode()); // remove the current node from the nodes to visit
             }
          }
