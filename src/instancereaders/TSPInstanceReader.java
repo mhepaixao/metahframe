@@ -1,5 +1,6 @@
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
+package instancereaders;
+
+import util.Node;
 
 import java.io.File;
 import java.io.FileReader;
@@ -12,190 +13,70 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Class used to read the instance.
- * 
- * This class extends JFrame because the user chooses the instance by a JFileChooser.
- * @author: Matheus Paixao 
+ * Class used to read the TSP instance.
+ *
+ * @author Matheus Paixao
  */
-public class InstanceReader extends JFrame {
+public class TSPInstanceReader{
    private File instance;
-   private String instanceType;
+
+   //regex matchers
    private Matcher twoLettersMatcher;
    private Matcher numbersMatcher;
    private Matcher spacesMatcher;
 
-   public InstanceReader(){
-      this.instance = loadInstance();
-      this.instanceType = readInstanceType();
+   /**
+    * Method to create a TSPInstanceReader.
+    *
+    * @author Matheus Paixao
+    * @param instance the instance to read
+    * @see setInstance
+    */
+   public TSPInstanceReader(File instance){
+      setInstance(instance);
    }
 
    private File getInstance(){
       return this.instance;
    }
 
-   public String getInstanceType(){
-      return this.instanceType;
+   private void setInstance(File instance){
+      this.instance = instance;
    }
 
    /**
-    * Method to load the instance file.
+    * Method to get the distances matrix.
     *
-    * Uses a JFileChooser to select the instance file.
+    * The instance can be in cartesian coordinates or synmetric matrix format.
     * @author Matheus Paixao
-    * @return the instance file.
+    * @return the distances matrix
+    * @see getInstanceFormat
+    * @see getDistancesMatrixInCartesianFormatInstance
+    * @see getDistancesMatrixInMatrixFormatInstance
     */
-   private File loadInstance(){
-      JFileChooser instanceChooser = new JFileChooser();
-      File instance = null;
+   public double[][] getDistancesMatrix(){
+      double[][] distancesMatrix = null;
+      String instanceType = getInstanceFormat();
 
-      Integer choose = instanceChooser.showOpenDialog(this);
-      if (choose.equals(JFileChooser.APPROVE_OPTION)) {
-         instance = instanceChooser.getSelectedFile();
+      if(instanceType.equals("coordinates")){
+         distancesMatrix = getDistancesMatrixInCartesianFormatInstance();
+      }
+      else if(instanceType.equals("matrix")){
+         distancesMatrix = getDistancesMatrixInMatrixFormatInstance();
       }
 
-      return instance;
-   }
-
-   public int getNumberOfJobs(){
-      int numberOfJobs = 0;
-      String instanceLine = null;
-
-      try{
-         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
-
-         instanceLine = reader.readLine();
-
-         numberOfJobs = Integer.parseInt(instanceLine.split(" ")[0]);
-      }
-      catch(Exception e){
-         System.out.println("JSSP instance reader error");
-      }
-
-      return numberOfJobs;
-   }
-
-   public double[][] getTimesMatrix(){
-      double[][] times = null;
-      String instanceLine = null;
-      String[] values = null;
-      int jobCounter = 0;
-
-      try{
-         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
-
-         while(reader.ready()){
-            instanceLine = reader.readLine();
-            spacesMatcher = Pattern.compile("\\s{2,}").matcher(instanceLine);
-            instanceLine = spacesMatcher.replaceAll(" ").trim(); //replace all spaces for just one
-
-            values = instanceLine.split(" ");
-            if(values.length == 2){
-               times = new double[Integer.parseInt(values[0])][Integer.parseInt(values[1])];
-            }
-            else{
-               for(int i = 0; i <= values.length - 1; i = i + 2){
-                  times[jobCounter][Integer.parseInt(values[i])] = Double.parseDouble(values[i + 1]);
-               }
-
-               jobCounter++;
-            }
-         }
-      }
-      catch(Exception e){
-         System.out.println("JSSP get times matrix error");
-         e.printStackTrace();
-      }
-
-      return times;
-   }
-
-   public int getNumberOfRequirements(){
-      int numberOfRequirements = 0;
-      String instanceLine = null;
-
-      try{
-         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
-
-         instanceLine = reader.readLine();
-
-         numberOfRequirements = Integer.parseInt(instanceLine.split(" ")[0]);
-      }
-      catch(Exception e){
-         System.out.println("requirements problem instance reader error");
-      }
-
-      return numberOfRequirements;
-   }
-
-   public double[][] getObjectivesMatrix(int numberOfRequirements){
-      double[][] objectivesMatrix = new double[getNumberOfObjectives()][numberOfRequirements];
-      String instanceLine = null;
-      String[] values = null;
-      int objectivesCounter = 0;
-
-      try{
-         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
-
-         while(reader.ready()){
-            instanceLine = reader.readLine();
-            spacesMatcher = Pattern.compile("\\s{2,}").matcher(instanceLine);
-            instanceLine = spacesMatcher.replaceAll(" ").trim(); //replace all spaces for just one
-
-            values = instanceLine.split(" ");
-            if(values.length > 1){
-               for(int i = 0; i <= values.length - 1; i++){
-                  objectivesMatrix[objectivesCounter][i] = Double.parseDouble(values[i]);
-               }
-
-               objectivesCounter++;
-            }
-         }
-      }
-      catch(Exception e){
-         System.out.println("requirements problem get number of objectives error");
-         e.printStackTrace();
-      }
-
-      return objectivesMatrix;
-   }
-
-   private int getNumberOfObjectives(){
-      int numberOfObjectives = 0;
-      String instanceLine = null;
-      String[] values = null;
-
-      try{
-         BufferedReader reader = new BufferedReader(new FileReader(getInstance()));
-
-         while(reader.ready()){
-            instanceLine = reader.readLine();
-            spacesMatcher = Pattern.compile("\\s{2,}").matcher(instanceLine);
-            instanceLine = spacesMatcher.replaceAll(" ").trim(); //replace all spaces for just one
-
-            values = instanceLine.split(" ");
-            if(values.length > 1){
-               numberOfObjectives++;
-            }
-         }
-      }
-      catch(Exception e){
-         System.out.println("requirements problem get number of objectives error");
-         e.printStackTrace();
-      }
-
-      return numberOfObjectives;
+      return distancesMatrix;
    }
 
    /**
-    * Method to read the type of the instance.
+    * Method to get the format of the instance.
     *
-    * In TSP problem the instance can be in matrix format or in cartesian coordinates format.
     * @author Matheus Paixao
-    * @return the type of the instance.
+    * @return the format of the instance.
     * @see regex package
     * @see getInstance
     */
-   public String readInstanceType(){
+   private String getInstanceFormat(){
       String instanceType = null;
       String instanceLine = null;
       String values[] = null;
@@ -226,10 +107,31 @@ public class InstanceReader extends JFrame {
          }
       }
       catch(Exception e){
-         System.out.println("Get instance type error");
+         System.out.println("Get instance format error");
       }
 
       return instanceType;
+   }
+
+   /**
+    * Method to get the distances matrix when the instance is in cartesian coordinates format.
+    *
+    * @author Matheus Paixao
+    * @return the distances matrix
+    * @see getNodesList
+    * @see calculateDistance
+    */
+   private double[][] getDistancesMatrixInCartesianFormatInstance(){
+      Node[] nodes = getNodesList();
+      double[][] distancesMatrix = new double[nodes.length][nodes.length];
+
+      for(int i = 0; i <= distancesMatrix.length - 1; i++){
+         for(int j = 0; j <= distancesMatrix[0].length - 1; j++){
+            distancesMatrix[i][j] = calculateDistance(nodes[i], nodes[j]);
+         }
+      }
+
+      return distancesMatrix;
    }
 
    /**
@@ -237,8 +139,8 @@ public class InstanceReader extends JFrame {
     *
     * It is used an auxiliary object. dynamicListOfNodes is an ArrayList of Node
     * and is used to create the nodes in a dynamic form. The AntQ algorithm uses an 
-    * array of nodes. So, after create all the nodes the dynamicListOfNodes is casted
-    * to a simple Node array.
+    * array of nodes. So, after create all the nodes the dynamicListOfNodes is sorted,
+    * the duplicate nodes are removed and the ArrayList is casted to a simple Node array.
     *
     * The cartesian coordinates have to be in one of the formats that follows:
     * 1) n Xe+P Ye+P, where n is the line number, X is the x cartesian value x*(10^P) and Y is the y cartesian value y*(10^P)  
@@ -249,9 +151,11 @@ public class InstanceReader extends JFrame {
     * @author Matheus Paixao
     * @return a Node array containing all the nodes of the instance.
     * @see getInstance
-    * @see toArray method from ArrayList class
+    * @see getCartesianNode
+    * @see removeDuplicatedNodes
+    * @see setNodesIndexes
     */
-   public Node[] getNodesList(){
+   private Node[] getNodesList(){
       Node[] nodes = null; //array to return
       ArrayList<Node> dynamicListOfNodes = new ArrayList<Node>(); 
       File instance = getInstance();
@@ -328,20 +232,18 @@ public class InstanceReader extends JFrame {
     *
     * The list of nodes must be sorted.
     * @author Matheus Paixao
-    * @param dynamicListOfNodes the list of nodes to delete duplicated nodes.
+    * @param dynamicListOfNodes the list of nodes to remove duplicated nodes.
     */
    private void removeDuplicatedNodes(ArrayList<Node> dynamicListOfNodes){
       Node node = null;
       Node nextNode = null;
 
-      for(int i = 0; i <= dynamicListOfNodes.size() - 1; i++){
-         if(i != dynamicListOfNodes.size() - 1){
-            node = dynamicListOfNodes.get(i);
-            nextNode = dynamicListOfNodes.get(i + 1);
+      for(int i = 0; i <= dynamicListOfNodes.size() - 2; i++){
+         node = dynamicListOfNodes.get(i);
+         nextNode = dynamicListOfNodes.get(i + 1);
 
-            if(node.equals(nextNode)){
-               dynamicListOfNodes.remove(i);
-            }
+         if(node.equals(nextNode)){
+            dynamicListOfNodes.remove(i);
          }
       }
    }
@@ -351,7 +253,7 @@ public class InstanceReader extends JFrame {
     *
     * After sort and delete duplicate nodes, it's necessary set new indexes.
     * @author Matheus Paixao
-    * @param dynamicListOfNodes the list od nodes to set a new index
+    * @param dynamicListOfNodes the list of nodes to set a new index
     * @see setIndex in Node class
     */
    private void setNodesIndexes(ArrayList<Node> dynamicListOfNodes){
@@ -361,19 +263,34 @@ public class InstanceReader extends JFrame {
    }
 
    /**
-    * Method to get the edges values matrix when the instance is in the distance matrix format.
+    * Method to calculate the distance between two nodes.
     *
-    * The distance matrix must be in one of the formats that follows:
+    * The distance is calculated using the equation from analytic geometry.
+    * @author Matheus Paixao
+    * @param node1 first node
+    * @param node2 second node
+    * @return the distance between the two nodes.
+    */
+   private static double calculateDistance(Node node1, Node node2){
+      return Math.sqrt(Math.pow(node1.getX() - node2.getX(), 2) + 
+            Math.pow(node1.getY() - node2.getY(), 2));
+   }
+
+   /**
+    * Method to get the distances matrix when the instance is in matrix format.
+    *
+    * The matrix must be in one of the formats that follows:
     * 1) Symmetric matrix, where the '0's delimits each row
+    *
     * Let n be the number of nodes.
     * 2) Symmetric matrix, where the first row is A1, A2 to A1, An. And the last row is An-1, An.
     *
     * @author Matheus Paixao
-    * @return the edges values matrix
+    * @return the distances matrix
     * @see getNumberOfNodesInMatrixFormat
     */
-   public double[][] getEdgesValuesMatrix(){
-      double edgesValuesMatrix[][] = null;
+   public double[][] getDistancesMatrixInMatrixFormatInstance(){
+      double distancesMatrix[][] = null;
 
       try{
          String instanceLine = null;
@@ -395,10 +312,10 @@ public class InstanceReader extends JFrame {
 
                //if the matrix is in format 1
                if(Double.parseDouble(values[0]) == 0.0){
-                  edgesValuesMatrix = getEdgesValuesMatrixInFormat1();
+                  distancesMatrix = getDistancesMatrixInMatrixFormat1();
                }
                else{
-                  edgesValuesMatrix = getEdgesValuesMatrixInFormat2();
+                  distancesMatrix = getDistancesMatrixInMatrixFormat2();
                }
 
                //read only the first line of values
@@ -411,20 +328,20 @@ public class InstanceReader extends JFrame {
          e.printStackTrace();
       }
 
-      return edgesValuesMatrix;
+      return distancesMatrix;
    }
 
    /**
-    * Method to get the edges values matrix when the matrix instance is in format 1.
+    * Method to get the distances matrix when the matrix instance is in format 1.
     *
     * Format 1: Symmetric matrix, where the '0's delimits each row.
     * @author Matheus Paixao
-    * @return the edges values matrix
+    * @return the distances matrix
     * @see getNumberOfNodesInMatrixFormat1
     */
-   private double[][] getEdgesValuesMatrixInFormat1(){
+   private double[][] getDistancesMatrixInMatrixFormat1(){
       int numberOfNodes = getNumberOfNodesInMatrixFormat1();
-      double edgesValuesMatrix[][] = new double[numberOfNodes][numberOfNodes];
+      double distancesMatrix[][] = new double[numberOfNodes][numberOfNodes];
 
       try{
          String instanceLine = null;
@@ -458,8 +375,8 @@ public class InstanceReader extends JFrame {
                   }
 
                   //symmetric matrix
-                  edgesValuesMatrix[rowIndex][rowIndex + (columnIndex + 1)] = Double.parseDouble(values[i]);
-                  edgesValuesMatrix[rowIndex + (columnIndex + 1)][rowIndex] = Double.parseDouble(values[i]);
+                  distancesMatrix[rowIndex][rowIndex + (columnIndex + 1)] = Double.parseDouble(values[i]);
+                  distancesMatrix[rowIndex + (columnIndex + 1)][rowIndex] = Double.parseDouble(values[i]);
                }
             }
          }
@@ -469,11 +386,11 @@ public class InstanceReader extends JFrame {
          e.printStackTrace();
       }
 
-      return edgesValuesMatrix;
+      return distancesMatrix;
    }
 
    /**
-    * Method to get the number of nodes when the instance is in distance matrix format 1.
+    * Method to get the number of nodes when the instance is in matrix format 1.
     *
     * Format 1: Symmetric matrix, where the '0's delimits each row.
     * @author Matheus Paixao
@@ -519,17 +436,17 @@ public class InstanceReader extends JFrame {
    }
 
    /**
-    * Method to get the edges values matrix when the matrix instance is in format 2.
+    * Method to get the distances matrix when the matrix is in format 2.
     *
     * Let n be the number of nodes.
     * Format 2: Symmetric matrix, where the first row is A1, A2 to A1, An. And the last row is An-1, An.
     * @author Matheus Paixao
-    * @return the edges values matrix
+    * @return the distances matrix
     * @see getNumberOfNodesInMatrixFormat2
     */
-   private double[][] getEdgesValuesMatrixInFormat2(){
+   private double[][] getDistancesMatrixInMatrixFormat2(){
       int numberOfNodes = getNumberOfNodesInMatrixFormat2();
-      double edgesValuesMatrix[][] = new double[numberOfNodes][numberOfNodes];
+      double distancesMatrix[][] = new double[numberOfNodes][numberOfNodes];
 
       try{
          String instanceLine = null;
@@ -553,8 +470,8 @@ public class InstanceReader extends JFrame {
                //format 2
                for(int i = 0; i <= values.length - 1; i++){
                   //symmetric matrix
-                  edgesValuesMatrix[rowIndex][rowIndex + (i + 1)] = Double.parseDouble(values[i]);
-                  edgesValuesMatrix[rowIndex + (i + 1)][rowIndex] = Double.parseDouble(values[i]);
+                  distancesMatrix[rowIndex][rowIndex + (i + 1)] = Double.parseDouble(values[i]);
+                  distancesMatrix[rowIndex + (i + 1)][rowIndex] = Double.parseDouble(values[i]);
                }
 
                rowIndex++;
@@ -566,11 +483,11 @@ public class InstanceReader extends JFrame {
          e.printStackTrace();
       }
 
-      return edgesValuesMatrix;
+      return distancesMatrix;
    }
 
    /**
-    * Method to get the number of nodes when the instance is in distance matrix format 2.
+    * Method to get the number of nodes when the instance is in matrix format 2.
     *
     * Let n be the number of nodes.
     * Format 2: Symmetric matrix, where the first row is A1, A2 to A1, An. And the last row is An-1, An.

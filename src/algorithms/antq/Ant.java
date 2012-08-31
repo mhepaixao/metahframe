@@ -1,3 +1,8 @@
+package algorithms.antq;
+
+import util.Node;
+import util.Edge;
+
 import java.util.Random;
 import java.util.Arrays;
 

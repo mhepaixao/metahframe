@@ -1,3 +1,5 @@
+package util;
+
 /**
  * Class to represent the edges between the nodes.
  * 

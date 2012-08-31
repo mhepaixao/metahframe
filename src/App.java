@@ -1,3 +1,12 @@
+import algorithms.Algorithm;
+import problems.tsp.TSPAntQ;
+import problems.tsp.TSPRandomAlgorithm;
+import problems.jssp.JSSPAntQ;
+import problems.jssp.JSSPRandomAlgorithm;
+import problems.srpp.SRPPAntQ;
+import problems.srpp.SRPPRandomAlgorithm;
+import instancereaders.InstanceChooser;
+
 import java.io.File;
 
 /**

@@ -1,3 +1,11 @@
+package problems.jssp;
+
+import algorithms.antq.AntQ;
+import algorithms.antq.Ant;
+import instancereaders.JSSPInstanceReader;
+import util.Node;
+import util.Edge;
+
 import java.io.File;
 
 /**

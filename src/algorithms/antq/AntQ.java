@@ -1,3 +1,10 @@
+package algorithms.antq;
+
+import algorithms.Algorithm;
+import algorithms.antq.Ant;
+import util.Node;
+import util.Edge;
+
 /**
  * Class that implements the Ant Q algorithm.
  *

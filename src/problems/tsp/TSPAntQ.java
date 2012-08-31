@@ -1,3 +1,10 @@
+package problems.tsp;
+
+import algorithms.antq.AntQ;
+import instancereaders.TSPInstanceReader;
+import util.Node;
+import util.Edge;
+
 import java.io.File;
 
 /**

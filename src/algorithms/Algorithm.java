@@ -1,3 +1,5 @@
+package algorithms;
+
 /**
  * Interface to specify the behavior of the algorithms.
  *

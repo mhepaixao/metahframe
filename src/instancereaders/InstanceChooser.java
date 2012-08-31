@@ -1,3 +1,5 @@
+package instancereaders;
+
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 

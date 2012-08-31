@@ -1,3 +1,7 @@
+package algorithms.random;
+
+import algorithms.Algorithm;
+
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Random;

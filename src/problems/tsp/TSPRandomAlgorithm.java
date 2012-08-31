@@ -1,3 +1,8 @@
+package problems.tsp;
+
+import algorithms.random.RandomAlgorithm;
+import instancereaders.TSPInstanceReader;
+
 import java.io.File;
 
 /**

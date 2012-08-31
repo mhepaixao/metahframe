@@ -1,3 +1,8 @@
+package problems.jssp;
+
+import algorithms.random.RandomAlgorithm;
+import instancereaders.JSSPInstanceReader;
+
 import java.io.File;
 
 /**
