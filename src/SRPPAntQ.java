@@ -211,7 +211,7 @@ public class SRPPAntQ extends AntQ{
    /**
     * Method to compare if a solution value is better than another one.
     *
-    * In TSP as bigger fitness value as better.
+    * In SRPP as bigger fitness value as better.
     * @author Matheus Paixao
     * @param iterationSolutionValue the fitness value of some solution
     * @param bestSolutionValue the best fitness value of an iteration

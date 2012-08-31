@@ -13,7 +13,7 @@ public class TSPRandomAlgorithm extends RandomAlgorithm{
 
    /**
     * Method to create the TSPRandomAlgorithm object, receive the instance to read and
-    * the number of iterations is passed to the TSPRandomAlgorithm constructor.
+    * the number of iterations is passed to the RandomAlgorithm constructor.
     *
     * @author Matheus Paixao
     * @param instance the instance to read

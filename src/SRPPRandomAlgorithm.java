@@ -17,6 +17,17 @@ public class SRPPRandomAlgorithm extends RandomAlgorithm{
    int numberOfRequirements;
    int[][] precedencesMatrix;
 
+   /**
+    * Method to create the SRPPRandomAlgorithm object, receive the instance to read and
+    * the number of iterations is passed to the RandomAlgorithm constructor.
+    *
+    * @author Matheus Paixao
+    * @param instance the instance to read
+    * @param numberOfIterations number of iterations to be runned
+    * @see RandomAlgorithm constructor
+    * @see getObjectiveValues in SRPPInstanceReader
+    * @see getPrecedencesMatrix in SRPPInstanceReader
+    */
    public SRPPRandomAlgorithm(File instance, int numberOfIterations){
       super(numberOfIterations);
       srppInstanceReader = new SRPPInstanceReader(instance);
@@ -25,6 +36,19 @@ public class SRPPRandomAlgorithm extends RandomAlgorithm{
       this.numberOfRequirements = objectivesValues[0].length;
    }
 
+   public int getNumberOfNodes(){
+      return this.numberOfRequirements;
+   }
+
+   /**
+    * Method that implements the fitness function of SRRP problem.
+    *
+    * This fitness function is described in the paper.
+    * @author Matheus Paixao
+    * @param solution the array of edges that corresponds to the solution founded by the algorithm
+    * @return fitness value of the solution
+    * @see getObjectivesSum
+    */
    public double calculateSolutionValue(int[] solution){
       double solutionValue = 0;
 
@@ -35,6 +59,13 @@ public class SRPPRandomAlgorithm extends RandomAlgorithm{
       return solutionValue;
    }
 
+   /**
+    * Method to get the sum of all objectives values for a requirement.
+    *
+    * @author Matheus Paixao
+    * @param requirement the requirement to know the objectives sum
+    * @return the sum of all objectives values for the requirement
+    */
    private double getObjectivesSum(int requirement){
       double objectivesSum = 0;
 
@@ -45,10 +76,15 @@ public class SRPPRandomAlgorithm extends RandomAlgorithm{
       return objectivesSum;
    }
 
-   public int getNumberOfNodes(){
-      return this.numberOfRequirements;
-   }
-
+   /**
+    * Method to compare if a solution value is better than another one.
+    *
+    * In SRPP as bigger fitness value as better.
+    * @author Matheus Paixao
+    * @param iterationSolutionValue the fitness value of some solution
+    * @param bestSolutionValue the best fitness value of an iteration
+    * @return true if the first fitness value is best than the other one
+    */
    public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
       boolean result = false;
 
@@ -59,6 +95,17 @@ public class SRPPRandomAlgorithm extends RandomAlgorithm{
       return result;
    }
 
+   /**
+    * Method to know if a solution broke some restriction.
+    *
+    * In SRPP a requirement cannot be placed before its predecessors.
+    * @author Matheus Paixao
+    * @param solution the solution to test if it broke some restriction
+    * @return true if the solution is OK, false if broke some restriction
+    * @see hasPredecessor
+    * @see getPredecessors
+    * @see getRequirementPosition
+    */
    public boolean satisfyAllRestrictions(int[] solution){
       boolean result = true;
       ArrayList<Node> predecessors = null;
@@ -67,6 +114,7 @@ public class SRPPRandomAlgorithm extends RandomAlgorithm{
       for(int i = 0; i < solution.length - 1; i++){
          if(hasPredecessor(solution[i])){
             predecessors = getPredecessors(solution[i]);
+
             for(Node node : predecessors){
                predecessorPosition = getRequirementPosition(node, solution);
                if(i < predecessorPosition){
@@ -100,6 +148,13 @@ public class SRPPRandomAlgorithm extends RandomAlgorithm{
       return result;
    }
 
+   /**
+    * Method to get all predecessors of a requirement.
+    *
+    * @author Matheus Paixao
+    * @param requirement the requirement to get its predecessors
+    * @return list containing all predecessors of the requirement
+    */
    private ArrayList<Node> getPredecessors(int requirement){
       ArrayList<Node> predecessors = new ArrayList<Node>();
 
@@ -112,6 +167,14 @@ public class SRPPRandomAlgorithm extends RandomAlgorithm{
       return predecessors;
    }
 
+   /**
+    * Method to get the position of a requirement in a given solution.
+    *
+    * @author Matheus Paixao
+    * @param requirement the requirement to get the position
+    * @param solution the solution where the requirement is
+    * @return the position of the requirement in the solution
+    */
    private int getRequirementPosition(Node requirement, int[] solution){
       int requirementPosition = 0;
 
