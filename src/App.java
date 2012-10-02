@@ -1,6 +1,7 @@
 import algorithms.Algorithm;
 import problems.tsp.TSPAntQ;
 import problems.tsp.TSPRandomAlgorithm;
+import problems.tsp.TSPACS;
 import problems.jssp.JSSPAntQ;
 import problems.jssp.JSSPRandomAlgorithm;
 import problems.srpp.SRPPAntQ;
@@ -48,6 +49,11 @@ public class App{
          }
          else if(problem.equals("srpp")){
             adaptedAlgorithm = new SRPPAntQ(instance, numberOfIterations);
+         }
+      }
+      else if(algorithm.equals("acs")){
+         if(problem.equals("tsp")){
+            adaptedAlgorithm = new TSPACS(instance, numberOfIterations);
          }
       }
       else if(algorithm.equals("random")){
