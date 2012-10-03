@@ -15,6 +15,7 @@ public abstract class ACS implements Algorithm{
    private double[][] pheromone;
 
    protected abstract int getNumberOfNodes();
+   protected abstract double getInitialPheromone();
 
    public ACS(int numberOfIterations){
       setNumberOfIterations(numberOfIterations);
@@ -60,6 +61,15 @@ public abstract class ACS implements Algorithm{
    }
 
    private void initPheromoneValues(){
-      //pheromone = new double
+      pheromone = new double[nodes.length][nodes.length];
+      double initialPheromone = getInitialPheromone();
+
+      for(int i = 0; i <= pheromone.length - 1; i++){
+         for(int j = 0; j <= pheromone[0].length - 1; j++){
+            if(i != j){
+               pheromone[i][j] = initialPheromone;
+            }
+         }
+      }
    }
 }
