@@ -26,6 +26,10 @@ public class TSPACS extends ACS{
       return this.numberOfCities;
    }
 
+   protected int getNumberOfAnts(){
+      return 10;
+   }
+
    protected double getInitialPheromone(){
       return this.initialPheromone;
    }

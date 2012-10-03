@@ -1,6 +1,10 @@
 package algorithms.acs;
 
 import algorithms.Algorithm;
+import algorithms.acs.ACSAnt;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public abstract class ACS implements Algorithm{
    private static final double q0 = 0.9;
@@ -14,7 +18,10 @@ public abstract class ACS implements Algorithm{
    private Integer[] nodes;
    private double[][] pheromone;
 
+   private ACSAnt[] ants;
+
    protected abstract int getNumberOfNodes();
+   protected abstract int getNumberOfAnts();
    protected abstract double getInitialPheromone();
 
    public ACS(int numberOfIterations){
@@ -24,6 +31,10 @@ public abstract class ACS implements Algorithm{
 
    private void setNumberOfIterations(int numberOfIterations){
       this.numberOfIterations = numberOfIterations;
+   }
+
+   private double getQ0(){
+      return this.q0;
    }
 
    private void setTotalTime(double totalTime){
@@ -50,6 +61,7 @@ public abstract class ACS implements Algorithm{
    private void initACS(){
       initNodes();
       initPheromoneValues();
+      initAnts();
    }
 
    private void initNodes(){
@@ -71,5 +83,34 @@ public abstract class ACS implements Algorithm{
             }
          }
       }
+   }
+
+   private void initAnts(){
+      ants = new ACSAnt[getNumberOfAnts()];
+      int randomInitialNode = 0;
+
+      ArrayList<Integer> listToGetInitialRandomNode = new ArrayList<Integer>();
+      fillListToGetInitialRandomNode(listToGetInitialRandomNode);
+
+      for(int i = 0; i <= ants.length - 1; i++){
+         randomInitialNode = getRandomInitialNode(listToGetInitialRandomNode);
+         listToGetInitialRandomNode.remove(new Integer(randomInitialNode));
+
+         ants[i] = new ACSAnt(this, getQ0(), randomInitialNode);
+      }
+   }
+
+   private void fillListToGetInitialRandomNode(ArrayList<Integer> listToGetInitialRandomNode){
+      for(int i = 0; i <= nodes.length - 1; i++){
+         listToGetInitialRandomNode.add(new Integer(i));
+      }
+   }
+
+   private int getRandomInitialNode(ArrayList<Integer> listToGetInitialRandomNode){
+      Random random = new Random();
+      int randomIndex = random.nextInt(listToGetInitialRandomNode.size());
+      int randomInitialNode = listToGetInitialRandomNode.get(randomIndex);
+
+      return randomInitialNode;
    }
 }
