@@ -35,53 +35,67 @@ public class TSPACS extends ACS{
    }
 
    private double calculateInitialPheromone(){
-      return Math.pow(getNumberOfNodes() * getNearestNeighbourSolution(), -1);
+      return Math.pow(getNumberOfNodes() * getNearestNeighbourSolutionValue(), -1);
    }
 
-   private double getNearestNeighbourSolution(){
+   private double getNearestNeighbourSolutionValue(){
       int[] nearestNeighbourSolution = new int[getNumberOfNodes()];
-      Integer[] citiesToVisit = new Integer[getNumberOfNodes()];
+      Integer[] citiesToVisitInNearestNeighbourSolution = new Integer[getNumberOfNodes()];
+      int previousCity = 0;
+      int nextCity = 0;
 
-      for(int i = 0; i <= nearestNeighbourSolution.length - 1; i++){
-         nearestNeighbourSolution[i] = 0;
-         citiesToVisit[i] = i;
-      }
+      initNearestNeighbourAlgorithm(nearestNeighbourSolution, citiesToVisitInNearestNeighbourSolution);
 
-      nearestNeighbourSolution[0] = getFirstNearestNeighbourCity(citiesToVisit);
+      nextCity = getFirstNearestNeighbourCity(citiesToVisitInNearestNeighbourSolution);
+      nearestNeighbourSolution[0] = nextCity;
+      citiesToVisitInNearestNeighbourSolution[nextCity] = null;
+
       for(int i = 1; i <= nearestNeighbourSolution.length - 1; i++){
-         nearestNeighbourSolution[i] = getNextNearestNeighbourCity(i - 1, citiesToVisit);
+         previousCity = i - 1;
+         nextCity = getNextNearestNeighbourCity(previousCity, citiesToVisitInNearestNeighbourSolution);
+         nearestNeighbourSolution[i] = nextCity;
+         citiesToVisitInNearestNeighbourSolution[nextCity] = null;
       }
 
       return calculateSolutionValue(nearestNeighbourSolution);
    }
 
-   private int getFirstNearestNeighbourCity(Integer[] citiesToVisit){
+   private void initNearestNeighbourAlgorithm(int[] nearestNeighbourSolution, Integer[] citiesToVisitInNearestNeighbourSolution){
+      for(int i = 0; i <= nearestNeighbourSolution.length - 1; i++){
+         nearestNeighbourSolution[i] = 0;
+         citiesToVisitInNearestNeighbourSolution[i] = i;
+      }
+   }
+
+   private int getFirstNearestNeighbourCity(Integer[] citiesToVisitInNearestNeighbourSolution){
       Random random = new Random();
-      int firstCity = random.nextInt(getNumberOfNodes());
-      citiesToVisit[firstCity] = null;
+      int randomCityIndex = random.nextInt(getNumberOfNodes());
+      int firstCity = citiesToVisitInNearestNeighbourSolution[randomCityIndex];
+
       return firstCity;
    }
 
-   private int getNextNearestNeighbourCity(int lastAddedCity, Integer[] citiesToVisit){
+   private int getNextNearestNeighbourCity(int previousCity, Integer[] citiesToVisitInNearestNeighbourSolution){
       int nextNearestNeighbourCity = 0;
       double minDistance = 0;
+      double distance = 0;
 
-      for(int i = 0; i <= citiesToVisit.length - 1; i++){
-         if(citiesToVisit[i] != null){
+      for(int i = 0; i <= citiesToVisitInNearestNeighbourSolution.length - 1; i++){
+         if(citiesToVisitInNearestNeighbourSolution[i] != null){
+            distance = distancesMatrix[previousCity][i];
             if(minDistance == 0){
-               minDistance = distancesMatrix[lastAddedCity][i];
+               minDistance = distance;
                nextNearestNeighbourCity = i;
             }
             else{
-               if(distancesMatrix[lastAddedCity][i] < minDistance){
-                  minDistance = distancesMatrix[lastAddedCity][i];
+               if(distance < minDistance){
+                  minDistance = distance;
                   nextNearestNeighbourCity = i;
                }
             }
          }
       }
 
-      citiesToVisit[nextNearestNeighbourCity] = null;
       return nextNearestNeighbourCity;
    }
 
