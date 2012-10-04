@@ -33,6 +33,10 @@ public abstract class ACS implements Algorithm{
       this.numberOfIterations = numberOfIterations;
    }
 
+   private int getNumberOfIterations(){
+      return this.numberOfIterations;
+   }
+
    private double getQ0(){
       return this.q0;
    }
@@ -49,9 +53,22 @@ public abstract class ACS implements Algorithm{
       double initialTime = 0;
       double finalTime = 0;
 
+      int[] iterationSolution = null;
+      double iterationSolutionValue = 0;
+      int[] bestSolution = null;
+      double bestSolutionValue = 0;
+
+      int iterationsCounter = 0;
+
       initACS();
 
       initialTime = System.currentTimeMillis();
+      while(iterationsCounter < getNumberOfIterations()){
+         iterationSolution = getIterationSolution();
+
+         iterationsCounter++;
+      }
+
       finalTime = System.currentTimeMillis();
       setTotalTime(finalTime - initialTime);
 
@@ -87,6 +104,23 @@ public abstract class ACS implements Algorithm{
 
    private void initAnts(){
       ants = new ACSAnt[getNumberOfAnts()];
+
+      for(int i = 0; i <= ants.length - 1; i++){
+         ants[i] = new ACSAnt(this, getQ0());
+      }
+   }
+
+   private int[] getIterationSolution(){
+      setAntsInitialNode(); 
+
+      for(int i = 0; i <= ants.length - 1; i++){
+         ants[i].loadNodesToVisit();
+      }
+
+      return new int[1];
+   }
+
+   private void setAntsInitialNode(){
       int randomInitialNode = 0;
 
       ArrayList<Integer> listToGetInitialRandomNode = new ArrayList<Integer>();
@@ -95,8 +129,7 @@ public abstract class ACS implements Algorithm{
       for(int i = 0; i <= ants.length - 1; i++){
          randomInitialNode = getRandomInitialNode(listToGetInitialRandomNode);
          listToGetInitialRandomNode.remove(new Integer(randomInitialNode));
-
-         ants[i] = new ACSAnt(this, getQ0(), randomInitialNode);
+         ants[i].setInitialNode(randomInitialNode);
       }
    }
 

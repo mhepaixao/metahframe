@@ -27,7 +27,7 @@ public class ACSAnt{
     * @see loadNodesToVisit
     * @see removeNodeFromNodesToVisit
     */
-   public ACSAnt(ACS acs, double q0, int initialNode){
+   public ACSAnt(ACS acs, double q0){
       this.random = new Random();
 
       this.acs = acs;
@@ -37,14 +37,16 @@ public class ACSAnt{
       tour = new int[acs.getNumberOfNodes()];
 
       loadNodesToVisit();
-
-      this.initialNode = initialNode;
-      setCurrentNode(getInitialNode());
-      removeNodeFromNodesToVisit(getInitialNode());
    }
 
    public int getInitialNode(){
       return this.initialNode;
+   }
+
+   public void setInitialNode(int initialNode){
+      this.initialNode = initialNode;
+      setCurrentNode(getInitialNode());
+      removeNodeFromNodesToVisit(getInitialNode());
    }
 
    public int getCurrentNode(){
