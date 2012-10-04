@@ -185,4 +185,16 @@ public abstract class ACS implements Algorithm{
 
       return actionChoice;
    }
+
+   public double getActionChoiceSum(int currentNode, Integer nodesToVisit[]){
+      double actionChoiceSum = 0;
+
+      for(int i = 0; i <= nodesToVisit.length - 1; i++){
+         if(nodesToVisit[i] != null){
+            actionChoiceSum += getActionChoice(currentNode, nodesToVisit[i]);
+         }
+      }
+
+      return actionChoiceSum;
+   }
 }

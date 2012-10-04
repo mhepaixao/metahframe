@@ -1,5 +1,6 @@
 package algorithms.acs;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class ACSAnt{
@@ -85,7 +86,7 @@ public class ACSAnt{
       }
       else{
          //exploration
-         //nextNode = getPseudoRandomProportionalNode(); //method 2
+         nextNode = getPseudoRandomProportionalNode(); 
       }
 
       return nextNode;
@@ -122,5 +123,63 @@ public class ACSAnt{
       }
 
       return firstNodeToVisit;
+   }
+
+   private int getPseudoRandomProportionalNode(){
+      int node = 0;
+      double rouletteValue = 0;
+      double probabilities[] = getPseudoRandomProportionalProbabilities();
+
+      rouletteValue = getRouletteValue(probabilities);
+
+      for(int i = 0; i <= probabilities.length - 1; i++){
+         if(rouletteValue == probabilities[i]){
+            node = nodesToVisit[i];
+            break;
+         }
+      }
+
+      return node;
+   }
+
+   protected double[] getPseudoRandomProportionalProbabilities(){
+      double probabilities[] = new double[nodesToVisit.length];
+      double actionChoiceSum = acs.getActionChoiceSum(getCurrentNode(), nodesToVisit);
+
+      for(int i = 0; i <= probabilities.length - 1; i++){
+         if(nodesToVisit[i] != null){
+            probabilities[i] = acs.getActionChoice(getCurrentNode(), nodesToVisit[i]) / actionChoiceSum;
+         }
+         else{
+            probabilities[i] = 0;
+         }
+      }
+
+      return probabilities;
+   }
+
+   private double getRouletteValue(double[] probabilities){
+      double[] rouletteProbabilities = new double[probabilities.length];
+      double neddle = 0;
+      double neddleChecker = 0;
+      double rouletteValue = 0;
+
+      for(int i = 0; i <= rouletteProbabilities.length - 1; i++){
+         rouletteProbabilities[i] = probabilities[i];
+      }
+
+      Arrays.sort(rouletteProbabilities);
+
+      neddle = getRandomNumber();
+
+      for(int i = 0; i <= rouletteProbabilities.length - 1; i++){
+         neddleChecker += rouletteProbabilities[i];
+         if(neddleChecker >= neddle){
+            rouletteValue = rouletteProbabilities[i];
+            break;
+         }
+      }
+
+      return rouletteValue;
    }
 }
