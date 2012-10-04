@@ -53,6 +53,10 @@ public class ACSAnt{
       return this.currentNode;
    }
 
+   private void setCurrentNode(int node){
+      this.currentNode = nodesToVisit[node];
+   }
+
    public Integer[] getNodesToVisit(){
       return this.nodesToVisit;
    }
@@ -63,11 +67,60 @@ public class ACSAnt{
       }
    }
 
-   private void setCurrentNode(int node){
-      this.currentNode = nodesToVisit[node];
-   }
-
    private void removeNodeFromNodesToVisit(int node){
       nodesToVisit[node] = null;
+   }
+
+   public boolean isTourFinished(){
+      return false;
+   }
+
+   public int chooseNextNode(){
+      double q = getRandomNumber();
+      int nextNode = 0;
+
+      if(q <= q0){
+         //exploitation
+         nextNode = getMaxActionChoiceNode();
+      }
+      else{
+         //exploration
+         //nextNode = getPseudoRandomProportionalNode(); //method 2
+      }
+
+      return nextNode;
+   }
+
+   private double getRandomNumber(){
+      return random.nextDouble();
+   }
+
+   private int getMaxActionChoiceNode(){
+      int maxActionChoiceNode = getFirstNodeToVisit();
+      int node = 0;
+
+      for(int i = 0; i <= nodesToVisit.length - 1; i++){
+         if(nodesToVisit[i] != null){
+            node = nodesToVisit[i];
+            if(acs.getActionChoice(getCurrentNode(), node) > acs.getActionChoice(getCurrentNode(), maxActionChoiceNode)){
+               maxActionChoiceNode = node;
+            }
+         }
+      }
+
+      return maxActionChoiceNode;
+   }
+
+   private int getFirstNodeToVisit(){
+      int firstNodeToVisit = 0;
+
+      for(int i = 0; i <= nodesToVisit.length - 1; i++){
+         if(nodesToVisit[i] != null){
+            firstNodeToVisit = nodesToVisit[i];
+            break;
+         }
+      }
+
+      return firstNodeToVisit;
    }
 }

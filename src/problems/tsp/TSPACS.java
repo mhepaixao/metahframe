@@ -116,4 +116,8 @@ public class TSPACS extends ACS{
 
       return solutionValue;
    }
+
+   public double getHeuristicValue(int node1, int node2){
+      return 1 / distancesMatrix[node1][node2];
+   }
 }

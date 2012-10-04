@@ -18,11 +18,13 @@ public abstract class ACS implements Algorithm{
    private Integer[] nodes;
    private double[][] pheromone;
 
-   private ACSAnt[] ants;
+   protected ACSAnt[] ants;
+   protected ACSAnt currentAnt;
 
    protected abstract int getNumberOfNodes();
    protected abstract int getNumberOfAnts();
    protected abstract double getInitialPheromone();
+   protected abstract double getHeuristicValue(int node1, int node2);
 
    public ACS(int numberOfIterations){
       setNumberOfIterations(numberOfIterations);
@@ -47,6 +49,14 @@ public abstract class ACS implements Algorithm{
 
    public double getTotalTime(){
       return this.totalTime;
+   }
+
+   private void setCurrentAnt(ACSAnt currentAnt){
+      this.currentAnt = currentAnt;
+   }
+
+   private ACSAnt getCurrentAnt(){
+      return this.currentAnt;
    }
    
    public double getSolution(){
@@ -113,11 +123,30 @@ public abstract class ACS implements Algorithm{
    private int[] getIterationSolution(){
       setAntsInitialNode(); 
 
-      for(int i = 0; i <= ants.length - 1; i++){
-         ants[i].loadNodesToVisit();
+      int[] iterationSolution = null;
+      double iterationSolutionValue = 0;
+
+      ACSAnt ant = null;
+      int nextNode = 0;
+      double reinforcementLearningValue = 0;
+
+      for(int i = 0; i <= nodes.length - 1; i++){
+         if(i != nodes.length - 1){
+            for(int j = 0; j <= ants.length - 1; j++){
+               setCurrentAnt(ants[j]);
+
+               ant = getCurrentAnt();
+               if(ant.isTourFinished() == false){
+                  nextNode = ant.chooseNextNode();
+                  //ant.setNextNode(nextNode);
+                  //ant.addNodeToTour(ant.getNextNode());
+               }
+               ant.loadNodesToVisit();
+            }
+         }
       }
 
-      return new int[1];
+      return iterationSolution;
    }
 
    private void setAntsInitialNode(){
@@ -145,5 +174,15 @@ public abstract class ACS implements Algorithm{
       int randomInitialNode = listToGetInitialRandomNode.get(randomIndex);
 
       return randomInitialNode;
+   }
+
+   public double getActionChoice(int node1, int node2){
+      double actionChoice =  pheromone[node1][node2] * Math.pow(getHeuristicValue(node1, node2), beta);
+
+      if((Double.isNaN(actionChoice)) || (Double.POSITIVE_INFINITY == actionChoice) || (Double.NEGATIVE_INFINITY == actionChoice)){
+         actionChoice = 0;
+      }
+
+      return actionChoice;
    }
 }
