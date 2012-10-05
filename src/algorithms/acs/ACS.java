@@ -25,6 +25,8 @@ public abstract class ACS implements Algorithm{
    protected abstract int getNumberOfAnts();
    protected abstract double getInitialPheromone();
    protected abstract double getHeuristicValue(int node1, int node2);
+   protected abstract double calculateSolutionValue(Integer[] solution);
+   protected abstract boolean isSolutionBest(double solutionValue, double bestSolutionValue);
 
    public ACS(int numberOfIterations){
       setNumberOfIterations(numberOfIterations);
@@ -63,9 +65,9 @@ public abstract class ACS implements Algorithm{
       double initialTime = 0;
       double finalTime = 0;
 
-      int[] iterationSolution = null;
+      Integer[] iterationSolution = null;
       double iterationSolutionValue = 0;
-      int[] bestSolution = null;
+      Integer[] bestSolution = null;
       double bestSolutionValue = 0;
 
       int iterationsCounter = 0;
@@ -75,6 +77,19 @@ public abstract class ACS implements Algorithm{
       initialTime = System.currentTimeMillis();
       while(iterationsCounter < getNumberOfIterations()){
          iterationSolution = getIterationSolution();
+         iterationSolutionValue = calculateSolutionValue(iterationSolution);
+
+         if(bestSolution == null){
+            bestSolution = iterationSolution;
+            bestSolutionValue = iterationSolutionValue;
+         }
+         else{
+            if(isSolutionBest(iterationSolutionValue, bestSolutionValue) == true){
+               //System.out.println("found best solution");
+               bestSolution = iterationSolution;
+               bestSolutionValue = iterationSolutionValue;
+            }
+         }
 
          iterationsCounter++;
       }
@@ -82,7 +97,7 @@ public abstract class ACS implements Algorithm{
       finalTime = System.currentTimeMillis();
       setTotalTime(finalTime - initialTime);
 
-      return 0;
+      return bestSolutionValue;
    }
 
    private void initACS(){
@@ -120,10 +135,10 @@ public abstract class ACS implements Algorithm{
       }
    }
 
-   private int[] getIterationSolution(){
+   private Integer[] getIterationSolution(){
       setAntsInitialNode(); 
 
-      int[] iterationSolution = null;
+      Integer[] iterationSolution = null;
       double iterationSolutionValue = 0;
 
       ACSAnt ant = null;
@@ -159,6 +174,9 @@ public abstract class ACS implements Algorithm{
 
          }
       }
+
+      iterationSolution = getIterationBestSolution();
+      iterationSolutionValue = calculateSolutionValue(iterationSolution);
 
       for(int i = 0; i <= ants.length - 1; i++){
          ants[i].clearTour();
@@ -215,5 +233,28 @@ public abstract class ACS implements Algorithm{
       }
 
       return actionChoiceSum;
+   }
+
+   private Integer[] getIterationBestSolution(){
+      Integer iterationBestSolutionTemp[] = ants[0].getTour();
+      Integer iterationBestSolution[] = new Integer[iterationBestSolutionTemp.length];
+      Integer solution[] = null;
+      double iterationBestSolutionValue = calculateSolutionValue(iterationBestSolutionTemp);
+      double solutionValue = 0;
+
+      for(int i = 0; i <= ants.length - 1; i++){
+         solution = ants[i].getTour();
+         solutionValue = calculateSolutionValue(solution);
+         if(isSolutionBest(solutionValue, iterationBestSolutionValue) == true){
+            iterationBestSolutionValue = solutionValue;
+            iterationBestSolutionTemp = solution;
+         }
+      }
+
+      for(int i = 0; i <= iterationBestSolutionTemp.length - 1; i++){
+         iterationBestSolution[i] = iterationBestSolutionTemp[i];
+      }
+
+      return iterationBestSolution;
    }
 }

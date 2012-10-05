@@ -39,7 +39,7 @@ public class TSPACS extends ACS{
    }
 
    private double getNearestNeighbourSolutionValue(){
-      int[] nearestNeighbourSolution = new int[getNumberOfNodes()];
+      Integer[] nearestNeighbourSolution = new Integer[getNumberOfNodes()];
       Integer[] citiesToVisitInNearestNeighbourSolution = new Integer[getNumberOfNodes()];
       int previousCity = 0;
       int nextCity = 0;
@@ -60,7 +60,7 @@ public class TSPACS extends ACS{
       return calculateSolutionValue(nearestNeighbourSolution);
    }
 
-   private void initNearestNeighbourAlgorithm(int[] nearestNeighbourSolution, Integer[] citiesToVisitInNearestNeighbourSolution){
+   private void initNearestNeighbourAlgorithm(Integer[] nearestNeighbourSolution, Integer[] citiesToVisitInNearestNeighbourSolution){
       for(int i = 0; i <= nearestNeighbourSolution.length - 1; i++){
          nearestNeighbourSolution[i] = 0;
          citiesToVisitInNearestNeighbourSolution[i] = i;
@@ -106,7 +106,7 @@ public class TSPACS extends ACS{
     * @param solution the array of int that corresponds to the solution to be calculated
     * @return fitness value of the solution
     */
-   public double calculateSolutionValue(int[] solution){
+   public double calculateSolutionValue(Integer[] solution){
       double solutionValue = 0;
 
       for(int i = 0; i <= solution.length - 2; i++){
@@ -119,5 +119,15 @@ public class TSPACS extends ACS{
 
    public double getHeuristicValue(int node1, int node2){
       return 1 / distancesMatrix[node1][node2];
+   }
+
+   public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
+      boolean result = false;
+
+      if(iterationSolutionValue < bestSolutionValue){
+         result = true;
+      }
+
+      return result;
    }
 }

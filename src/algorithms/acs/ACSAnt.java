@@ -80,6 +80,10 @@ public class ACSAnt{
       nodesToVisit[node] = null;
    }
 
+   public Integer[] getTour(){
+      return this.tour;
+   }
+
    public boolean isTourFinished(){
       return false;
    }
