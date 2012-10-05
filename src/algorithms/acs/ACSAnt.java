@@ -8,7 +8,7 @@ public class ACSAnt{
    private int currentNode;
    private int nextNode;
    protected Integer nodesToVisit[];
-   private int[] tour;
+   private Integer[] tour;
 
    protected ACS acs; //used to call some acs methods
    private double q0; //used in chooseNextNode method
@@ -35,7 +35,7 @@ public class ACSAnt{
       this.q0 = q0;
 
       this.nodesToVisit = new Integer[acs.getNumberOfNodes()];
-      tour = new int[acs.getNumberOfNodes()];
+      tour = new Integer[acs.getNumberOfNodes()];
 
       loadNodesToVisit();
    }
@@ -54,8 +54,16 @@ public class ACSAnt{
       return this.currentNode;
    }
 
-   private void setCurrentNode(int node){
+   public void setCurrentNode(int node){
       this.currentNode = nodesToVisit[node];
+   }
+
+   public int getNextNode(){
+      return this.nextNode;
+   }
+
+   public void setNextNode(int node){
+      this.nextNode = nodesToVisit[node];
    }
 
    public Integer[] getNodesToVisit(){
@@ -68,12 +76,27 @@ public class ACSAnt{
       }
    }
 
-   private void removeNodeFromNodesToVisit(int node){
+   public void removeNodeFromNodesToVisit(int node){
       nodesToVisit[node] = null;
    }
 
    public boolean isTourFinished(){
       return false;
+   }
+
+   public void clearTour(){
+      for(int i = 0; i <= tour.length - 1; i++){
+         tour[i] = null;
+      }
+   }
+
+   public void addNodeToTour(int node){
+      for(int i = 0; i <= tour.length - 1; i++){
+         if(tour[i] == null){
+            tour[i] = node;
+            break;
+         }
+      }
    }
 
    public int chooseNextNode(){

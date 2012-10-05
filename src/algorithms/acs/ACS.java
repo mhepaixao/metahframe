@@ -130,20 +130,38 @@ public abstract class ACS implements Algorithm{
       int nextNode = 0;
       double reinforcementLearningValue = 0;
 
-      for(int i = 0; i <= nodes.length - 1; i++){
-         if(i != nodes.length - 1){
-            for(int j = 0; j <= ants.length - 1; j++){
-               setCurrentAnt(ants[j]);
+      for(int i = 1; i <= nodes.length - 1; i++){
+         for(int j = 0; j <= ants.length - 1; j++){
+            setCurrentAnt(ants[j]);
 
-               ant = getCurrentAnt();
-               if(ant.isTourFinished() == false){
-                  nextNode = ant.chooseNextNode();
-                  //ant.setNextNode(nextNode);
-                  //ant.addNodeToTour(ant.getNextNode());
-               }
-               ant.loadNodesToVisit();
+            ant = getCurrentAnt();
+
+            if(ant.isTourFinished() == false){
+               nextNode = ant.chooseNextNode();
+               ant.setNextNode(nextNode);
+               ant.addNodeToTour(ant.getNextNode());
             }
          }
+
+         for(int j = 0; j <= ants.length - 1; j++){
+            setCurrentAnt(ants[j]);
+
+            ant = getCurrentAnt();
+
+            ant.setCurrentNode(ant.getNextNode()); //move to the next choosed node
+            if(ant.isTourFinished() == false){
+               ant.removeNodeFromNodesToVisit(ant.getCurrentNode()); // remove the current node from the nodes to visit
+            }
+
+            if(i == nodes.length - 1){
+               ant.loadNodesToVisit();
+            }
+
+         }
+      }
+
+      for(int i = 0; i <= ants.length - 1; i++){
+         ants[i].clearTour();
       }
 
       return iterationSolution;
@@ -159,6 +177,7 @@ public abstract class ACS implements Algorithm{
          randomInitialNode = getRandomInitialNode(listToGetInitialRandomNode);
          listToGetInitialRandomNode.remove(new Integer(randomInitialNode));
          ants[i].setInitialNode(randomInitialNode);
+         ants[i].addNodeToTour(ants[i].getInitialNode());
       }
    }
 
