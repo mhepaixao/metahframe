@@ -79,6 +79,8 @@ public abstract class ACS implements Algorithm{
          iterationSolution = getIterationSolution();
          iterationSolutionValue = calculateSolutionValue(iterationSolution);
 
+         //System.out.println("iteration: "+iterationsCounter);
+
          if(bestSolution == null){
             bestSolution = iterationSolution;
             bestSolutionValue = iterationSolutionValue;
@@ -163,6 +165,8 @@ public abstract class ACS implements Algorithm{
 
             ant = getCurrentAnt();
 
+            localUpdate(ant.getTour());
+
             ant.setCurrentNode(ant.getNextNode()); //move to the next choosed node
             if(ant.isTourFinished() == false){
                ant.removeNodeFromNodesToVisit(ant.getCurrentNode()); // remove the current node from the nodes to visit
@@ -181,6 +185,9 @@ public abstract class ACS implements Algorithm{
       for(int i = 0; i <= ants.length - 1; i++){
          ants[i].clearTour();
       }
+
+      reinforcementLearningValue = Math.pow(iterationSolutionValue, -1);
+      globalUpdate(iterationSolution, reinforcementLearningValue);
 
       return iterationSolution;
    }
@@ -235,6 +242,27 @@ public abstract class ACS implements Algorithm{
       return actionChoiceSum;
    }
 
+   private void localUpdate(Integer[] tour){
+      int lastNode = 0;
+      int previousNode = 0;
+
+      if(tour[tour.length - 1] != null){
+         lastNode = tour[tour.length - 1];
+         previousNode = tour[tour.length - 2];
+      }
+      else{
+         for(int i = 0; i <= tour.length - 1; i++){
+            if(tour[i] == null){
+               lastNode = tour[i - 1];
+               previousNode = tour[i - 2];
+               break;
+            }
+         }
+      }
+      
+      pheromone[previousNode][lastNode] = ((1 - rho) * pheromone[previousNode][lastNode]) + (rho * getInitialPheromone());
+   }
+
    private Integer[] getIterationBestSolution(){
       Integer iterationBestSolutionTemp[] = ants[0].getTour();
       Integer iterationBestSolution[] = new Integer[iterationBestSolutionTemp.length];
@@ -256,5 +284,21 @@ public abstract class ACS implements Algorithm{
       }
 
       return iterationBestSolution;
+   }
+
+   private void globalUpdate(Integer[] iterationSolution, double reinforcementLearningValue){
+      int lastNode = 0;
+      int previousNode = 0;
+
+      for(int i = 1; i <= iterationSolution.length - 1; i++){
+         lastNode = iterationSolution[i];
+         previousNode = iterationSolution[i - 1];
+
+         pheromone[previousNode][lastNode] = ((1 - alpha) * pheromone[previousNode][lastNode]) + (alpha * reinforcementLearningValue);
+      }
+      lastNode = iterationSolution[iterationSolution.length - 1];
+      previousNode = iterationSolution[0];
+
+      pheromone[previousNode][lastNode] = ((1 - alpha) * pheromone[previousNode][lastNode]) + (alpha * reinforcementLearningValue);
    }
 }
