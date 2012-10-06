@@ -85,7 +85,16 @@ public class ACSAnt{
    }
 
    public boolean isTourFinished(){
-      return false;
+      boolean result = true;
+
+      for(int i = 0; i <= tour.length - 1; i++){
+         if(tour[i] == null){
+            result = false;
+            break;
+         }
+      }
+
+      return result;
    }
 
    public void clearTour(){

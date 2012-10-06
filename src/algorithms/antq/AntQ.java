@@ -55,6 +55,7 @@ public abstract class AntQ implements Algorithm{
     * that it will run.
     *
     * @author Matheus Paixao
+    * @param numberOfIterations number of iterations that the algorithm will run
     * @see setNumberOfIterations
     * @see setTotalTime
     */
