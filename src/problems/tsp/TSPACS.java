@@ -22,6 +22,22 @@ public class TSPACS extends ACS{
       this.initialPheromone = calculateInitialPheromone();
    }
 
+   protected double getQ0(){
+      return 0.9;
+   }
+
+   protected double getBeta(){
+      return 2;
+   }
+
+   protected double getAlpha(){
+      return 0.1;
+   }
+
+   protected double getRho(){
+      return 0.1;
+   }
+
    protected int getNumberOfNodes(){
       return this.numberOfCities;
    }

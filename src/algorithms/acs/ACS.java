@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class ACS implements Algorithm{
-   private static final double q0 = 0.9;
-   private static final double beta = 2;
-   private static final double alpha = 0.1;
-   private static final double rho = 0.1;
+   private double q0;
+   private double beta;
+   private double alpha;
+   private double rho;
 
    private int numberOfIterations;
    private double totalTime;
@@ -20,6 +20,11 @@ public abstract class ACS implements Algorithm{
 
    protected ACSAnt[] ants;
    protected ACSAnt currentAnt;
+
+   protected abstract double getQ0();
+   protected abstract double getAlpha();
+   protected abstract double getBeta();
+   protected abstract double getRho();
 
    protected abstract int getNumberOfNodes();
    protected abstract int getNumberOfAnts();
@@ -39,10 +44,6 @@ public abstract class ACS implements Algorithm{
 
    private int getNumberOfIterations(){
       return this.numberOfIterations;
-   }
-
-   private double getQ0(){
-      return this.q0;
    }
 
    private void setTotalTime(double totalTime){
@@ -103,6 +104,11 @@ public abstract class ACS implements Algorithm{
    }
 
    private void initACS(){
+      q0 = getQ0();
+      beta = getBeta();
+      alpha = getAlpha();
+      rho = getRho();
+
       initNodes();
       initPheromoneValues();
       initAnts();
