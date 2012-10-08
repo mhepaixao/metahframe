@@ -11,10 +11,7 @@ import java.io.File;
  * @author Matheus Paixao
  */
 public class TSPRandomAlgorithm extends RandomAlgorithm{
-   private TSPInstanceReader tspInstanceReader;
-
-   private int numberOfCities;
-   private double[][] distancesMatrix;
+   private TSPProblem tspProblem;
 
    /**
     * Method to create the TSPRandomAlgorithm object, receive the instance to read and
@@ -26,15 +23,13 @@ public class TSPRandomAlgorithm extends RandomAlgorithm{
     * @see RandomAlgorithm constructor
     * @see getDistancesMatrix in TSPInstanceReader
     */
-   public TSPRandomAlgorithm(File instance, int numberOfIterations){
+   public TSPRandomAlgorithm(TSPProblem tspProblem, int numberOfIterations){
       super(numberOfIterations);
-      this.tspInstanceReader = new TSPInstanceReader(instance);
-      this.distancesMatrix = tspInstanceReader.getDistancesMatrix();
-      this.numberOfCities = distancesMatrix.length; 
+      this.tspProblem = tspProblem;
    }
 
    public int getNumberOfNodes(){
-      return this.numberOfCities;
+      return tspProblem.getNumberOfCities();
    }
 
    /**
@@ -44,15 +39,8 @@ public class TSPRandomAlgorithm extends RandomAlgorithm{
     * @param solution the array of int that corresponds to the solution founded by the algorithm
     * @return fitness value of the solution
     */
-   public double calculateSolutionValue(int[] solution){
-      double solutionValue = 0;
-
-      for(int i = 0; i <= solution.length - 2; i++){
-         solutionValue += distancesMatrix[solution[i]][solution[i + 1]];
-      }
-      solutionValue += distancesMatrix[solution.length - 1][0];
-
-      return solutionValue;
+   public double calculateSolutionValue(Integer[] solution){
+      return tspProblem.calculateSolutionValue(solution);
    }
 
    /**
@@ -65,13 +53,7 @@ public class TSPRandomAlgorithm extends RandomAlgorithm{
     * @return true if the first fitness value is best than the other one
     */
    public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
-      boolean result =  false;
-
-      if(iterationSolutionValue < bestSolutionValue){
-         result = true;
-      }
-
-      return result;
+      return tspProblem.isSolutionBest(iterationSolutionValue, bestSolutionValue);
    }
 
    /**
@@ -80,7 +62,7 @@ public class TSPRandomAlgorithm extends RandomAlgorithm{
     * In TSP there's no city sequence restriction.
     * @author Matheus Paixao
     */
-   public boolean satisfyAllRestrictions(int[] solution){
+   public boolean satisfyAllRestrictions(Integer[] solution){
       return true;
    }
 }

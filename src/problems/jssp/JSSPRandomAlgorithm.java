@@ -65,7 +65,7 @@ public class JSSPRandomAlgorithm extends RandomAlgorithm{
     * @return fitness value (makespan) of the solution
     * @see getMakespan
     */
-   public double calculateSolutionValue(int[] solution){
+   public double calculateSolutionValue(Integer[] solution){
       return getMakespan(solution);
    }
 
@@ -77,7 +77,7 @@ public class JSSPRandomAlgorithm extends RandomAlgorithm{
     * @param jobSequence sequence of jobs to calculate the makespan
     * @return the makespan value of the job sequence
     */
-   private double getMakespan(int[] jobSequence){
+   private double getMakespan(Integer[] jobSequence){
       double[] makespan = new double[timesMatrix[0].length];
       int job = 0;
 
@@ -103,7 +103,7 @@ public class JSSPRandomAlgorithm extends RandomAlgorithm{
     * In JSSP there's no job sequence restriction.
     * @author Matheus Paixao
     */
-   public boolean satisfyAllRestrictions(int[] solution){
+   public boolean satisfyAllRestrictions(Integer[] solution){
       return true;
    }
 }

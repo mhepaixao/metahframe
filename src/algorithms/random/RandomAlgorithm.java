@@ -20,9 +20,9 @@ public abstract class RandomAlgorithm implements Algorithm{
    private Random random;
 
    //abstract methods that each problem to be solved with this random algorithm must implement:
-   public abstract double calculateSolutionValue(int[] solution); //fitness function value
+   public abstract double calculateSolutionValue(Integer[] solution); //fitness function value
    public abstract boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue); //depends on a max or min problem
-   public abstract boolean satisfyAllRestrictions(int[] solution); //if the founded solution broke some restriction
+   public abstract boolean satisfyAllRestrictions(Integer[] solution); //if the founded solution broke some restriction
    public abstract int getNumberOfNodes();
    
    /**
@@ -68,9 +68,9 @@ public abstract class RandomAlgorithm implements Algorithm{
       double initialTime = 0;
       double finalTime = 0;
 
-      int[] iterationSolution = null;
+      Integer[] iterationSolution = null;
       double iterationSolutionValue = 0;
-      int[] bestSolution = null;
+      Integer[] bestSolution = null;
       double bestSolutionValue = 0;
 
       int iterationsCounter = 0;
@@ -120,8 +120,8 @@ public abstract class RandomAlgorithm implements Algorithm{
     * @see getRandomSolution
     * @see satisfyAllRestrictions
     */
-   private int[] getIterationSolution(){
-      int[] iterationSolution = getRandomSolution();
+   private Integer[] getIterationSolution(){
+      Integer[] iterationSolution = getRandomSolution();
 
       while(satisfyAllRestrictions(iterationSolution) == false){
          iterationSolution = getRandomSolution();
@@ -138,8 +138,8 @@ public abstract class RandomAlgorithm implements Algorithm{
     * @see getNumberOfNodes
     * @see shuffle method of the Collections class
     */
-   private int[] getRandomSolution(){
-      int[] randomSolution = new int[getNumberOfNodes()];
+   private Integer[] getRandomSolution(){
+      Integer[] randomSolution = new Integer[getNumberOfNodes()];
 
       Collections.shuffle(dynamicListOfNodes);
 

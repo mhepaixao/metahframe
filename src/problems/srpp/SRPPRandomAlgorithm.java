@@ -55,7 +55,7 @@ public class SRPPRandomAlgorithm extends RandomAlgorithm{
     * @return fitness value of the solution
     * @see getObjectivesSum
     */
-   public double calculateSolutionValue(int[] solution){
+   public double calculateSolutionValue(Integer[] solution){
       double solutionValue = 0;
 
       for(int i = 0; i <= solution.length - 1; i++){
@@ -112,7 +112,7 @@ public class SRPPRandomAlgorithm extends RandomAlgorithm{
     * @see getPredecessors
     * @see getRequirementPosition
     */
-   public boolean satisfyAllRestrictions(int[] solution){
+   public boolean satisfyAllRestrictions(Integer[] solution){
       boolean result = true;
       ArrayList<Node> predecessors = null;
       int predecessorPosition = 0;
@@ -181,7 +181,7 @@ public class SRPPRandomAlgorithm extends RandomAlgorithm{
     * @param solution the solution where the requirement is
     * @return the position of the requirement in the solution
     */
-   private int getRequirementPosition(Node requirement, int[] solution){
+   private int getRequirementPosition(Node requirement, Integer[] solution){
       int requirementPosition = 0;
 
       for(int i = 0; i <= solution.length - 1; i++){
