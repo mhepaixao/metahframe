@@ -1,11 +1,8 @@
 package problems.tsp;
 
 import algorithms.antq.AntQ;
-import instancereaders.TSPInstanceReader;
 import util.Node;
 import util.Edge;
-
-import java.io.File;
 
 /**
  * Class to implement the AntQ class to the Travel Salesman Problem.
@@ -13,34 +10,28 @@ import java.io.File;
  * @author Matheus Paixao
  */
 public class TSPAntQ extends AntQ{
-   private TSPInstanceReader tspInstanceReader;
+   private TSPProblem tspProblem;
 
-   private int numberOfCities;
-   private double[][] distancesMatrix;
    private double initialPheromone;
 
    /**
-    * Method to create the TSPAntQ object, receive the instance to read and
+    * Method to create the TSPAntQ object, receive TSPProblem object and
     * the number of iterations is passed to AntQ constructor.
     *
     * @author Matheus Paixao
-    * @param instance the instance to read
+    * @param tspProblem the TSPProblem object
     * @param numberOfIterations number of iterations to be runned
     * @see AntQ constructor
-    * @see TSPInstanceReader constructor
-    * @see getDistancesMatrix in TSPInstanceReader
     * @see calculateInitialPheromone
     */
-   public TSPAntQ(File instance, int numberOfIterations){
+   public TSPAntQ(TSPProblem tspProblem, int numberOfIterations){
       super(numberOfIterations);
-      this.tspInstanceReader = new TSPInstanceReader(instance);
-      this.distancesMatrix = tspInstanceReader.getDistancesMatrix();
-      this.numberOfCities = distancesMatrix.length; 
+      this.tspProblem = tspProblem;
       this.initialPheromone = calculateInitialPheromone();
    }
 
    public int getNumberOfNodes(){
-      return this.numberOfCities;
+      return tspProblem.getNumberOfCities();
    }
 
    public double getInitialPheromone(){
@@ -53,36 +44,41 @@ public class TSPAntQ extends AntQ{
     * @author Matheus Paixao
     * @param solution the array of edges that corresponds to the solution founded by the algorithm
     * @return fitness value of the solution
+    * @see getIntegerSolutionArray
+    * @see calculateSolutionValue in TSPProblem class
     */
    public double calculateSolutionValue(Edge[] solution){
-      double solutionValue = 0;
+      return tspProblem.calculateSolutionValue(getIntegerSolutionArray(solution));
+   }
 
-      Edge edge = null;
-      for(int i = 0; i <= solution.length - 1; i++){
-         edge = solution[i];
-         solutionValue += distancesMatrix[edge.getNode1().getIndex()][edge.getNode2().getIndex()];
+   /**
+    * Method to get an Integer solution array given an Edge solution array.
+    *
+    * @author Matheus Paixao
+    * @param solution the Edge solution array
+    * @return the Integer solution array
+    */
+   private Integer[] getIntegerSolutionArray(Edge[] solution){
+      Integer[] integerSolutionArray = new Integer[solution.length];
+
+      for(int i = 0; i <= integerSolutionArray.length - 1; i++){
+         integerSolutionArray[i] = solution[i].getNode1().getIndex();
       }
 
-      return solutionValue;
+      return integerSolutionArray;
    }
 
    /**
     * Method to compare if a solution value is better than another one.
     *
-    * In TSP as smaller fitness value as better.
     * @author Matheus Paixao
     * @param iterationSolutionValue the fitness value of some solution
     * @param bestSolutionValue the best fitness value of an iteration
     * @return true if the first fitness value is best than the other one
+    * @see isSolutionBest in TSPProblem class
     */
    public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
-      boolean result = false;
-
-      if(iterationSolutionValue < bestSolutionValue){
-         result = true;
-      }
-
-      return result;
+      return tspProblem.isSolutionBest(iterationSolutionValue, bestSolutionValue);
    }
 
    /**
@@ -94,6 +90,7 @@ public class TSPAntQ extends AntQ{
     * @see getNumberOfEdges
     */
    public double calculateInitialPheromone(){
+      double[][] distancesMatrix = tspProblem.getDistancesMatrix();
       double sumOfDistances = 0;
       double distancesAverage = 0;
 
@@ -115,6 +112,7 @@ public class TSPAntQ extends AntQ{
     * @return the number of existing edges.
     */
    private int getNumberOfEdges(){
+      double[][] distancesMatrix = tspProblem.getDistancesMatrix();
       int numberOfEdges = 0;
 
       for(int i = 0; i <= distancesMatrix.length - 1; i++){
@@ -138,6 +136,7 @@ public class TSPAntQ extends AntQ{
     * @return the heuristic value of the edge composed by the two passed nodes
     */
    public double getHeuristicValue(Node node1, Node node2){
+      double[][] distancesMatrix = tspProblem.getDistancesMatrix();
       return 1 / distancesMatrix[node1.getIndex()][node2.getIndex()];
    }
 }

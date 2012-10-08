@@ -46,7 +46,7 @@ public class App{
       if(algorithm.equals("antq")){
          if(problem.equals("tsp")){
             TSPProblem tspProblem = new TSPProblem(instance);
-            adaptedAlgorithm = new TSPAntQ(instance, numberOfIterations);
+            adaptedAlgorithm = new TSPAntQ(tspProblem, numberOfIterations);
          }
          else if(problem.equals("jssp")){
             adaptedAlgorithm = new JSSPAntQ(instance, numberOfIterations);
