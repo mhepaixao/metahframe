@@ -4,6 +4,11 @@ import instancereaders.TSPInstanceReader;
 
 import java.io.File;
 
+/**
+ * Class that describes the Travel Salesman Problem features.
+ *
+ * @author Matheus Paixao
+ */
 public class TSPProblem{
    private TSPInstanceReader tspInstanceReader;
 
@@ -24,10 +29,19 @@ public class TSPProblem{
       return this.distancesMatrix.length;
    }
 
-   public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
+   /**
+    * Method to comprare if a solution value is better than another one.
+    *
+    * In TSP as smaller fitness value as better.
+    * @author Matheus Paixao
+    * @param solution1
+    * @param solution2
+    * @return true if the first fitness value is best than the other one
+    */
+   public boolean isSolutionBest(double solution1, double solution2){
       boolean result = false;
 
-      if(iterationSolutionValue < bestSolutionValue){
+      if(solution1 < solution2){
          result = true;
       }
 
