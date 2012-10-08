@@ -1,4 +1,5 @@
 import algorithms.Algorithm;
+import problems.tsp.TSPProblem;
 import problems.tsp.TSPAntQ;
 import problems.tsp.TSPRandomAlgorithm;
 import problems.tsp.TSPACS;

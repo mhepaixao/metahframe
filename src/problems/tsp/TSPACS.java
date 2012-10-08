@@ -8,17 +8,13 @@ import java.io.File;
 import java.util.Random;
 
 public class TSPACS extends ACS{
-   private TSPInstanceReader tspInstanceReader;
+   private TSPProblem tspProblem;
 
-   private int numberOfCities;
-   private double[][] distancesMatrix;
    private double initialPheromone;
 
    public TSPACS(File instance, int numberOfIterations){
       super(numberOfIterations);
-      this.tspInstanceReader = new TSPInstanceReader(instance);
-      this.distancesMatrix = tspInstanceReader.getDistancesMatrix();
-      this.numberOfCities = distancesMatrix.length; 
+      this.tspProblem = new TSPProblem(instance);
       this.initialPheromone = calculateInitialPheromone();
    }
 
@@ -39,7 +35,7 @@ public class TSPACS extends ACS{
    }
 
    protected int getNumberOfNodes(){
-      return this.numberOfCities;
+      return tspProblem.getNumberOfCities();
    }
 
    protected int getNumberOfAnts(){
@@ -48,6 +44,21 @@ public class TSPACS extends ACS{
 
    protected double getInitialPheromone(){
       return this.initialPheromone;
+   }
+
+   public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
+      return tspProblem.isSolutionBest(iterationSolutionValue, bestSolutionValue);
+   }
+
+   /**
+    * Method that implements the fitness function of TSP problem.
+    *
+    * @author Matheus Paixao
+    * @param solution the array of int that corresponds to the solution to be calculated
+    * @return fitness value of the solution
+    */
+   public double calculateSolutionValue(Integer[] solution){
+      return tspProblem.calculateSolutionValue(solution);
    }
 
    private double calculateInitialPheromone(){
@@ -73,7 +84,7 @@ public class TSPACS extends ACS{
          citiesToVisitInNearestNeighbourSolution[nextCity] = null;
       }
 
-      return calculateSolutionValue(nearestNeighbourSolution);
+      return tspProblem.calculateSolutionValue(nearestNeighbourSolution);
    }
 
    private void initNearestNeighbourAlgorithm(Integer[] nearestNeighbourSolution, Integer[] citiesToVisitInNearestNeighbourSolution){
@@ -92,6 +103,7 @@ public class TSPACS extends ACS{
    }
 
    private int getNextNearestNeighbourCity(int previousCity, Integer[] citiesToVisitInNearestNeighbourSolution){
+      double[][] distancesMatrix = tspProblem.getDistancesMatrix();
       int nextNearestNeighbourCity = 0;
       double minDistance = 0;
       double distance = 0;
@@ -115,35 +127,8 @@ public class TSPACS extends ACS{
       return nextNearestNeighbourCity;
    }
 
-   /**
-    * Method that implements the fitness function of TSP problem.
-    *
-    * @author Matheus Paixao
-    * @param solution the array of int that corresponds to the solution to be calculated
-    * @return fitness value of the solution
-    */
-   public double calculateSolutionValue(Integer[] solution){
-      double solutionValue = 0;
-
-      for(int i = 0; i <= solution.length - 2; i++){
-         solutionValue += distancesMatrix[solution[i]][solution[i + 1]];
-      }
-      solutionValue += distancesMatrix[solution[solution.length - 1]][solution[0]];
-
-      return solutionValue;
-   }
-
    public double getHeuristicValue(int node1, int node2){
+      double[][] distancesMatrix = tspProblem.getDistancesMatrix();
       return 1 / distancesMatrix[node1][node2];
-   }
-
-   public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
-      boolean result = false;
-
-      if(iterationSolutionValue < bestSolutionValue){
-         result = true;
-      }
-
-      return result;
    }
 }
