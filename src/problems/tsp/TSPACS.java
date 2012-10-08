@@ -12,9 +12,9 @@ public class TSPACS extends ACS{
 
    private double initialPheromone;
 
-   public TSPACS(File instance, int numberOfIterations){
+   public TSPACS(TSPProblem tspProblem, int numberOfIterations){
       super(numberOfIterations);
-      this.tspProblem = new TSPProblem(instance);
+      this.tspProblem = tspProblem;
       this.initialPheromone = calculateInitialPheromone();
    }
 

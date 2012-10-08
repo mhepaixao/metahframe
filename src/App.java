@@ -1,4 +1,5 @@
 import algorithms.Algorithm;
+
 import problems.tsp.TSPProblem;
 import problems.tsp.TSPAntQ;
 import problems.tsp.TSPRandomAlgorithm;
@@ -7,6 +8,7 @@ import problems.jssp.JSSPAntQ;
 import problems.jssp.JSSPRandomAlgorithm;
 import problems.srpp.SRPPAntQ;
 import problems.srpp.SRPPRandomAlgorithm;
+
 import instancereaders.InstanceChooser;
 
 import java.io.File;
@@ -43,6 +45,7 @@ public class App{
 
       if(algorithm.equals("antq")){
          if(problem.equals("tsp")){
+            TSPProblem tspProblem = new TSPProblem(instance);
             adaptedAlgorithm = new TSPAntQ(instance, numberOfIterations);
          }
          else if(problem.equals("jssp")){
@@ -54,11 +57,13 @@ public class App{
       }
       else if(algorithm.equals("acs")){
          if(problem.equals("tsp")){
-            adaptedAlgorithm = new TSPACS(instance, numberOfIterations);
+            TSPProblem tspProblem = new TSPProblem(instance);
+            adaptedAlgorithm = new TSPACS(tspProblem, numberOfIterations);
          }
       }
       else if(algorithm.equals("random")){
          if(problem.equals("tsp")){
+            TSPProblem tspProblem = new TSPProblem(instance);
             adaptedAlgorithm = new TSPRandomAlgorithm(instance, numberOfIterations);
          }
          else if(problem.equals("jssp")){
