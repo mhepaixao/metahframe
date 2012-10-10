@@ -87,7 +87,7 @@ public abstract class ACS implements Algorithm{
       this.currentAnt = currentAnt;
    }
 
-   private ACSAnt getCurrentAnt(){
+   protected ACSAnt getCurrentAnt(){
       return this.currentAnt;
    }
    
