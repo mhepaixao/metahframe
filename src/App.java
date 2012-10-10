@@ -69,7 +69,8 @@ public class App{
             adaptedAlgorithm = new TSPRandomAlgorithm(tspProblem, numberOfIterations);
          }
          else if(problem.equals("jssp")){
-            adaptedAlgorithm = new JSSPRandomAlgorithm(instance, numberOfIterations);
+            JSSPProblem jsspProblem = new JSSPProblem(instance);
+            adaptedAlgorithm = new JSSPRandomAlgorithm(jsspProblem, numberOfIterations);
          }
          else if(problem.equals("srpp")){
             adaptedAlgorithm = new SRPPRandomAlgorithm(instance, numberOfIterations);
