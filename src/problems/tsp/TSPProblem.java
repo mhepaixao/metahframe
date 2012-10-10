@@ -15,6 +15,14 @@ public class TSPProblem{
    private int numberOfCities;
    private double[][] distancesMatrix;
 
+   /**
+    * Method to create the TSPProblem object.
+    *
+    * @author Matheus Paixao
+    * @param instance the problem's instance
+    * @see TSPInstanceReader constructor
+    * @see getDistancesMatrix in TSPInstanceReader class
+    */
    public TSPProblem(File instance){
       this.tspInstanceReader = new TSPInstanceReader(instance);
       this.distancesMatrix = tspInstanceReader.getDistancesMatrix();
@@ -36,7 +44,7 @@ public class TSPProblem{
     * @author Matheus Paixao
     * @param solution1
     * @param solution2
-    * @return true if the first fitness value is best than the other one
+    * @return true if the first fitness value is better than the other one
     */
    public boolean isSolutionBest(double solution1, double solution2){
       boolean result = false;
@@ -52,7 +60,7 @@ public class TSPProblem{
     * Method that implements the fitness function of TSP problem.
     *
     * @author Matheus Paixao
-    * @param solution the array of int that corresponds to the solution to be calculated
+    * @param solution the Integer array that corresponds to the solution to be calculated
     * @return fitness value of the solution
     */
    public double calculateSolutionValue(Integer[] solution){
