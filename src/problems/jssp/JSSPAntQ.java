@@ -43,7 +43,7 @@ public class JSSPAntQ extends AntQ{
     * @param node1 the first node of the edge
     * @param node2 the second node of the edge
     * @return the heuristic value of the edge composed by the two passed nodes
-    * @see getCurrentAnt
+    * @see getCurrentAnt in ACS class
     * @see getJobSequence
     * @see calculateSolutionValue in JSSPProblem class
     */
