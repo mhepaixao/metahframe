@@ -4,6 +4,7 @@ import problems.tsp.TSPProblem;
 import problems.tsp.TSPAntQ;
 import problems.tsp.TSPRandomAlgorithm;
 import problems.tsp.TSPACS;
+import problems.jssp.JSSPProblem;
 import problems.jssp.JSSPAntQ;
 import problems.jssp.JSSPRandomAlgorithm;
 import problems.srpp.SRPPAntQ;
@@ -49,7 +50,8 @@ public class App{
             adaptedAlgorithm = new TSPAntQ(tspProblem, numberOfIterations);
          }
          else if(problem.equals("jssp")){
-            adaptedAlgorithm = new JSSPAntQ(instance, numberOfIterations);
+            JSSPProblem jsspProblem = new JSSPProblem(instance);
+            adaptedAlgorithm = new JSSPAntQ(jsspProblem, numberOfIterations);
          }
          else if(problem.equals("srpp")){
             adaptedAlgorithm = new SRPPAntQ(instance, numberOfIterations);

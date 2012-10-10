@@ -2,43 +2,33 @@ package problems.jssp;
 
 import algorithms.antq.AntQ;
 import algorithms.antq.Ant;
-import instancereaders.JSSPInstanceReader;
 import util.Node;
 import util.Edge;
 
-import java.io.File;
-
 /**
- * Class to implement the AntQ class to the Job Sequence Schedule Problem.
+ * Class to implement the AntQ algorithm to the Job Sequence Schedule Problem.
  *
  * @author Matheus Paixao
  */
 public class JSSPAntQ extends AntQ{
-   private JSSPInstanceReader jsspInstanceReader;
-
-   private int numberOfJobs;
-   private double[][] timesMatrix;
+   JSSPProblem jsspProblem;
 
    /**
-    * Method to create the JSSPAntQ object, receive the instance to read and
+    * Method to create the JSSPAntQ object, receive the JSSPProblem object and
     * the number of iterations is passed to AntQ constructor.
     *
     * @author Matheus Paixao
-    * @param instance the instance to read
+    * @param jsspProblem the JSSPProblem object
     * @param numberOfIterations number of iterations to be runned
     * @see AntQ constructor
-    * @see JSSPInstanceReader constructor
-    * @see getTimesMatrix in JSSPInstanceReader
     */
-   public JSSPAntQ(File instance, int numberOfIterations){
+   public JSSPAntQ(JSSPProblem jsspProblem, int numberOfIterations){
       super(numberOfIterations);
-      jsspInstanceReader = new JSSPInstanceReader(instance);
-      this.timesMatrix = jsspInstanceReader.getTimesMatrix();
-      this.numberOfJobs = timesMatrix.length;
+      this.jsspProblem = jsspProblem;
    }
 
    public int getNumberOfNodes(){
-      return this.numberOfJobs; //in JSSP the jobs are represented by the nodes
+      return jsspProblem.getNumberOfJobs(); //in JSSP the jobs are represented by the nodes
    }
 
    public double getInitialPheromone(){
@@ -48,19 +38,19 @@ public class JSSPAntQ extends AntQ{
    /**
     * Method to get the heuristic value of an edge.
     *
-    * In JSSP as smaller the makespan, higher is the heuristic value.
+    * In JSSP as smaller the solution, higher is the heuristic value.
     * @author Matheus Paixao
     * @param node1 the first node of the edge
     * @param node2 the second node of the edge
     * @return the heuristic value of the edge composed by the two passed nodes
     * @see getCurrentAnt
     * @see getJobSequence
-    * @see getMakespan
+    * @see calculateSolutionValue in JSSPProblem class
     */
    public double getHeuristicValue(Node node1, Node node2){
-      int[] jobSequence = getJobSequence(node1, node2, getCurrentAnt());
+      Integer[] jobSequence = getJobSequence(node1, node2, getCurrentAnt());
       
-      return 1 / getMakespan(jobSequence);
+      return 1 / jsspProblem.calculateSolutionValue(jobSequence);
    }
 
    /**
@@ -68,17 +58,17 @@ public class JSSPAntQ extends AntQ{
     *
     * @author Matheus Paixao
     * @param solution the array of edges that corresponds to the solution founded by the algorithm
-    * @return fitness value (makespan) of the solution
-    * @see getMakespan
+    * @return fitness value of the solution
+    * @see calculateSolutionValue in JSSPProblem class
     */
    public double calculateSolutionValue(Edge[] solution){
-      int[] jobSequence = new int[solution.length];
+      Integer[] jobSequence = new Integer[solution.length];
 
       for(int i = 0; i <= jobSequence.length - 1; i++){
          jobSequence[i] = solution[i].getNode1().getIndex();
       }
 
-      return getMakespan(jobSequence);
+      return jsspProblem.calculateSolutionValue(jobSequence);
    }
 
    /**
@@ -93,11 +83,11 @@ public class JSSPAntQ extends AntQ{
     * @see getTour in Ant class
     * @see getNumberOfJobs
     */
-   private int[] getJobSequence(Node node1, Node node2, Ant ant){
-      int[] jobSequence;
+   private Integer[] getJobSequence(Node node1, Node node2, Ant ant){
+      Integer[] jobSequence;
 
       Edge[] solution = ant.getTour();
-      jobSequence = new int[getNumberOfJobs(solution) + 2]; //there is the next edge to add
+      jobSequence = new Integer[getNumberOfJobs(solution) + 2]; //there is the next edge to add
 
       if(solution[0] == null){
          jobSequence[0] = node1.getIndex();
@@ -136,49 +126,15 @@ public class JSSPAntQ extends AntQ{
    }
 
    /**
-    * Method to calculate the makespan of a sequence of jobs (fitness function).
-    *
-    * For more information about this algorithm, search for "JSSP flowchart makespan".
-    * @author Matheus Paixao
-    * @param jobSequence sequence of jobs to calculate the makespan
-    * @return the makespan value of the job sequence
-    */
-   private double getMakespan(int[] jobSequence){
-      double[] makespan = new double[timesMatrix[0].length];
-      int job = 0;
-
-      for(int i = 0; i <= jobSequence.length - 1; i++){
-         job = jobSequence[i];
-         makespan[0] = makespan[0] + timesMatrix[job][0];
-         for(int j = 1; j <= timesMatrix[0].length - 1; j++){
-            if(makespan[j] > makespan[j - 1]){
-               makespan[j] = makespan[j] + timesMatrix[job][j];
-            }
-            else{
-               makespan[j] = makespan[j - 1] + timesMatrix[job][j];
-            }
-         }
-      }
-
-      return makespan[timesMatrix[0].length - 1];
-   }
-
-   /**
     * Method to compare if a solution value is better than another one.
     *
-    * In JSSP as smaller fitness value as better.
     * @author Matheus Paixao
     * @param iterationSolutionValue the fitness value of some solution
     * @param bestSolutionValue the best fitness value of an iteration
     * @return true if the first fitness value is best than the other one
+    * @see isSolutionBest in JSSPProblem class
     */
    public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
-      boolean result = false;
-
-      if(iterationSolutionValue < bestSolutionValue){
-         result = true;
-      }
-
-      return result;
+      return jsspProblem.isSolutionBest(iterationSolutionValue, bestSolutionValue);
    }
 }
