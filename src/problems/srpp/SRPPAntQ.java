@@ -2,11 +2,8 @@ package problems.srpp;
 
 import algorithms.antq.AntQ;
 import algorithms.antq.Ant;
-import instancereaders.SRPPInstanceReader;
 import util.Node;
 import util.Edge;
-
-import java.io.File;
 
 /**
  * Class to implement the AntQ class to the Software Requirement Priorization Problem.
@@ -17,13 +14,8 @@ import java.io.File;
  * @author Matheus Paixao
  */
 public class SRPPAntQ extends AntQ{
-   SRPPInstanceReader srppInstanceReader;
-
-   double[][] objectivesValues; //value of each objective for each requirement
-   int numberOfRequirements;
-   int numberOfClients;
+   SRPPProblem srppProblem;
    double maxPossibleHeuristicValue;
-   int[][] precedencesMatrix;
 
    /**
     * Method to create the SRRPAntQ object, receive the instance to read and
@@ -40,26 +32,18 @@ public class SRPPAntQ extends AntQ{
     * @see getMaxPossibleHeuristicValue
     * @see getPrecedencesMatrix in SRPPInstanceReader
     */
-   public SRPPAntQ(File instance, int numberOfIterations){
+   public SRPPAntQ(SRPPProblem srppProblem, int numberOfIterations){
       super(numberOfIterations);
-      srppInstanceReader = new SRPPInstanceReader(instance);
-      objectivesValues = srppInstanceReader.getObjectiveValues();
-      this.numberOfRequirements = srppInstanceReader.getNumberOfRequirements();
-      this.numberOfClients = srppInstanceReader.getNumberOfClients();
+      this.srppProblem = srppProblem;
       this.maxPossibleHeuristicValue = getMaxPossibleHeuristicValue();
-      this.precedencesMatrix = srppInstanceReader.getPrecedencesMatrix();
    }
 
    public int getNumberOfNodes(){
-      return getNumberOfRequirements();
-   }
-
-   private int getNumberOfRequirements(){
-      return this.numberOfRequirements;
+      return srppProblem.getNumberOfRequirements();
    }
 
    private int[][] getPrecedencesMatrix(){
-      return this.precedencesMatrix;
+      return srppProblem.getPrecedencesMatrix();
    }
 
    public double getInitialPheromone(){
@@ -83,11 +67,11 @@ public class SRPPAntQ extends AntQ{
     * @see getPrecedencesMatrix
     */
    protected void initAnts(){
-      this.ants = new Ant[srppInstanceReader.getNumberOfRequirementsWithNoPrecedence()]; 
+      this.ants = new Ant[srppProblem.getNumberOfRequirementsWithNoPrecedence()]; 
       //this.ants = new Ant[1]; 
       Node initialNode = null;
 
-      for(int i = 0; i <= getNumberOfRequirements() - 1; i++){
+      for(int i = 0; i <= getNumberOfNodes() - 1; i++){
          initialNode = new Node(i);
          if(hasPredecessor(initialNode) == false){
             addAnt(new PrecedenceConstrainedAnt(this, getQ0(), new Node(i), getPrecedencesMatrix()));
@@ -103,6 +87,7 @@ public class SRPPAntQ extends AntQ{
     * @return true if the requirement has some predecessor, false if don't
     */
    private boolean hasPredecessor(Node requirement){
+      int[][] precedencesMatrix = srppProblem.getPrecedencesMatrix();
       boolean result = false;
 
       for(int i = 0; i <= precedencesMatrix[requirement.getIndex()].length - 1; i++){
@@ -139,9 +124,10 @@ public class SRPPAntQ extends AntQ{
     * @see the SRRP instance format in SRPPInstanceReader class
     */
    private double getMaxPossibleHeuristicValue(){
+      int numberOfClients = srppProblem.getNumberOfClients();
       double maxPossibleHeuristicValue = 0;
 
-      for(int i = 0; i <= this.numberOfClients - 1; i++){
+      for(int i = 0; i <= numberOfClients - 1; i++){
          maxPossibleHeuristicValue += 10 * 10;
       }
 
@@ -158,7 +144,7 @@ public class SRPPAntQ extends AntQ{
     * @return the heuristic value of the edge composed by the two passed nodes
     */
    public double getHeuristicValue(Node node1, Node node2){
-      return getObjectivesSum(node2.getIndex()) / maxPossibleHeuristicValue;
+      return srppProblem.getObjectivesSum(node2.getIndex()) / maxPossibleHeuristicValue;
    }
    
    /**
@@ -172,14 +158,8 @@ public class SRPPAntQ extends AntQ{
     * @see getObjectivesSum
     */
    public double calculateSolutionValue(Edge[] solution){
-      double solutionValue = 0;
-      int[] nodes = getNodes(solution);
-
-      for(int i = 0; i <= nodes.length - 1; i++){
-         solutionValue += (nodes.length - i) * getObjectivesSum(nodes[i]);
-      }
-
-      return solutionValue;
+      Integer[] nodes = getNodes(solution);
+      return srppProblem.calculateSolutionValue(nodes);
    }
 
    /**
@@ -189,8 +169,8 @@ public class SRPPAntQ extends AntQ{
     * @param solution the egde array
     * @return the int array representing the solution
     */
-   private int[] getNodes(Edge[] solution){
-      int[] nodes = new int[solution.length];
+   private Integer[] getNodes(Edge[] solution){
+      Integer[] nodes = new Integer[solution.length];
 
       for(int i = 0; i <= nodes.length - 1; i++){
          nodes[i] = solution[i].getNode1().getIndex();
@@ -199,23 +179,6 @@ public class SRPPAntQ extends AntQ{
       return nodes;
    }
 
-   /**
-    * Method to get the sum of all objectives values for a requirement.
-    *
-    * @author Matheus Paixao
-    * @param requirement the requirement to know the objectives sum
-    * @return the sum of all objectives values for the requirement
-    */
-   private double getObjectivesSum(int requirement){
-      double objectivesSum = 0;
-
-      for(int i = 0; i <= objectivesValues.length - 1; i++){
-         objectivesSum += objectivesValues[i][requirement];
-      }
-
-      return objectivesSum;
-   }
-   
    /**
     * Method to compare if a solution value is better than another one.
     *
@@ -226,12 +189,6 @@ public class SRPPAntQ extends AntQ{
     * @return true if the first fitness value is best than the other one
     */
    public boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue){
-      boolean result = false;
-
-      if(iterationSolutionValue > bestSolutionValue){
-         result = true;
-      }
-
-      return result;
+      return srppProblem.isSolutionBest(iterationSolutionValue, bestSolutionValue);
    }
 }

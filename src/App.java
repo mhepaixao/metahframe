@@ -8,6 +8,7 @@ import problems.jssp.JSSPProblem;
 import problems.jssp.JSSPAntQ;
 import problems.jssp.JSSPRandomAlgorithm;
 import problems.jssp.JSSPACS;
+import problems.srpp.SRPPProblem;
 import problems.srpp.SRPPAntQ;
 import problems.srpp.SRPPRandomAlgorithm;
 
@@ -55,7 +56,8 @@ public class App{
             adaptedAlgorithm = new JSSPAntQ(jsspProblem, numberOfIterations);
          }
          else if(problem.equals("srpp")){
-            adaptedAlgorithm = new SRPPAntQ(instance, numberOfIterations);
+            SRPPProblem srppProblem = new SRPPProblem(instance);
+            adaptedAlgorithm = new SRPPAntQ(srppProblem, numberOfIterations);
          }
       }
       else if(algorithm.equals("acs")){
