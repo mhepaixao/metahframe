@@ -8,9 +8,6 @@ import java.util.ArrayList;
 /**
  * Class to implement the Random Algorithm to the Software Requirement Priorization Problem.
  *
- * This problem is modeled in the paper:
- * "Aplicando o Algoritmo Ant-Q na Priorização de Requisitos de Software com Precedência",
- * published at WESB 2012
  * @author Matheus Paixao
  */
 public class SRPPRandomAlgorithm extends RandomAlgorithm{
