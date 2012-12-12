@@ -4,6 +4,7 @@ import problems.tsp.TSPProblem;
 import problems.tsp.TSPAntQ;
 import problems.tsp.TSPRandomAlgorithm;
 import problems.tsp.TSPACS;
+import problems.tsp.TSPSimulatedAnnealing;
 import problems.jssp.JSSPProblem;
 import problems.jssp.JSSPAntQ;
 import problems.jssp.JSSPRandomAlgorithm;
@@ -82,6 +83,12 @@ public class App{
          else if(problem.equals("srpp")){
             SRPPProblem srppProblem = new SRPPProblem(instance);
             adaptedAlgorithm = new SRPPRandomAlgorithm(srppProblem, numberOfIterations);
+         }
+      }
+      else if(algorithm.equals("sa")){
+         if(problem.equals("tsp")){
+            TSPProblem tspProblem = new TSPProblem(instance);
+            adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem, numberOfIterations);
          }
       }
 
