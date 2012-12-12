@@ -64,6 +64,12 @@ public class TSPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected double calculateSolutionValue(int[] solution){
-      return 0;
+      Integer[] parsedSolution = new Integer[solution.length];
+
+      for(int i = 0; i <= parsedSolution.length - 1; i++){
+         parsedSolution[i] = new Integer(solution[i]);
+      }
+
+      return tspProblem.calculateSolutionValue(parsedSolution);
    }
 }

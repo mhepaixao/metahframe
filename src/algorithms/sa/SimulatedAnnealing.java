@@ -7,8 +7,9 @@ import java.util.Random;
 public abstract class SimulatedAnnealing implements Algorithm{
    private int numberOfIterations;
    private double temperature;
+   private double alfa;
    private int numberOfMarkovChains;
-   private int[] bestSolutionSoFar;
+   private int[] bestSoFarSolution;
 
    protected abstract int[] getInitialSolution();
    protected abstract int[] getNeighbourSolution(int[] solution);
@@ -34,20 +35,49 @@ public abstract class SimulatedAnnealing implements Algorithm{
    public double getSolution(){
       double initialTime = System.currentTimeMillis();
       int[] neighbourSolution = null;
+      double bestSoFarSolutionValue = 0;
+      double neighbourSolutionValue = 0;
+      double acceptanceProbability = 0;
 
       initSA();
 
       while(temperature > 1){
-         neighbourSolution = getNeighbourSolution(bestSolutionSoFar);
+         for(int i = 0; i <= numberOfMarkovChains - 1; i++){
+            neighbourSolution = getNeighbourSolution(bestSoFarSolution);
+
+            bestSoFarSolutionValue = calculateSolutionValue(bestSoFarSolution);
+            neighbourSolutionValue = calculateSolutionValue(neighbourSolution);
+
+            if(neighbourSolutionValue <= bestSoFarSolutionValue){
+               bestSoFarSolution = neighbourSolution;
+            }
+            else{
+               acceptanceProbability = getAcceptanceProbability(bestSoFarSolutionValue, neighbourSolutionValue);
+               if(acceptanceProbability > random.nextDouble()){
+                  bestSoFarSolution = neighbourSolution;
+               }
+            }
+         }
+
+         updateTemperature();
       }
 
       setTotalTime(System.currentTimeMillis() - initialTime);
-      return 0;
+      return calculateSolutionValue(bestSoFarSolution);
    }
 
    private void initSA(){
-      temperature = 100;
+      temperature = 1000;
+      alfa = 0.9995;
       numberOfMarkovChains = 10;
-      bestSolutionSoFar = getInitialSolution();
+      bestSoFarSolution = getInitialSolution();
+   }
+
+   private double getAcceptanceProbability(double bestSoFarSolutionValue, double neighbourSolutionValue){
+      return Math.exp((bestSoFarSolutionValue - neighbourSolutionValue) / temperature);
+   }
+
+   private void updateTemperature(){
+      temperature = temperature * alfa;
    }
 }
