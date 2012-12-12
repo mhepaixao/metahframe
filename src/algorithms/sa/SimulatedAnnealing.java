@@ -16,14 +16,32 @@ public abstract class SimulatedAnnealing implements Algorithm{
 
    private Random random;
 
+   private double totalTime;
+
    public SimulatedAnnealing(int numberOfIterations){
       this.numberOfIterations = numberOfIterations;
       this.random = new Random();
    }
 
+   public double getTotalTime(){
+      return this.totalTime;
+   }
+
+   public void setTotalTime(double totalTime){
+      this.totalTime = totalTime;
+   }
+
    public double getSolution(){
+      double initialTime = System.currentTimeMillis();
+      int[] neighbourSolution = null;
+
       initSA();
 
+      while(temperature > 1){
+         neighbourSolution = getNeighbourSolution(bestSolutionSoFar);
+      }
+
+      setTotalTime(System.currentTimeMillis() - initialTime);
       return 0;
    }
 
@@ -31,9 +49,5 @@ public abstract class SimulatedAnnealing implements Algorithm{
       temperature = 100;
       numberOfMarkovChains = 10;
       bestSolutionSoFar = getInitialSolution();
-   }
-
-   public double getTotalTime(){
-      return 0;
    }
 }

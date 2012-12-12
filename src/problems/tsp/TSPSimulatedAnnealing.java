@@ -11,14 +11,16 @@ import java.util.ArrayList;
 public class TSPSimulatedAnnealing extends SimulatedAnnealing{
    private TSPProblem tspProblem;
 
+   private Random random;
+
    public TSPSimulatedAnnealing(TSPProblem tspProblem, int numberOfIterations){
       super(numberOfIterations);
       this.tspProblem = tspProblem;
+      this.random = new Random();
    }
 
    protected int[] getInitialSolution(){
       int[] initialSolution = new int[tspProblem.getNumberOfCities()];
-      Random random = new Random();
       ArrayList<Integer> listToGetRandomCities = new ArrayList<Integer>();
 
       for(int i = 0; i <= initialSolution.length - 1; i++){
@@ -26,13 +28,13 @@ public class TSPSimulatedAnnealing extends SimulatedAnnealing{
       }
 
       for(int i = 0; i <= initialSolution.length - 1; i++){
-         initialSolution[i] = getRandomCity(random, listToGetRandomCities);
+         initialSolution[i] = getRandomCity(listToGetRandomCities);
       }
 
       return initialSolution;
    }
 
-   private int getRandomCity(Random random, ArrayList<Integer> listToGetRandomCities){
+   private int getRandomCity(ArrayList<Integer> listToGetRandomCities){
       int randomCity;
       int randomIndex = random.nextInt(listToGetRandomCities.size());
 
@@ -42,7 +44,23 @@ public class TSPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected int[] getNeighbourSolution(int[] solution){
-      return null;
+      int[] neighbourSolution = new int[solution.length];
+      int randomIndex1 = 0;
+      int randomIndex2 = 0;
+      int swapCityAux = 0;
+
+      for(int i = 0; i <= neighbourSolution.length - 1; i++){
+         neighbourSolution[i] = solution[i];
+      }
+
+      randomIndex1 = random.nextInt(neighbourSolution.length - 1);
+      randomIndex2 = random.nextInt(neighbourSolution.length - 1);
+
+      swapCityAux = neighbourSolution[randomIndex1];
+      neighbourSolution[randomIndex1] = neighbourSolution[randomIndex2];
+      neighbourSolution[randomIndex2] = swapCityAux;
+
+      return neighbourSolution;
    }
 
    protected double calculateSolutionValue(int[] solution){
