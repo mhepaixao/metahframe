@@ -14,6 +14,7 @@ public class TSPSimulatedAnnealing extends SimulatedAnnealing{
    private int[] initialSolution;
    private double initialTemperature;
    private double finalTemperature;
+   private int numberOfNeighbours;
 
    private Random random;
 
@@ -35,11 +36,11 @@ public class TSPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected double getAlpha(){
-      return 0.9995;
+      return 0.995;
    }
 
    protected int getNumberOfMarkovChains(){
-      return 10;
+      return this.numberOfNeighbours;
    }
 
    protected int[] getInitialSolution(){
@@ -71,23 +72,10 @@ public class TSPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected int[] getNeighbourSolution(int[] solution){
-      int[] neighbourSolution = new int[solution.length];
-      int randomIndex1 = 0;
-      int randomIndex2 = 0;
-      int swapCityAux = 0;
+      int randomIndex1 = random.nextInt(solution.length - 1);
+      int randomIndex2 = random.nextInt(solution.length - 1);
 
-      for(int i = 0; i <= neighbourSolution.length - 1; i++){
-         neighbourSolution[i] = solution[i];
-      }
-
-      randomIndex1 = random.nextInt(neighbourSolution.length - 1);
-      randomIndex2 = random.nextInt(neighbourSolution.length - 1);
-
-      swapCityAux = neighbourSolution[randomIndex1];
-      neighbourSolution[randomIndex1] = neighbourSolution[randomIndex2];
-      neighbourSolution[randomIndex2] = swapCityAux;
-
-      return neighbourSolution;
+      return getNeighbourSolution(solution, randomIndex1, randomIndex2);
    }
 
    private int[] getNeighbourSolution(int[] solution, int index1, int index2){
@@ -146,6 +134,7 @@ public class TSPSimulatedAnnealing extends SimulatedAnnealing{
          }
       }
 
+      this.numberOfNeighbours = neighbours.size();
       return neighbours;
    }
 
