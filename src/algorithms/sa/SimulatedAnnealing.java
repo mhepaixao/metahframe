@@ -4,13 +4,32 @@ import algorithms.Algorithm;
 
 import java.util.Random;
 
+/**
+ * Class that implements the Simulated Annealing algorithm.
+ *
+ * The initialization constants are adjusted by each the problem.
+ *
+ * The final temperature is the stop criteria.
+ *
+ * The temperature is the exploitation/exploration parameter control.
+ *
+ * Alpha is the cooling parameter.
+ *
+ * Number of Markov Iterations define the number of neighbours tested in each iteration.
+ *
+ * The algorihtm stores the best so far solution.
+ *
+ * @author Matheus Paixao
+ */
 public abstract class SimulatedAnnealing implements Algorithm{
    private double finalTemperature;
    private double temperature;
-   private double alfa;
+   private double alpha;
    private int numberOfMarkovChains;
    private int[] bestSoFarSolution;
 
+   //all these parameters and functions depends on the problem
+   //they must be implemented by the problem child class
    protected abstract double getInitialTemperature();
    protected abstract double getFinalTemperature();
    protected abstract double getAlpha();
@@ -23,6 +42,11 @@ public abstract class SimulatedAnnealing implements Algorithm{
 
    private double totalTime;
 
+   /**
+    * Method to create an SimulatedAnnealing object
+    *
+    * @author Matheus Paixao
+    */
    public SimulatedAnnealing(){
       this.random = new Random();
    }
@@ -35,6 +59,18 @@ public abstract class SimulatedAnnealing implements Algorithm{
       this.totalTime = totalTime;
    }
 
+   /**
+    * Method to get the solution of the algorithm and to set the total time spended.
+    *
+    * @author Matheus Paixao
+    * @return solution founded by the algorithm
+    * @see initSA
+    * @see getNeighbourSolution
+    * @see calculateSolutionValue
+    * @see isSolutionBest
+    * @see getAcceptanceProbability
+    * @see setTotalTime
+    */
    public double getSolution(){
       int[] neighbourSolution = null;
       double bestSoFarSolutionValue = 0;
@@ -73,19 +109,40 @@ public abstract class SimulatedAnnealing implements Algorithm{
       return calculateSolutionValue(bestSoFarSolution);
    }
 
+   /**
+    * Method to initialize the SimulatedAnnealing algorithm.
+    *
+    * @author Matheus Paixao
+    * @see getInitialTemperature
+    * @see getFinalTemperature
+    * @see getAlpha
+    * @see getNumberOfMarkovChains
+    * @see getInitialSolution
+    */
    private void initSA(){
       temperature = getInitialTemperature();
       finalTemperature = getFinalTemperature();
-      alfa = getAlpha();
+      alpha = getAlpha();
       numberOfMarkovChains = getNumberOfMarkovChains();
       bestSoFarSolution = getInitialSolution();
    }
 
+   /**
+    * Method to get the probability to accept a worse solution that the current solution.
+    *
+    * @author Matheus Paixao
+    */
    private double getAcceptanceProbability(double bestSoFarSolutionValue, double neighbourSolutionValue){
       return Math.exp((bestSoFarSolutionValue - neighbourSolutionValue) / temperature);
    }
 
+   /**
+    * Method to update the temperature.
+    *
+    * The temperature is always decreased by the alpha parameter.
+    * @author Matheus Paixao
+    */
    private void updateTemperature(){
-      temperature = temperature * alfa;
+      temperature = temperature * alpha;
    }
 }
