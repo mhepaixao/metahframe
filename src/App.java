@@ -88,7 +88,7 @@ public class App{
       else if(algorithm.equals("sa")){
          if(problem.equals("tsp")){
             TSPProblem tspProblem = new TSPProblem(instance);
-            adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem, numberOfIterations);
+            adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem);
          }
       }
 

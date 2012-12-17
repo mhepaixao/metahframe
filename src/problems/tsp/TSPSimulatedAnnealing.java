@@ -18,8 +18,8 @@ public class TSPSimulatedAnnealing extends SimulatedAnnealing{
 
    private Random random;
 
-   public TSPSimulatedAnnealing(TSPProblem tspProblem, int numberOfIterations){
-      super(numberOfIterations);
+   public TSPSimulatedAnnealing(TSPProblem tspProblem){
+      super();
       this.tspProblem = tspProblem;
       this.random = new Random();
 

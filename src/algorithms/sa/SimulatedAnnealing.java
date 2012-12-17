@@ -5,7 +5,6 @@ import algorithms.Algorithm;
 import java.util.Random;
 
 public abstract class SimulatedAnnealing implements Algorithm{
-   private int numberOfIterations;
    private double finalTemperature;
    private double temperature;
    private double alfa;
@@ -24,8 +23,7 @@ public abstract class SimulatedAnnealing implements Algorithm{
 
    private double totalTime;
 
-   public SimulatedAnnealing(int numberOfIterations){
-      this.numberOfIterations = numberOfIterations;
+   public SimulatedAnnealing(){
       this.random = new Random();
    }
 
