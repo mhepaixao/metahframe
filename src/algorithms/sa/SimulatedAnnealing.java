@@ -37,6 +37,7 @@ public abstract class SimulatedAnnealing implements Algorithm{
    protected abstract int[] getInitialSolution();
    protected abstract int[] getNeighbourSolution(int[] solution);
    protected abstract double calculateSolutionValue(int[] solution);
+   protected abstract boolean isSolutionBest(double solutionValue1, double solutionValue2);
 
    private Random random;
 
@@ -90,7 +91,7 @@ public abstract class SimulatedAnnealing implements Algorithm{
             bestSoFarSolutionValue = calculateSolutionValue(bestSoFarSolution);
             neighbourSolutionValue = calculateSolutionValue(neighbourSolution);
 
-            if(neighbourSolutionValue <= bestSoFarSolutionValue){
+            if(isSolutionBest(neighbourSolutionValue, bestSoFarSolutionValue)){
                bestSoFarSolution = neighbourSolution;
             }
             else{

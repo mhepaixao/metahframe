@@ -156,4 +156,14 @@ public class TSPSimulatedAnnealing extends SimulatedAnnealing{
    protected double calculateSolutionValue(int[] solution){
       return tspProblem.calculateSolutionValue(solution);
    }
+
+   protected boolean isSolutionBest(double solutionValue1, double solutionValue2){
+      boolean result = false;
+
+      if(solutionValue1 < solutionValue2){
+         result = true;
+      }
+
+      return result;
+   }
 }
