@@ -11,20 +11,27 @@ import java.util.ArrayList;
 public class TSPSimulatedAnnealing extends SimulatedAnnealing{
    private TSPProblem tspProblem;
 
+   private int[] initialSolution;
+   private double initialTemperature;
+   private double finalTemperature;
+
    private Random random;
 
    public TSPSimulatedAnnealing(TSPProblem tspProblem, int numberOfIterations){
       super(numberOfIterations);
       this.tspProblem = tspProblem;
       this.random = new Random();
+
+      this.initialSolution = generateInitialSolution();
+      calculateInitialAndFinalTemperature();
    }
 
    protected double getInitialTemperature(){
-      return 1000;
+      return this.initialTemperature;
    }
 
    protected double getFinalTemperature(){
-      return 1;
+      return this.finalTemperature;
    }
 
    protected double getAlpha(){
@@ -36,6 +43,10 @@ public class TSPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected int[] getInitialSolution(){
+      return this.initialSolution;
+   }
+
+   private int[] generateInitialSolution(){
       int[] initialSolution = new int[tspProblem.getNumberOfCities()];
       ArrayList<Integer> listToGetRandomCities = new ArrayList<Integer>();
 
@@ -79,13 +90,12 @@ public class TSPSimulatedAnnealing extends SimulatedAnnealing{
       return neighbourSolution;
    }
 
+   private void calculateInitialAndFinalTemperature(){
+      this.initialTemperature = 1000;
+      this.finalTemperature = 1;
+   }
+
    protected double calculateSolutionValue(int[] solution){
-      Integer[] parsedSolution = new Integer[solution.length];
-
-      for(int i = 0; i <= parsedSolution.length - 1; i++){
-         parsedSolution[i] = new Integer(solution[i]);
-      }
-
-      return tspProblem.calculateSolutionValue(parsedSolution);
+      return tspProblem.calculateSolutionValue(solution);
    }
 }

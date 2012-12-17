@@ -57,13 +57,31 @@ public class TSPProblem{
    }
 
    /**
-    * Method that implements the fitness function of TSP problem.
+    * Method that implements the fitness function of TSP problem whem an Integer array is passed.
     *
     * @author Matheus Paixao
     * @param solution the Integer array that corresponds to the solution to be calculated
     * @return fitness value of the solution
     */
    public double calculateSolutionValue(Integer[] solution){
+      double solutionValue = 0;
+
+      for(int i = 0; i <= solution.length - 2; i++){
+         solutionValue += distancesMatrix[solution[i]][solution[i + 1]];
+      }
+      solutionValue += distancesMatrix[solution[solution.length - 1]][solution[0]];
+
+      return solutionValue;
+   }
+
+   /**
+    * Method that implements the fitness function of TSP problem whem an int array is passed.
+    *
+    * @author Matheus Paixao
+    * @param solution the int array that corresponds to the solution to be calculated
+    * @return fitness value of the solution
+    */
+   public double calculateSolutionValue(int[] solution){
       double solutionValue = 0;
 
       for(int i = 0; i <= solution.length - 2; i++){
