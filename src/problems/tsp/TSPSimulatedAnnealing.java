@@ -90,9 +90,78 @@ public class TSPSimulatedAnnealing extends SimulatedAnnealing{
       return neighbourSolution;
    }
 
+   private int[] getNeighbourSolution(int[] solution, int index1, int index2){
+      int[] neighbourSolution = new int[solution.length];
+      int swapCityAux = 0;
+
+      for(int i = 0; i <= neighbourSolution.length - 1; i++){
+         neighbourSolution[i] = solution[i];
+      }
+
+      swapCityAux = neighbourSolution[index1];
+      neighbourSolution[index1] = neighbourSolution[index2];
+      neighbourSolution[index2] = swapCityAux;
+
+      return neighbourSolution;
+   }
+
    private void calculateInitialAndFinalTemperature(){
-      this.initialTemperature = 1000;
-      this.finalTemperature = 1;
+      double maxSolutionValueDifference = 0;
+      double minSolutionValueDifference = 0;
+      double solutionValueDifference = 0;
+      ArrayList<int[]> neighbours = getAllNeighbours(getInitialSolution());
+
+      for(int i = 0; i <= neighbours.size() - 1; i++){
+         for(int j = 0; j <= neighbours.size() - 1; j++){
+            if(i != j){
+               solutionValueDifference = getSolutionDifference(neighbours.get(i), neighbours.get(j));
+
+               if((maxSolutionValueDifference == 0) && (minSolutionValueDifference == 0)){
+                  maxSolutionValueDifference = solutionValueDifference;
+                  minSolutionValueDifference = solutionValueDifference;
+               }
+
+               if(solutionValueDifference > maxSolutionValueDifference){
+                  maxSolutionValueDifference = solutionValueDifference;
+               }
+               else{
+                  if((solutionValueDifference > 0) && (solutionValueDifference < minSolutionValueDifference)){
+                     minSolutionValueDifference = solutionValueDifference;
+                  }
+               }
+            }
+         }
+      }
+
+      this.initialTemperature = maxSolutionValueDifference;
+      this.finalTemperature = minSolutionValueDifference;
+   }
+
+   private ArrayList<int[]> getAllNeighbours(int[] solution){
+      ArrayList<int[]> neighbours = new ArrayList<int[]>();
+
+      for(int i = 0; i <= solution.length - 1; i++){
+         for(int j = solution.length - 1; j > i; j--){
+            neighbours.add(getNeighbourSolution(solution, i, j));
+         }
+      }
+
+      return neighbours;
+   }
+
+   private double getSolutionDifference(int[] solution1, int[] solution2){
+      double solutionDifference = 0;
+      double solutionValue1 = calculateSolutionValue(solution1);
+      double solutionValue2 = calculateSolutionValue(solution2);
+
+      if(solutionValue1 >= solutionValue2){
+         solutionDifference = solutionValue1 - solutionValue2;
+      }
+      else{
+         solutionDifference = solutionValue2 - solutionValue1;
+      }
+
+      return solutionDifference;
    }
 
    protected double calculateSolutionValue(int[] solution){

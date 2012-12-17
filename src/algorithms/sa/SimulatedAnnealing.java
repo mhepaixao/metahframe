@@ -43,10 +43,12 @@ public abstract class SimulatedAnnealing implements Algorithm{
       double neighbourSolutionValue = 0;
       double acceptanceProbability = 0;
 
-      double initialTime = System.currentTimeMillis();
+      double initialTime = 0;
+      double finalTime = 0 ;
 
       initSA();
 
+      initialTime = System.currentTimeMillis();
       while(temperature > finalTemperature){
          for(int i = 0; i <= numberOfMarkovChains - 1; i++){
             neighbourSolution = getNeighbourSolution(bestSoFarSolution);
@@ -67,8 +69,9 @@ public abstract class SimulatedAnnealing implements Algorithm{
 
          updateTemperature();
       }
+      finalTime = System.currentTimeMillis();
 
-      setTotalTime(System.currentTimeMillis() - initialTime);
+      setTotalTime(finalTime - initialTime);
       return calculateSolutionValue(bestSoFarSolution);
    }
 
