@@ -19,6 +19,22 @@ public class TSPSimulatedAnnealing extends SimulatedAnnealing{
       this.random = new Random();
    }
 
+   protected double getInitialTemperature(){
+      return 1000;
+   }
+
+   protected double getFinalTemperature(){
+      return 1;
+   }
+
+   protected double getAlpha(){
+      return 0.9995;
+   }
+
+   protected int getNumberOfMarkovChains(){
+      return 10;
+   }
+
    protected int[] getInitialSolution(){
       int[] initialSolution = new int[tspProblem.getNumberOfCities()];
       ArrayList<Integer> listToGetRandomCities = new ArrayList<Integer>();

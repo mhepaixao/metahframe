@@ -6,13 +6,16 @@ import java.util.Random;
 
 public abstract class SimulatedAnnealing implements Algorithm{
    private int numberOfIterations;
-   private double initialTemperature;
    private double finalTemperature;
    private double temperature;
    private double alfa;
    private int numberOfMarkovChains;
    private int[] bestSoFarSolution;
 
+   protected abstract double getInitialTemperature();
+   protected abstract double getFinalTemperature();
+   protected abstract double getAlpha();
+   protected abstract int getNumberOfMarkovChains();
    protected abstract int[] getInitialSolution();
    protected abstract int[] getNeighbourSolution(int[] solution);
    protected abstract double calculateSolutionValue(int[] solution);
@@ -70,11 +73,10 @@ public abstract class SimulatedAnnealing implements Algorithm{
    }
 
    private void initSA(){
-      initialTemperature = 100;
-      finalTemperature = 1;
-      temperature = initialTemperature;
-      alfa = 0.9995;
-      numberOfMarkovChains = 10;
+      temperature = getInitialTemperature();
+      finalTemperature = getFinalTemperature();
+      alfa = getAlpha();
+      numberOfMarkovChains = getNumberOfMarkovChains();
       bestSoFarSolution = getInitialSolution();
    }
 
