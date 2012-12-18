@@ -15,8 +15,8 @@ public class TSPACS extends ACS{
    private double initialPheromone;
 
    /**
-    * Method to create the TSPAntQ object, receive TSPProblem object and
-    * the number of iterations is passed to AntQ constructor.
+    * Method to create the TSPACS object, receive TSPProblem object and
+    * the number of iterations is passed to ACS constructor.
     *
     * @author Matheus Paixao
     * @param tspProblem the TSPProblem object
