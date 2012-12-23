@@ -13,6 +13,8 @@ public class RobustNRPInstanceGenerator{
    private int numberOfRequirements;
    private int numberOfScenarios;
    private int requirementRange;
+   private int costRange;
+   private int devianceRange;
 
    public RobustNRPInstanceGenerator(){
       this.random = new Random();
@@ -22,11 +24,14 @@ public class RobustNRPInstanceGenerator{
       numberOfRequirements = Integer.parseInt(parameters[0]);
       numberOfScenarios = Integer.parseInt(parameters[1]);
       requirementRange = Integer.parseInt(parameters[2]);
+      costRange = Integer.parseInt(parameters[3]);
+      devianceRange = Integer.parseInt(parameters[4]);
    }
 
    private void generateInstance(){
       try{
-         BufferedWriter writer = new BufferedWriter(new FileWriter(new File("/home/mhepaixao/instancias/rnrp/instancia.txt")));
+         BufferedWriter writer = new BufferedWriter(new FileWriter(new File("/home/mhepaixao/instancias/rnrp/Inst_"+ numberOfRequirements +
+                                                                              "_" + numberOfScenarios + "_" + devianceRange + ".txt")));
 
          writer.write(numberOfRequirements + " " + numberOfScenarios);
          writer.write("\n");
@@ -37,34 +42,22 @@ public class RobustNRPInstanceGenerator{
          writer.write("\n");
       
          for(int i = 0; i <= numberOfScenarios - 1; i++){
-            writer.write(getRequirementsValues());
+            writer.write(getRandomNumbersSequency(numberOfRequirements, 1, requirementRange));
             writer.write("\n");
          }
+         writer.write("\n");
+
+         writer.write(getRandomNumbersSequency(numberOfRequirements, 1, costRange));
+         writer.write("\n");
+
+         writer.write(getRandomNumbersSequency(numberOfRequirements, 0, devianceRange));
+         writer.write("\n");
 
          writer.close();
       }
       catch(Exception e){
          e.printStackTrace();
       }
-   }
-
-   private String getRequirementsValues(){
-      String requirementsValues = null;
-
-      for(int i = 0; i <= numberOfRequirements - 1; i++){
-         if(requirementsValues == null){
-            requirementsValues = getRequirementValue() + "";
-         }
-         else{
-            requirementsValues += " " + getRequirementValue();
-         }
-      }
-
-      return requirementsValues;
-   }
-
-   private int getRequirementValue(){
-      return 1 + random.nextInt(requirementRange);
    }
 
    private String getScenariosProbabilities(){
@@ -87,6 +80,30 @@ public class RobustNRPInstanceGenerator{
       }
 
       return scenariosProbabilities;
+   }
+
+   private String getRandomNumbersSequency(int size, int lowerBound, int upperBound){
+      String randomNumbersSequency = null;
+
+      for(int i = 0; i <= size - 1; i++){
+         if(randomNumbersSequency == null){
+            randomNumbersSequency = getRandomNumber(lowerBound, upperBound) + "";
+         }
+         else{
+            randomNumbersSequency += " " + getRandomNumber(lowerBound, upperBound);
+         }
+      }
+
+      return randomNumbersSequency;
+   }
+
+   private int getRandomNumber(int lowerBound, int upperBound){
+      if(lowerBound == 0){
+         return random.nextInt(upperBound + 1);
+      }
+      else{
+         return lowerBound + random.nextInt(upperBound);
+      }
    }
 
    public static void main(String[] args){
