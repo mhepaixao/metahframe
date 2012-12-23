@@ -32,10 +32,9 @@ public class RobustNRPInstanceGenerator{
          writer.write("\n");
          writer.write("\n");
 
-         for(int i = 0; i <= 9; i++){
-            writer.write(getScenariosProbabilities());
-            writer.write("\n");
-         }
+         writer.write(getScenariosProbabilities());
+         writer.write("\n");
+         writer.write("\n");
       
          for(int i = 0; i <= numberOfScenarios - 1; i++){
             writer.write(getRequirementsValues());
@@ -71,6 +70,7 @@ public class RobustNRPInstanceGenerator{
    private String getScenariosProbabilities(){
       String scenariosProbabilities = null;
       double[] randomNumbers = new double[numberOfScenarios];
+      double[] probabilities = new double[numberOfScenarios];
       double randomNumbersSum = 0;
 
       DecimalFormatSymbols dfs = new DecimalFormatSymbols();
@@ -82,21 +82,49 @@ public class RobustNRPInstanceGenerator{
 
       scenariosProbabilities = null;
 
-      for(int i = 0; i <= randomNumbers.length - 1; i++){
-         randomNumbers[i] = random.nextDouble();
-         randomNumbersSum += randomNumbers[i];
+      while(isProbabilitiesValid(probabilities) == false){
+         for(int i = 0; i <= randomNumbers.length - 1; i++){
+            randomNumbers[i] = random.nextDouble();
+            randomNumbersSum += randomNumbers[i];
+         }
+
+         for(int i = 0; i <= randomNumbers.length - 1; i++){
+            probabilities[i] = Double.parseDouble(df.format(randomNumbers[i] / randomNumbersSum));
+         }
       }
 
-      for(int i = 0; i <= randomNumbers.length - 1; i++){
+      for(int i = 0; i <= probabilities.length - 1; i++){
          if(scenariosProbabilities == null){
-            scenariosProbabilities = df.format(randomNumbers[i] / randomNumbersSum) + "";
+            scenariosProbabilities = df.format(probabilities[i])+ "";
          }
          else{
-            scenariosProbabilities += " " + df.format(randomNumbers[i] / randomNumbersSum);
+            scenariosProbabilities += " " + df.format(probabilities[i]);
          }
       }
 
       return scenariosProbabilities;
+   }
+
+   private boolean isProbabilitiesValid(double[] probabilities){
+      boolean result = false;
+      double probabilitiesSum = 0;
+      boolean invalidProbabilityPresence = false;
+
+      for(int i = 0; i <= probabilities.length - 1; i++){
+         if(probabilities[i] == 0){
+            invalidProbabilityPresence = true;
+            break;
+         }
+         else{
+            probabilitiesSum += probabilities[i];
+         }
+      }
+
+      if((probabilitiesSum == 1.0) && (invalidProbabilityPresence == false)){
+         result = true;
+      }
+
+      return result;
    }
 
    public static void main(String[] args){
