@@ -12,6 +12,10 @@ import java.io.File;
 public class RobustNextReleaseProblem{
    RobustNRPInstanceReader robustNRPInstanceReader;
 
+   int numberOfRequirements;
+   int[] requirementsCosts;
+   int[] requirementsDeviances;
+
    /**
     * Method to create the RobustNextReleaseProblem object.
     *
@@ -20,5 +24,8 @@ public class RobustNextReleaseProblem{
     */
    public RobustNextReleaseProblem(File instance){
       robustNRPInstanceReader = new RobustNRPInstanceReader(instance);
+      this.numberOfRequirements = robustNRPInstanceReader.getNumberOfRequirements();
+      this.requirementsCosts = robustNRPInstanceReader.getRequirementsCosts();
+      this.requirementsDeviances = robustNRPInstanceReader.getRequirementsDeviances();
    }
 }
