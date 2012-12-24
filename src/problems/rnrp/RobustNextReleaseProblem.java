@@ -13,6 +13,7 @@ public class RobustNextReleaseProblem{
    RobustNRPInstanceReader robustNRPInstanceReader;
 
    int numberOfRequirements;
+   double[] requirementsValues;
    int[] requirementsCosts;
    int[] requirementsDeviances;
 
@@ -25,6 +26,7 @@ public class RobustNextReleaseProblem{
    public RobustNextReleaseProblem(File instance){
       robustNRPInstanceReader = new RobustNRPInstanceReader(instance);
       this.numberOfRequirements = robustNRPInstanceReader.getNumberOfRequirements();
+      this.requirementsValues = robustNRPInstanceReader.getRequirementsValues();
       this.requirementsCosts = robustNRPInstanceReader.getRequirementsCosts();
       this.requirementsDeviances = robustNRPInstanceReader.getRequirementsDeviances();
    }

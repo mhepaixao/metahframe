@@ -63,6 +63,47 @@ public class RobustNRPInstanceReader{
       return Integer.parseInt(instanceLines[0].split(" ")[1]);
    }
 
+   public double[] getRequirementsValues(){
+      double[] requirementsValues = new double[getNumberOfRequirements()];
+      double[][] requirementsScenariosValues = getRequirementsScenariosValues();
+      double[] scenariosProbabilities = getScenariosProbabilities();
+
+      for(int i = 0; i <= requirementsValues.length - 1; i++){
+         for(int j = 0; j <= requirementsScenariosValues.length - 1; j++){
+            requirementsValues[i] += requirementsScenariosValues[j][i] * scenariosProbabilities[j];
+         }
+      }
+
+      return requirementsValues;
+   }
+
+   private double[][] getRequirementsScenariosValues(){
+      int numberOfScenarios = getNumberOfScenarios();
+      int numberOfRequirements = getNumberOfRequirements();
+      double[][] requirementsScenariosValues = new double[numberOfScenarios][numberOfRequirements];
+      String[] instanceScenarioValues = null;
+
+      for(int i = 0; i <= numberOfScenarios - 1; i++){
+         instanceScenarioValues = instanceLines[4 + i].split(" ");
+         for(int j = 0; j <= numberOfRequirements - 1; j++){
+            requirementsScenariosValues[i][j] = Double.parseDouble(instanceScenarioValues[j]);
+         }
+      }
+
+      return requirementsScenariosValues;
+   }
+
+   private double[] getScenariosProbabilities(){
+      double[] scenariosProbabilities = new double[getNumberOfScenarios()];
+      String[] instanceScenariosProbabilities = instanceLines[2].split(" ");
+
+      for(int i = 0; i <= scenariosProbabilities.length - 1; i++){
+         scenariosProbabilities[i] = Double.parseDouble(instanceScenariosProbabilities[i]);
+      }
+
+      return scenariosProbabilities;
+   }
+
    public int[] getRequirementsCosts(){
       String[] instanceRequirementsCosts = instanceLines[4 + getNumberOfScenarios() + 1].split(" ");
       int[] requirementsCosts = new int[getNumberOfRequirements()];
