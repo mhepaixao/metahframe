@@ -16,6 +16,8 @@ public class RobustNRPInstanceGenerator{
    private int costRange;
    private int devianceRange;
 
+   private String path;
+
    public RobustNRPInstanceGenerator(){
       this.random = new Random();
    }
@@ -26,12 +28,13 @@ public class RobustNRPInstanceGenerator{
       requirementRange = Integer.parseInt(parameters[2]);
       costRange = Integer.parseInt(parameters[3]);
       devianceRange = Integer.parseInt(parameters[4]);
+      path = parameters[5];
    }
 
    private void generateInstance(){
       try{
-         BufferedWriter writer = new BufferedWriter(new FileWriter(new File("/home/mhepaixao/instancias/rnrp/Inst_"+ numberOfRequirements +
-                                                                              "_" + numberOfScenarios + "_" + devianceRange + ".txt")));
+         BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path + "Inst_" + numberOfRequirements + "_" + numberOfScenarios + 
+                                                                              "_" + devianceRange + ".txt")));
 
          writer.write(numberOfRequirements + " " + numberOfScenarios);
          writer.write("\n");
