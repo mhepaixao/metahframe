@@ -12,6 +12,7 @@ import problems.jssp.JSSPACS;
 import problems.srpp.SRPPProblem;
 import problems.srpp.SRPPAntQ;
 import problems.srpp.SRPPRandomAlgorithm;
+import problems.rnrp.RobustNRPSimulatedAnnealing;
 
 import instancereaders.InstanceChooser;
 
@@ -89,6 +90,9 @@ public class App{
          if(problem.equals("tsp")){
             TSPProblem tspProblem = new TSPProblem(instance);
             adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem);
+         }
+         else if(problem.equals("rnrp")){ 
+            adaptedAlgorithm = new RobustNRPSimulatedAnnealing();
          }
       }
 
