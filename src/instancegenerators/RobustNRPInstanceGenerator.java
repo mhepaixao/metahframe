@@ -7,6 +7,29 @@ import java.util.Random;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
+/**
+ * Class to generate random instances for the Robust Next Release Problem proposed to GECCO 2013.
+ *
+ * To generate an instance just run: 
+ * java RobustNRPInstanceGenerator <number of requirements> <number of scenarios> <requirements values upper bound>
+ *                                  <requirements costs upper bound> <requirements deviance upper bound> <path>
+ * Example: java RobustNRPInstanceGenerator 50 5 10 10 5 /home/instances
+ *
+ * The instance format is:
+ * Line 1 - <number of requirements> <number of scnarios>
+ * Line 2 - blank
+ * Line 3 - scenarios probabilities
+ * Line 4 - blank
+ * Line 5 - requirements values for scenario 1
+ * Line 6 - requirements values for scenario 2
+ *    .
+ *    .
+ *    .
+ * Line (5 + number of scenarios + 1) - requirements costs
+ * Line (5 + number of scenarios + 2) - requirements deviances
+ *
+ * @author Matheus Paixao
+ */
 public class RobustNRPInstanceGenerator{
    private Random random;
 
@@ -75,7 +98,7 @@ public class RobustNRPInstanceGenerator{
 
       for(int i = 0; i <= randomNumbers.length - 1; i++){
          if(scenariosProbabilities == null){
-            scenariosProbabilities = randomNumbers[i] / randomNumbersSum+ "";
+            scenariosProbabilities = randomNumbers[i] / randomNumbersSum + "";
          }
          else{
             scenariosProbabilities += " " + randomNumbers[i] / randomNumbersSum;
