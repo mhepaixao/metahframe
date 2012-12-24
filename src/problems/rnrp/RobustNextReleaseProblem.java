@@ -1,5 +1,7 @@
 package problems.rnrp;
 
+import instancereaders.RobustNRPInstanceReader;
+
 import java.io.File;
 
 /**
@@ -8,6 +10,7 @@ import java.io.File;
  * @author Matheus Paixao
  */
 public class RobustNextReleaseProblem{
+   RobustNRPInstanceReader robustNRPInstanceReader;
 
    /**
     * Method to create the RobustNextReleaseProblem object.
@@ -16,6 +19,6 @@ public class RobustNextReleaseProblem{
     * @param instance the problem's instance
     */
    public RobustNextReleaseProblem(File instance){
-
+      robustNRPInstanceReader = new RobustNRPInstanceReader(instance);
    }
 }
