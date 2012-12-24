@@ -8,9 +8,10 @@ import algorithms.sa.SimulatedAnnealing;
  * @author Matheus Paixao
  */
 public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
+   RobustNextReleaseProblem robustNRP;
 
-   public RobustNRPSimulatedAnnealing(){
-
+   public RobustNRPSimulatedAnnealing(RobustNextReleaseProblem robustNRP){
+      this.robustNRP = robustNRP;
    }
 
    protected double getInitialTemperature(){

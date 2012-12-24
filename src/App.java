@@ -12,6 +12,7 @@ import problems.jssp.JSSPACS;
 import problems.srpp.SRPPProblem;
 import problems.srpp.SRPPAntQ;
 import problems.srpp.SRPPRandomAlgorithm;
+import problems.rnrp.RobustNextReleaseProblem;
 import problems.rnrp.RobustNRPSimulatedAnnealing;
 
 import instancereaders.InstanceChooser;
@@ -92,7 +93,8 @@ public class App{
             adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem);
          }
          else if(problem.equals("rnrp")){ 
-            adaptedAlgorithm = new RobustNRPSimulatedAnnealing();
+            RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instance);
+            adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP);
          }
       }
 
