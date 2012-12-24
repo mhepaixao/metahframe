@@ -4,10 +4,24 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
 
+/**
+ * Class used to read the RobustNRP instance.
+ *
+ * Information about the instance format in the RobustNRPInstanceGenerator
+ *
+ * @author Matheus Paixao
+ */
 public class RobustNRPInstanceReader{
    File instance;
    String[] instanceLines;
 
+   /**
+    * Method to create a RobustNRPInstanceReader object.
+    *
+    * @author Matheus Paixao
+    * @param instance the instance to read
+    * @see getInstanceLines
+    */
    public RobustNRPInstanceReader(File instance){
       this.instance = instance;
       this.instanceLines = getInstanceLines();
@@ -17,6 +31,12 @@ public class RobustNRPInstanceReader{
       return this.instance;
    }
 
+   /**
+    * Method to store each line of the instance as a String in an String array.
+    *
+    * @author Matheus Paixao
+    * @see getNumberOfLinesInInstance
+    */
    private String[] getInstanceLines(){
       String[] instanceLines = new String[getNumberOfLinesInInstance()];
       int instanceLineCounter = 0;
@@ -36,6 +56,11 @@ public class RobustNRPInstanceReader{
       return instanceLines;
    }
 
+   /**
+    * Method to get the number of lines in the instance.
+    *
+    * @author Matheus Paixao
+    */
    private int getNumberOfLinesInInstance(){
       int numberOfLinesInInstance = 0;
       String instanceLine = null;
@@ -55,14 +80,35 @@ public class RobustNRPInstanceReader{
       return numberOfLinesInInstance;
    }
 
+   /**
+    * Method to get the number of requirements of the instance.
+    *
+    * The number of requirements is the first value of the first line.
+    * @author Matheus Paixao
+    */
    public int getNumberOfRequirements(){
       return Integer.parseInt(instanceLines[0].split(" ")[0]);
    }
 
+   /**
+    * Method to get the number of scenarios of the instance.
+    *
+    * The number of requirements is the second value of the first line.
+    * @author Matheus Paixao
+    */
    public int getNumberOfScenarios(){
       return Integer.parseInt(instanceLines[0].split(" ")[1]);
    }
 
+   /**
+    * Method to get the double array containing the value of each requirement.
+    *
+    * For more information about the value of a requirement, see the Robust Next Release Problem paper.
+    * @author Matheus Paixao
+    * @see getNumberOfRequirements
+    * @see getNumberOfScenarios
+    * @see getScenariosProbabilities
+    */
    public double[] getRequirementsValues(){
       double[] requirementsValues = new double[getNumberOfRequirements()];
       double[][] requirementsScenariosValues = getRequirementsScenariosValues();
@@ -77,6 +123,13 @@ public class RobustNRPInstanceReader{
       return requirementsValues;
    }
 
+   /**
+    * Method to get the double matrix with the value of each requirement in each scenario.
+    *
+    * @author Matheus Paixao
+    * @see getNumberOfRequirements
+    * @see getNumberOfScenarios
+    */
    private double[][] getRequirementsScenariosValues(){
       int numberOfScenarios = getNumberOfScenarios();
       int numberOfRequirements = getNumberOfRequirements();
@@ -93,6 +146,13 @@ public class RobustNRPInstanceReader{
       return requirementsScenariosValues;
    }
 
+   /**
+    * Method to get a double array with each scenarios probability.
+    *
+    * The scenarios probabilities are in line 3 of the instance.
+    * @author Matheus Paixao
+    * @see getNumberOfScenarios
+    */
    private double[] getScenariosProbabilities(){
       double[] scenariosProbabilities = new double[getNumberOfScenarios()];
       String[] instanceScenariosProbabilities = instanceLines[2].split(" ");
@@ -104,6 +164,13 @@ public class RobustNRPInstanceReader{
       return scenariosProbabilities;
    }
 
+   /**
+    * Method to get the requirements costs.
+    *
+    * @author Matheus Paixao
+    * @see getNumberOfRequirements
+    * @see getNumberOfScenarios
+    */
    public int[] getRequirementsCosts(){
       String[] instanceRequirementsCosts = instanceLines[4 + getNumberOfScenarios() + 1].split(" ");
       int[] requirementsCosts = new int[getNumberOfRequirements()];
@@ -115,6 +182,13 @@ public class RobustNRPInstanceReader{
       return requirementsCosts;
    }
 
+   /**
+    * Method to get the requirements deviances.
+    *
+    * @author Matheus Paixao
+    * @see getNumberOfRequirements
+    * @see getNumberOfScenarios
+    */
    public int[] getRequirementsDeviances(){
       String[] instanceRequirementsDeviances = instanceLines[4 + getNumberOfScenarios() + 2].split(" ");
       int[] requirementsDeviances = new int[getNumberOfRequirements()];
