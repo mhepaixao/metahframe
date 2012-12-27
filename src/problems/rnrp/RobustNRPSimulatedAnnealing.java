@@ -13,6 +13,7 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    RobustNextReleaseProblem robustNRP;
 
    int[] initialSolution;
+   int numberOfRequirementsToChangeInNeighbourSolution;
 
    Random random;
 
@@ -21,6 +22,7 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
 
       this.robustNRP = robustNRP;
       this.initialSolution = generateInitialSolution();
+      this.numberOfRequirementsToChangeInNeighbourSolution = 1;
    }
 
    protected double getInitialTemperature(){
@@ -44,7 +46,34 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected int[] getNeighbourSolution(int[] solution){
-      return null;
+      int[] neighbourSolution = getNeighbourSolution(solution, numberOfRequirementsToChangeInNeighbourSolution);
+
+      while(robustNRP.isSolutionValid(neighbourSolution) == false){
+         neighbourSolution = getNeighbourSolution(solution, numberOfRequirementsToChangeInNeighbourSolution);
+      }
+
+      return neighbourSolution;
+   }
+
+   private int[] getNeighbourSolution(int[] solution, int numberOfRequirementsToChangeInNeighbourSolution){
+      int[] neighbourSolution = new int[solution.length];
+      int indexToChange = 0;
+
+      for(int i = 0; i <= solution.length - 1; i++){
+         neighbourSolution[i] = solution[i];
+      }
+
+      for(int i = 0; i <= numberOfRequirementsToChangeInNeighbourSolution - 1; i++){
+         indexToChange = random.nextInt(neighbourSolution.length);
+         if(neighbourSolution[indexToChange] == 0){
+            neighbourSolution[indexToChange] = 1;
+         }
+         else if(neighbourSolution[indexToChange] == 1){
+            neighbourSolution[indexToChange] = 0;
+         }
+      }
+
+      return neighbourSolution;
    }
 
    protected double calculateSolutionValue(int[] solution){
