@@ -30,4 +30,8 @@ public class RobustNextReleaseProblem{
       this.requirementsCosts = robustNRPInstanceReader.getRequirementsCosts();
       this.requirementsDeviances = robustNRPInstanceReader.getRequirementsDeviances();
    }
+
+   public int getNumberOfRequirements(){
+      return this.numberOfRequirements;
+   }
 }
