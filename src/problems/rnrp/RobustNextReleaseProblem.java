@@ -34,7 +34,7 @@ public class RobustNextReleaseProblem{
       this.requirementsCosts = robustNRPInstanceReader.getRequirementsCosts();
       this.requirementsDeviances = robustNRPInstanceReader.getRequirementsDeviances();
       this.budget = getBudget(50);
-      this.gamma = 2;
+      this.gamma = getGamma(10);
    }
 
    public int getNumberOfRequirements(){
@@ -45,6 +45,17 @@ public class RobustNextReleaseProblem{
       double percentage = totalCostPercentage / 100;
 
       return getTotalCostsSum() * percentage;
+   }
+
+   private int getGamma(double estimatesMistakesPercentage){
+      double percentage = estimatesMistakesPercentage / 100;
+      double gamma = percentage * getNumberOfRequirements();
+
+      if(gamma - ((int) gamma) != 0){
+         gamma = ((int) gamma) + 1;
+      }
+
+      return (int) gamma;
    }
 
    private double getTotalCostsSum(){
