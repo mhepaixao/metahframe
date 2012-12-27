@@ -2,6 +2,8 @@ package problems.rnrp;
 
 import algorithms.sa.SimulatedAnnealing;
 
+import java.util.Random;
+
 /**
  * Class to implement the SimulatedAnnealing class to the Robust Next Release Problem.
  *
@@ -10,8 +12,15 @@ import algorithms.sa.SimulatedAnnealing;
 public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    RobustNextReleaseProblem robustNRP;
 
+   int[] initialSolution;
+
+   Random random;
+
    public RobustNRPSimulatedAnnealing(RobustNextReleaseProblem robustNRP){
+      this.random = new Random();
+
       this.robustNRP = robustNRP;
+      this.initialSolution = generateInitialSolution();
    }
 
    protected double getInitialTemperature(){
@@ -31,7 +40,7 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected int[] getInitialSolution(){
-      return null;
+      return this.initialSolution;
    }
 
    protected int[] getNeighbourSolution(int[] solution){
@@ -44,5 +53,25 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
 
    protected boolean isSolutionBest(double solutionValue1, double solutionValue2){
       return false;
+   }
+
+   private int[] generateInitialSolution(){
+      int[] initialSolution = getRandomSolution();
+
+      while(robustNRP.isSolutionValid(initialSolution) == false){
+         initialSolution = getRandomSolution();
+      }
+
+      return initialSolution;
+   }
+
+   private int[] getRandomSolution(){
+      int[] randomSolution = new int[robustNRP.getNumberOfRequirements()];
+
+      for(int i = 0; i <= randomSolution.length - 1; i++){
+         randomSolution[i] = random.nextInt(2);
+      }
+
+      return randomSolution;
    }
 }
