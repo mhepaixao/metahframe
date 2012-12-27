@@ -118,4 +118,24 @@ public class RobustNextReleaseProblem{
 
       return costsDeviances;
    }
+
+   public double calculateSolutionValue(int[] solution){
+      double solutionValue = 0;
+
+      for(int i = 0; i <= solution.length - 1; i++){
+         solutionValue += solution[i] * requirementsValues[i];
+      }
+
+      return solutionValue;
+   }
+
+   public boolean isSolutionBest(double solutionValue1, double solutionValue2){
+      boolean result = false;
+
+      if(solutionValue1 > solutionValue2){
+         result = true;
+      }
+
+      return result;
+   }
 }

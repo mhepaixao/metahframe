@@ -77,11 +77,11 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected double calculateSolutionValue(int[] solution){
-      return 0;
+      return robustNRP.calculateSolutionValue(solution);
    }
 
    protected boolean isSolutionBest(double solutionValue1, double solutionValue2){
-      return false;
+      return robustNRP.isSolutionBest(solutionValue1, solutionValue2);
    }
 
    private int[] generateInitialSolution(){
