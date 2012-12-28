@@ -5,6 +5,7 @@ import problems.tsp.TSPAntQ;
 import problems.tsp.TSPRandomAlgorithm;
 import problems.tsp.TSPACS;
 import problems.tsp.TSPSimulatedAnnealing;
+import problems.tsp.TSPGeneticAlgorithm;
 import problems.jssp.JSSPProblem;
 import problems.jssp.JSSPAntQ;
 import problems.jssp.JSSPRandomAlgorithm;
@@ -95,6 +96,11 @@ public class App{
          else if(problem.equals("rnrp")){ 
             RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instance);
             adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP);
+         }
+      }
+      else if(algorithm.equals("ga")){
+         if(problem.equals("tsp")){
+            adaptedAlgorithm = new TSPGeneticAlgorithm();
          }
       }
 
