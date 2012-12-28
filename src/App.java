@@ -100,7 +100,8 @@ public class App{
       }
       else if(algorithm.equals("ga")){
          if(problem.equals("tsp")){
-            adaptedAlgorithm = new TSPGeneticAlgorithm();
+            TSPProblem tspProblem = new TSPProblem(instance);
+            adaptedAlgorithm = new TSPGeneticAlgorithm(tspProblem, numberOfIterations);
          }
       }
 
