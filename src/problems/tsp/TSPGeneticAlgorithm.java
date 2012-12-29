@@ -224,4 +224,11 @@ public class TSPGeneticAlgorithm extends GeneticAlgorithm{
 
       return childs;
    }
+
+   protected void mutate(int[] individual, int indexToMutate){
+      int randomCityToSwap = random.nextInt(individual.length);
+      int cityAux = individual[indexToMutate];
+      individual[indexToMutate] = individual[randomCityToSwap];
+      individual[randomCityToSwap] = cityAux;
+   }
 }

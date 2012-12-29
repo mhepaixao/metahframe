@@ -20,6 +20,7 @@ public abstract class GeneticAlgorithm implements Algorithm{
    protected abstract double getMutationProbability();
    protected abstract int[][] getParents(int[][] population);
    protected abstract int[][] getChildsByCrossover(int[][] parents);
+   protected abstract void mutate(int[] individual, int indexToMutate);
 
    public GeneticAlgorithm(int numberOfIterations){
       this.numberOfIterations = numberOfIterations;
@@ -64,6 +65,18 @@ public abstract class GeneticAlgorithm implements Algorithm{
             else{
                childs = parents;
             }
+
+            for(int k = 0; k <= childs.length - 1; k++){
+               for(int w = 0; w <= childs[0].length - 1; w++){
+                  randomNumber = getRandomNumber();
+                  if(randomNumber < mutationProbability){
+                     mutate(childs[k], w);
+                  }
+               }
+            }
+
+            population[j] = childs[0];
+            population[j + 1] = childs[1];
          }
       }
 
