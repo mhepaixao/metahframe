@@ -16,6 +16,7 @@ public abstract class GeneticAlgorithm implements Algorithm{
    protected abstract int[][] getInitialPopulation();
    protected abstract double getCrossoverProbability();
    protected abstract double getMutationProbability();
+   protected abstract int[][] getParents(int[][] population);
 
    public GeneticAlgorithm(int numberOfIterations){
       this.numberOfIterations = numberOfIterations;
@@ -32,9 +33,25 @@ public abstract class GeneticAlgorithm implements Algorithm{
    public double getSolution(){
       double initialTime;
       double finalTime;
+
       initGA();
 
+      int[][] iterationPopulation = new int[population.length][population[0].length];
+      int[][] parents = null;
+
       initialTime = System.currentTimeMillis();
+
+      for(int i = 0; i <= numberOfIterations - 1; i++){
+         for(int j = 0; j <= iterationPopulation.length - 1; j++){
+            for(int k = 0; k <= iterationPopulation[0].length - 1; k++){
+               iterationPopulation[j][k] = population[j][k];
+            }
+         }
+
+         for(int j = 0; j <= population.length - 1; j = j + 2){
+            parents = getParents(iterationPopulation);
+         }
+      }
 
       finalTime = System.currentTimeMillis();
       setTotalTime(finalTime - initialTime);
