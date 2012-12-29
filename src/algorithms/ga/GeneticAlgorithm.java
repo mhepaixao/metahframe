@@ -56,6 +56,7 @@ public abstract class GeneticAlgorithm implements Algorithm{
 
          for(int j = 0; j <= population.length - 1; j = j + 2){
             parents = getParents(iterationPopulation);
+
             randomNumber = getRandomNumber();
             if(randomNumber < crossoverProbability){
                childs = getChildsByCrossover(parents);
