@@ -195,4 +195,28 @@ public class TSPGeneticAlgorithm extends GeneticAlgorithm{
 
       return rouletteValue;
    }
+
+   protected int[][] getChildsByCrossover(int[][] parents){
+      int[][] childs = new int[parents.length][parents[0].length];
+      int crossoverIndex = random.nextInt(childs[0].length);
+
+      for(int i = 0; i <= childs.length - 1; i++){
+         for(int j = 0; j <= crossoverIndex; j++){
+            childs[i][j] = parents[i][j];
+         }
+
+         if(i == 0){
+            for(int j = crossoverIndex + 1; j <= childs[0].length - 1; j++){
+               childs[i][j] = parents[1][j];
+            }
+         }
+         else if(i == 1){
+            for(int j = crossoverIndex + 1; j <= childs[0].length - 1; j++){
+               childs[i][j] = parents[0][j];
+            }
+         }
+      }
+
+      return childs;
+   }
 }
