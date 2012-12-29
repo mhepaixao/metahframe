@@ -21,6 +21,8 @@ public abstract class GeneticAlgorithm implements Algorithm{
    protected abstract int[][] getParents(int[][] population);
    protected abstract int[][] getChildsByCrossover(int[][] parents);
    protected abstract void mutate(int[] individual, int indexToMutate);
+   protected abstract double calculateSolutionValue(int[] individual);
+   protected abstract boolean isSolutionBetter(double solutionValue1, double solutionValue2);
 
    public GeneticAlgorithm(int numberOfIterations){
       this.numberOfIterations = numberOfIterations;
@@ -82,7 +84,8 @@ public abstract class GeneticAlgorithm implements Algorithm{
 
       finalTime = System.currentTimeMillis();
       setTotalTime(finalTime - initialTime);
-      return 0;
+
+      return getBestIndividualSolutionValue();
    }
 
    private double getRandomNumber(){
@@ -93,5 +96,24 @@ public abstract class GeneticAlgorithm implements Algorithm{
       this.population = getInitialPopulation();
       this.crossoverProbability = getCrossoverProbability();
       this.mutationProbability = getMutationProbability();
+   }
+
+   private double getBestIndividualSolutionValue(){
+      double individualSolutionValue = 0;
+      double bestIndividualSolutionValue = 0;
+
+      for(int i = 0; i <= population.length - 1; i++){
+         individualSolutionValue = calculateSolutionValue(population[i]);
+         if(i == 0){
+            bestIndividualSolutionValue = individualSolutionValue;
+         }
+         else{
+            if(isSolutionBetter(individualSolutionValue, bestIndividualSolutionValue)){
+               bestIndividualSolutionValue = individualSolutionValue;
+            }
+         }
+      }
+
+      return bestIndividualSolutionValue;
    }
 }

@@ -6,6 +6,7 @@ import instancereaders.TSPInstanceReader;
 import java.io.File;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -25,7 +26,7 @@ public class TSPGeneticAlgorithm extends GeneticAlgorithm{
       super(numberOfIterations);
       this.tspProblem = tspProblem;
       this.random = new Random();
-      this.populationSize = 10;
+      this.populationSize = 100;
    }
 
    protected double getCrossoverProbability(){
@@ -128,6 +129,7 @@ public class TSPGeneticAlgorithm extends GeneticAlgorithm{
     */
    private double[] getIndividualsProbabilities(int[][] population){
       double[] probabilities = new double[population.length];
+      double probabilityValue = 0;
       double[] individualsSelectionValues = getIndividualsSelectionValues(population);
       double individualsSelectionValuesSum = 0;
 
@@ -136,7 +138,12 @@ public class TSPGeneticAlgorithm extends GeneticAlgorithm{
       }
 
       for(int i = 0; i <= probabilities.length - 1; i++){
-         probabilities[i] = individualsSelectionValues[i] / individualsSelectionValuesSum;
+         probabilityValue = individualsSelectionValues[i] / individualsSelectionValuesSum;
+         if(Double.isNaN(probabilityValue)){
+            probabilityValue = 0;
+         }
+
+         probabilities[i] = probabilityValue;
       }
 
       return probabilities;
@@ -197,27 +204,26 @@ public class TSPGeneticAlgorithm extends GeneticAlgorithm{
    }
 
    protected int[][] getChildsByCrossover(int[][] parents){
-      int[][] childs = new int[parents.length][parents[0].length];
-      int crossoverIndex = random.nextInt(childs[0].length);
+      return getChildsByCycleCrossover(parents);
+   }
 
-      if(Arrays.equals(parents[0], parents[1]) == true){
-         childs = parents;
-      }
-      else{
-         for(int i = 0; i <= childs.length - 1; i++){
-            for(int j = 0; j <= crossoverIndex; j++){
-               childs[i][j] = parents[i][j];
+   private int[][] getChildsByCycleCrossover(int[][] parents){
+      int childs[][] = new int[parents.length][parents[0].length];
+      ArrayList<ArrayList<Integer>> cycles = getCycles(parents);
+      ArrayList<Integer> cycle = null;
+      
+      for(int i = 0; i <= cycles.size() - 1; i++){
+         cycle = cycles.get(i);
+         if(i % 2 == 0){
+            for(int j = 0; j <= cycle.size() - 1; j++){
+               childs[0][cycle.get(j)] = parents[0][cycle.get(j)];
+               childs[1][cycle.get(j)] = parents[1][cycle.get(j)];
             }
-
-            if(i == 0){
-               for(int j = crossoverIndex + 1; j <= childs[0].length - 1; j++){
-                  childs[i][j] = parents[1][j];
-               }
-            }
-            else if(i == 1){
-               for(int j = crossoverIndex + 1; j <= childs[0].length - 1; j++){
-                  childs[i][j] = parents[0][j];
-               }
+         }
+         else{
+            for(int j = 0; j <= cycle.size() - 1; j++){
+               childs[0][cycle.get(j)] = parents[1][cycle.get(j)];
+               childs[1][cycle.get(j)] = parents[0][cycle.get(j)];
             }
          }
       }
@@ -225,10 +231,78 @@ public class TSPGeneticAlgorithm extends GeneticAlgorithm{
       return childs;
    }
 
+   private ArrayList<ArrayList<Integer>> getCycles(int[][] parents){
+      ArrayList<ArrayList<Integer>> cycles = new ArrayList<ArrayList<Integer>>();
+
+      for(int i = 0; i <= parents[0].length - 1; i++){
+         if(isCityInCycles(i, cycles) == false){
+            cycles.add(getCycle(i, parents));
+         }
+      }
+
+      return cycles;
+   }
+
+   private boolean isCityInCycles(int cityIndex, ArrayList<ArrayList<Integer>> cycles){
+      boolean result = false;
+
+      if(cycles.size() != 0){
+         outerloop:
+         for(int i = 0; i <= cycles.size() - 1; i++){
+            for(int j = 0; j <= cycles.get(i).size() - 1; j++){
+               if(cycles.get(i).get(j) == cityIndex){
+                  result = true;
+                  break outerloop;
+               }
+            }
+         }
+      }
+
+      return result;
+   }
+
+   private ArrayList<Integer> getCycle(int startIndex, int[][] parents){
+      ArrayList<Integer> cycle = new ArrayList<Integer>();
+      int nextIndex = parents[0].length;
+      cycle.add(startIndex);
+
+      while(nextIndex != startIndex){
+         nextIndex = getNextIndex(cycle.get(cycle.size() - 1), parents);
+         if(nextIndex != startIndex){
+            cycle.add(nextIndex);
+         }
+      }
+
+      Collections.sort(cycle);
+      return cycle;
+   }
+
+   private int getNextIndex(int lastIndex, int[][] parents){
+      int nextIndex = 0;
+      int lastIndexValue = parents[0][lastIndex];
+
+      for(int i = 0; i <= parents[1].length - 1; i++){
+         if(parents[1][i] == lastIndexValue){
+            nextIndex = i;
+            break;
+         }
+      }
+
+      return nextIndex;
+   }
+
    protected void mutate(int[] individual, int indexToMutate){
       int randomCityToSwap = random.nextInt(individual.length);
       int cityAux = individual[indexToMutate];
       individual[indexToMutate] = individual[randomCityToSwap];
       individual[randomCityToSwap] = cityAux;
+   }
+
+   protected double calculateSolutionValue(int[] individual){
+      return tspProblem.calculateSolutionValue(individual);
+   }
+
+   protected boolean isSolutionBetter(double solutionValue1, double solutionValue2){
+      return tspProblem.isSolutionBest(solutionValue1, solutionValue2);
    }
 }
