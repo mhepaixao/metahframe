@@ -3,6 +3,7 @@ package algorithms.ga;
 import algorithms.Algorithm;
 
 import java.util.Random;
+import java.util.Arrays;
 
 public abstract class GeneticAlgorithm implements Algorithm{
 
@@ -10,6 +11,7 @@ public abstract class GeneticAlgorithm implements Algorithm{
    private int[][] population;
    private double crossoverProbability;
    private double mutationProbability;
+   private int numberOfEliteIndividuals;
 
    private double totalTime;
 
@@ -23,6 +25,8 @@ public abstract class GeneticAlgorithm implements Algorithm{
    protected abstract void mutate(int[] individual, int indexToMutate);
    protected abstract double calculateSolutionValue(int[] individual);
    protected abstract boolean isSolutionBetter(double solutionValue1, double solutionValue2);
+   protected abstract int getNumberOfEliteIndividuals();
+   protected abstract boolean isMinimizationProblem();
 
    public GeneticAlgorithm(int numberOfIterations){
       this.numberOfIterations = numberOfIterations;
@@ -44,6 +48,7 @@ public abstract class GeneticAlgorithm implements Algorithm{
       initGA();
 
       int[][] iterationPopulation = new int[population.length][population[0].length];
+      int[][] eliteIndividuals = null;
       int[][] parents = null;
       int[][] childs = null;
       double randomNumber = 0;
@@ -57,7 +62,12 @@ public abstract class GeneticAlgorithm implements Algorithm{
             }
          }
 
-         for(int j = 0; j <= population.length - 1; j = j + 2){
+         eliteIndividuals = getEliteIndividuals(iterationPopulation, numberOfEliteIndividuals);
+         for(int j = 0; j <= eliteIndividuals.length - 1; j++){
+            population[j] = eliteIndividuals[j];
+         }
+
+         for(int j = numberOfEliteIndividuals; j <= population.length - 1; j = j + 2){
             parents = getParents(iterationPopulation);
 
             randomNumber = getRandomNumber();
@@ -88,14 +98,47 @@ public abstract class GeneticAlgorithm implements Algorithm{
       return getBestIndividualSolutionValue();
    }
 
-   private double getRandomNumber(){
-      return random.nextDouble();
-   }
-
    private void initGA(){
       this.population = getInitialPopulation();
       this.crossoverProbability = getCrossoverProbability();
       this.mutationProbability = getMutationProbability();
+      this.numberOfEliteIndividuals = getNumberOfEliteIndividuals();
+   }
+
+   private double getRandomNumber(){
+      return random.nextDouble();
+   }
+
+   private int[][] getEliteIndividuals(int[][] population, int numberOfEliteIndividuals){
+      int[][] eliteIndividuals = new int[numberOfEliteIndividuals][population[0].length];
+      double[] individualsSolutionValues = new double[population.length];
+      double[] sortedIndividualsSolutionValues = null;
+
+      for(int i = 0; i <= individualsSolutionValues.length - 1; i++){
+         individualsSolutionValues[i] = calculateSolutionValue(population[i]);
+      }
+
+      sortedIndividualsSolutionValues = Arrays.copyOf(individualsSolutionValues, individualsSolutionValues.length);
+      Arrays.sort(sortedIndividualsSolutionValues);
+
+      for(int i = 0; i <= eliteIndividuals.length - 1; i++){
+         for(int j = 0; j <= individualsSolutionValues.length - 1; j++){
+            if(isMinimizationProblem() == true){
+               if(sortedIndividualsSolutionValues[i] == individualsSolutionValues[j]){
+                  eliteIndividuals[i] = Arrays.copyOf(population[j], population[j].length);
+                  break;
+               }
+            }
+            else{
+               if(sortedIndividualsSolutionValues[sortedIndividualsSolutionValues.length - 1 - i] == individualsSolutionValues[j]){
+                  eliteIndividuals[i] = Arrays.copyOf(population[j], population[j].length);
+                  break;
+               }
+            }
+         }
+      }
+
+      return eliteIndividuals;
    }
 
    private double getBestIndividualSolutionValue(){

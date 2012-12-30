@@ -37,6 +37,14 @@ public class TSPGeneticAlgorithm extends GeneticAlgorithm{
       return 0.01;
    }
 
+   protected int getNumberOfEliteIndividuals(){
+      return (int) (0.2*populationSize);
+   }
+
+   protected boolean isMinimizationProblem(){
+      return true;
+   }
+
    protected int[][] getInitialPopulation(){
       int[][] initialPopulation = new int[populationSize][];
 
