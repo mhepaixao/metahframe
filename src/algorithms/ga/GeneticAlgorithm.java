@@ -150,11 +150,12 @@ public abstract class GeneticAlgorithm implements Algorithm{
    }
 
    private double getBestIndividualSolutionValue(){
+      double[] individualsSolutionValues = getIndividualsSolutionValues();
       double individualSolutionValue = 0;
       double bestIndividualSolutionValue = 0;
 
-      for(int i = 0; i <= population.length - 1; i++){
-         individualSolutionValue = calculateSolutionValue(population[i]);
+      for(int i = 0; i <= individualsSolutionValues.length - 1; i++){
+         individualSolutionValue = individualsSolutionValues[i];
          if(i == 0){
             bestIndividualSolutionValue = individualSolutionValue;
          }
