@@ -94,11 +94,11 @@ public class TSPGeneticAlgorithm extends GeneticAlgorithm{
       return randomCity;
    }
 
-   protected int[][] getParents(int[][] population){
+   protected int[][] getParents(int[][] population, double[] individualsSolutionValues){
       int[][] parents = new int[2][population[0].length];
 
       for(int i = 0; i <= parents.length - 1; i++){
-         parents[i] = getIndividual(population);
+         parents[i] = getIndividual(population, individualsSolutionValues);
       }
 
       return parents;
@@ -112,10 +112,10 @@ public class TSPGeneticAlgorithm extends GeneticAlgorithm{
     * @see getProbabilities
     * @see getRouletteValue
     */
-   private int[] getIndividual(int[][] population){
+   private int[] getIndividual(int[][] population, double[] individualsSolutionValues){
       int[] individual = null;
       double rouletteValue = 0;
-      double[] probabilities = getIndividualsProbabilities(population);
+      double[] probabilities = getIndividualsProbabilities(population, individualsSolutionValues);
 
       rouletteValue = getRouletteValue(probabilities);
 
@@ -135,15 +135,11 @@ public class TSPGeneticAlgorithm extends GeneticAlgorithm{
     * @author Matheus Paixao
     * @return an array containing the selection's probability of each individual
     */
-   private double[] getIndividualsProbabilities(int[][] population){
+   private double[] getIndividualsProbabilities(int[][] population, double[] individualsSolutionValues){
       double[] probabilities = new double[population.length];
       double probabilityValue = 0;
-      double[] individualsSelectionValues = getIndividualsSelectionValues(population);
-      double individualsSelectionValuesSum = 0;
-
-      for(int i = 0; i <= individualsSelectionValues.length - 1; i++){
-         individualsSelectionValuesSum += individualsSelectionValues[i];
-      }
+      double[] individualsSelectionValues = getIndividualsSelectionValues(population, individualsSolutionValues);
+      double individualsSelectionValuesSum = getIndividualsSelectionValuesSum(individualsSelectionValues);
 
       for(int i = 0; i <= probabilities.length - 1; i++){
          probabilityValue = individualsSelectionValues[i] / individualsSelectionValuesSum;
@@ -157,23 +153,37 @@ public class TSPGeneticAlgorithm extends GeneticAlgorithm{
       return probabilities;
    }
 
-   private double[] getIndividualsSelectionValues(int[][] population){
+   private double[] getIndividualsSelectionValues(int[][] population, double[] individualsSolutionValues){
       double[] individualsSelectionValues = new double[population.length];
-      double[] individualsSolutionValues = new double[population.length];
-      double maxIndividualSolutionValue = 0;
-
-      for(int i = 0; i <= individualsSolutionValues.length - 1; i++){
-         individualsSolutionValues[i] = tspProblem.calculateSolutionValue(population[i]);
-         if(individualsSolutionValues[i] > maxIndividualSolutionValue){
-            maxIndividualSolutionValue = individualsSolutionValues[i];
-         }
-      }
+      double maxIndividualSolutionValue = getMaxIndividualSolutionValue(individualsSolutionValues);
 
       for(int i = 0; i <= individualsSelectionValues.length - 1; i++){
          individualsSelectionValues[i] = maxIndividualSolutionValue - individualsSolutionValues[i];
       }
 
       return individualsSelectionValues;
+   }
+
+   private double getIndividualsSelectionValuesSum(double[] individualsSelectionValues){
+      double individualsSelectionValuesSum = 0;
+
+      for(int i = 0; i <= individualsSelectionValues.length - 1; i++){
+         individualsSelectionValuesSum += individualsSelectionValues[i];
+      }
+
+      return individualsSelectionValuesSum;
+   }
+
+   private double getMaxIndividualSolutionValue(double[] individualsSolutionValues){
+      double maxIndividualSolutionValue = 0;
+
+      for(int i = 0; i <= individualsSolutionValues.length - 1; i++){
+         if(individualsSolutionValues[i] > maxIndividualSolutionValue){
+            maxIndividualSolutionValue = individualsSolutionValues[i];
+         }
+      }
+
+      return maxIndividualSolutionValue;
    }
 
    /**
