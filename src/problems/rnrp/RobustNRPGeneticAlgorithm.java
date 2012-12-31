@@ -21,16 +21,33 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
       this.random = new Random();
    }
 
-   protected int[][] getInitialPopulation(){
-      return null;
-   }
-
    protected double getCrossoverProbability(){
       return 0.9;
    }
 
    protected double getMutationProbability(){
       return 0;
+   }
+
+   protected int[][] getInitialPopulation(){
+      int[][] initialPopulation = new int[robustNRP.getNumberOfRequirements()][robustNRP.getNumberOfRequirements()];
+
+      for(int i = 0; i <= initialPopulation.length - 1; i++){
+         initialPopulation[i] = getRandomIndividual(initialPopulation[0].length, i);
+      }
+
+      return initialPopulation;
+   }
+
+   private int[] getRandomIndividual(int numberOfRequirements, int requirementToBeIncluded){
+      int[] randomIndividual = new int[numberOfRequirements];
+
+      for(int i = 0; i <= randomIndividual.length - 1; i++){
+         randomIndividual[i] = random.nextInt(2);
+      }
+      randomIndividual[requirementToBeIncluded] = 1;
+
+      return randomIndividual;
    }
 
    protected int[][] getParents(int[][] population, double[] individualsSolutionValues){
