@@ -26,6 +26,11 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
    }
 
    protected double getMutationProbability(){
+      double numberOfRequirements = (double) robustNRP.getNumberOfRequirements();
+      return 1 / (10 * numberOfRequirements);
+   }
+
+   protected int getNumberOfEliteIndividuals(){
       return 0;
    }
 
@@ -67,10 +72,6 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
 
    protected boolean isSolutionBetter(double solutionValue1, double solutionValue2){
       return false;
-   }
-
-   protected int getNumberOfEliteIndividuals(){
-      return 0;
    }
 
    protected boolean isMinimizationProblem(){
