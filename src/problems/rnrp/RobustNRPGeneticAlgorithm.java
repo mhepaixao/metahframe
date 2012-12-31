@@ -32,7 +32,7 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
    }
 
    protected int getNumberOfEliteIndividuals(){
-      return 0;
+      return 2;
    }
 
    protected int[][] getInitialPopulation(){
@@ -201,6 +201,10 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
                childs[i][j] = parents[0][j];
             }
          }
+
+         if(robustNRP.isSolutionValid(childs[i]) == false){
+            repair(childs[i]);
+         }
       }
 
       return childs;
@@ -245,7 +249,13 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
    }
 
    protected boolean isSolutionBetter(double solutionValue1, double solutionValue2){
-      return false;
+      boolean result = false;
+
+      if(solutionValue1 > solutionValue2){
+         result = true;
+      }
+
+      return result;
    }
 
    protected boolean isMinimizationProblem(){
