@@ -37,9 +37,15 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
 
    protected int[][] getInitialPopulation(){
       int[][] initialPopulation = new int[robustNRP.getNumberOfRequirements()][robustNRP.getNumberOfRequirements()];
+      int[] randomIndividual = null;
 
       for(int i = 0; i <= initialPopulation.length - 1; i++){
-         initialPopulation[i] = getRandomIndividual(initialPopulation[0].length, i);
+         randomIndividual = getRandomIndividual(initialPopulation[0].length, i);
+         while(robustNRP.isSolutionValid(randomIndividual) == false){
+            randomIndividual = getRandomIndividual(initialPopulation[0].length, i);
+         }
+
+         initialPopulation[i] = randomIndividual;
       }
 
       return initialPopulation;
