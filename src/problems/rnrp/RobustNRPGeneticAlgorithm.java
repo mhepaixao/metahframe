@@ -207,6 +207,37 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
    }
 
    protected void mutate(int[] individual, int indexToMutate){
+      if(individual[indexToMutate] == 0){
+         individual[indexToMutate] = 1;
+      }
+      else if(individual[indexToMutate] == 1){
+         individual[indexToMutate] = 0;
+      }
+
+      if(robustNRP.isSolutionValid(individual) == false){
+         repair(individual);
+      }
+   }
+
+   private void repair(int[] individual){
+      removeRandomRequirement(individual);
+
+      if(robustNRP.isSolutionValid(individual) == false){
+         repair(individual);
+      }
+   }
+
+   private void removeRandomRequirement(int[] individual){
+      boolean removeFlag = false;
+      int randomRequirementToRemove = 0;
+
+      while(removeFlag == false){
+         randomRequirementToRemove = random.nextInt(individual.length);
+         if(individual[randomRequirementToRemove] == 1){
+            individual[randomRequirementToRemove] = 0;
+            removeFlag = true;
+         }
+      }
    }
 
    protected double calculateSolutionValue(int[] individual){

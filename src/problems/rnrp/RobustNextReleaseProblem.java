@@ -64,23 +64,8 @@ public class RobustNextReleaseProblem{
    public boolean isSolutionValid(int[] solution){
       boolean result = false;
 
-      if(isSolutionEmpty(solution) == false){
-         if(getSolutionCost(solution) <= budget){
-            result = true;
-         }
-      }
-
-      return result;
-   }
-
-   private boolean isSolutionEmpty(int[] solution){
-      boolean result = true;
-
-      for(int i = 0; i <= solution.length - 1; i++){
-         if(solution[i] != 0){
-            result = false;
-            break;
-         }
+      if(getSolutionCost(solution) <= budget){
+         result = true;
       }
 
       return result;
