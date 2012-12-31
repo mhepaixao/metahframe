@@ -32,7 +32,7 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
    }
 
    protected int getNumberOfEliteIndividuals(){
-      return 2;
+      return (int) (0.2 * robustNRP.getNumberOfRequirements());
    }
 
    protected int[][] getInitialPopulation(){
