@@ -15,6 +15,7 @@ import problems.srpp.SRPPAntQ;
 import problems.srpp.SRPPRandomAlgorithm;
 import problems.rnrp.RobustNextReleaseProblem;
 import problems.rnrp.RobustNRPSimulatedAnnealing;
+import problems.rnrp.RobustNRPGeneticAlgorithm;
 
 import instancereaders.InstanceChooser;
 
@@ -102,6 +103,10 @@ public class App{
          if(problem.equals("tsp")){
             TSPProblem tspProblem = new TSPProblem(instance);
             adaptedAlgorithm = new TSPGeneticAlgorithm(tspProblem, numberOfIterations);
+         }
+         else if(problem.equals("rnrp")){ 
+            RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instance);
+            adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, numberOfIterations);
          }
       }
 
