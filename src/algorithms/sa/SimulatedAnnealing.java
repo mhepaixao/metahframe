@@ -109,9 +109,10 @@ public abstract class SimulatedAnnealing implements Algorithm{
 
          updateTemperature();
       }
-      finalTime = System.currentTimeMillis();
 
+      finalTime = System.currentTimeMillis();
       setTotalTime(finalTime - initialTime);
+
       return calculateSolutionValue(bestSoFarSolution);
    }
 

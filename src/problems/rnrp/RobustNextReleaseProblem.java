@@ -33,8 +33,8 @@ public class RobustNextReleaseProblem{
       this.requirementsValues = robustNRPInstanceReader.getRequirementsValues();
       this.requirementsCosts = robustNRPInstanceReader.getRequirementsCosts();
       this.requirementsDeviances = robustNRPInstanceReader.getRequirementsDeviances();
-      this.budget = getBudget(50);
-      this.gamma = getGamma(10);
+      this.budget = getBudget(70);
+      this.gamma = getGamma();
    }
 
    public int getNumberOfRequirements(){
@@ -47,17 +47,6 @@ public class RobustNextReleaseProblem{
       return getTotalCostsSum() * percentage;
    }
 
-   private int getGamma(double estimatesMistakesPercentage){
-      double percentage = estimatesMistakesPercentage / 100;
-      double gamma = percentage * getNumberOfRequirements();
-
-      if(gamma - ((int) gamma) != 0){
-         gamma = ((int) gamma) + 1;
-      }
-
-      return (int) gamma;
-   }
-
    private double getTotalCostsSum(){
       double totalCostsSum = 0;
 
@@ -66,6 +55,10 @@ public class RobustNextReleaseProblem{
       }
 
       return totalCostsSum;
+   }
+
+   private int getGamma(){
+      return 2;
    }
 
    public boolean isSolutionValid(int[] solution){
@@ -79,11 +72,7 @@ public class RobustNextReleaseProblem{
    }
 
    private double getSolutionCost(int[] solution){
-      double solutionCost = 0;
-
-      solutionCost = getSolutionEstimatesCosts(solution) + getMaxCostsDeviancesSubsetSum(solution);
-
-      return solutionCost;
+      return getSolutionEstimatesCosts(solution) + getMaxDeviancesSubsetSum(solution);
    }
 
    private double getSolutionEstimatesCosts(int[] solution){
@@ -96,27 +85,26 @@ public class RobustNextReleaseProblem{
       return solutionEstimatesCosts;
    }
 
-   private double getMaxCostsDeviancesSubsetSum(int[] solution){
-      double maxCostsDeviancesSubsetSum = 0;
-      double[] costsDeviances = getCostsDeviances(solution);
+   private double getMaxDeviancesSubsetSum(int[] solution){
+      double maxDeviancesSubsetSum = 0;
+      double[] solutionDeviances = getSolutionDeviances(solution);
+      Arrays.sort(solutionDeviances);
 
-      Arrays.sort(costsDeviances);
-
-      for(int i = costsDeviances.length - 1; i >= (costsDeviances.length - gamma); i--){
-         maxCostsDeviancesSubsetSum += costsDeviances[i];
+      for(int i = solutionDeviances.length - 1; i >= (solutionDeviances.length - gamma); i--){
+         maxDeviancesSubsetSum += solutionDeviances[i];
       }
 
-      return maxCostsDeviancesSubsetSum;
+      return maxDeviancesSubsetSum;
    }
 
-   private double[] getCostsDeviances(int[] solution){
-      double[] costsDeviances = new double[getNumberOfRequirements()];
+   private double[] getSolutionDeviances(int[] solution) {
+      double[] solutionDeviances = new double[solution.length];
 
-      for(int i = 0; i <= costsDeviances.length - 1; i++){
-         costsDeviances[i] = solution[i] * (requirementsCosts[i] + requirementsDeviances[i]);
+      for(int i = 0; i <= solutionDeviances.length - 1; i++){
+         solutionDeviances[i] = solution[i] * requirementsDeviances[i];
       }
 
-      return costsDeviances;
+      return solutionDeviances;
    }
 
    public double calculateSolutionValue(int[] solution){
