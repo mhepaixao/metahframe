@@ -26,92 +26,122 @@ import java.io.File;
  * @author Matheus Paixao
  *
  * How to run:
- * java App <algorithm> <problem> <number of iterations>
- * Only the last parameter is optional. If not specified, will be runned 200 iterations
+ * java App <algorithm> <problem> <number of runs> <iterations per run>
  */
 public class App{
+
+   File instance;
+   double[] solutions;
+   double[] runTimes;
+
+   public App(){
+      InstanceChooser instanceChooser = new InstanceChooser();
+      this.instance = instanceChooser.getInstance(); //choose the instance to be used by the algorithm
+   }
+
+   public File getInstance(){
+      return this.instance;
+   }
+
+   public void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
+      Algorithm adaptedAlgorithm = null;
+      solutions = new double[numberOfRuns];
+      runTimes = new double[numberOfRuns];
+
+      for(int i = 0; i <= numberOfRuns - 1; i++){
+         if(algorithm.equals("antq")){
+            if(problem.equals("tsp")){
+               TSPProblem tspProblem = new TSPProblem(instance);
+               adaptedAlgorithm = new TSPAntQ(tspProblem, iterationsPerRun);
+            }
+            else if(problem.equals("jssp")){
+               JSSPProblem jsspProblem = new JSSPProblem(instance);
+               adaptedAlgorithm = new JSSPAntQ(jsspProblem, iterationsPerRun);
+            }
+            else if(problem.equals("srpp")){
+               SRPPProblem srppProblem = new SRPPProblem(instance);
+               adaptedAlgorithm = new SRPPAntQ(srppProblem, iterationsPerRun);
+            }
+         }
+         else if(algorithm.equals("acs")){
+            if(problem.equals("tsp")){
+               TSPProblem tspProblem = new TSPProblem(instance);
+               adaptedAlgorithm = new TSPACS(tspProblem, iterationsPerRun);
+            }
+            else if(problem.equals("jssp")){
+               JSSPProblem jsspProblem = new JSSPProblem(instance);
+               adaptedAlgorithm = new JSSPACS(jsspProblem, iterationsPerRun);
+            }
+         }
+         else if(algorithm.equals("random")){
+            if(problem.equals("tsp")){
+               TSPProblem tspProblem = new TSPProblem(instance);
+               adaptedAlgorithm = new TSPRandomAlgorithm(tspProblem, iterationsPerRun);
+            }
+            else if(problem.equals("jssp")){
+               JSSPProblem jsspProblem = new JSSPProblem(instance);
+               adaptedAlgorithm = new JSSPRandomAlgorithm(jsspProblem, iterationsPerRun);
+            }
+            else if(problem.equals("srpp")){
+               SRPPProblem srppProblem = new SRPPProblem(instance);
+               adaptedAlgorithm = new SRPPRandomAlgorithm(srppProblem, iterationsPerRun);
+            }
+         }
+         else if(algorithm.equals("sa")){
+            if(problem.equals("tsp")){
+               TSPProblem tspProblem = new TSPProblem(instance);
+               adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem);
+            }
+            else if(problem.equals("rnrp")){ 
+               RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instance);
+               adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP);
+            }
+         }
+         else if(algorithm.equals("ga")){
+            if(problem.equals("tsp")){
+               TSPProblem tspProblem = new TSPProblem(instance);
+               adaptedAlgorithm = new TSPGeneticAlgorithm(tspProblem, iterationsPerRun);
+            }
+            else if(problem.equals("rnrp")){ 
+               RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instance);
+               adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, iterationsPerRun);
+            }
+         }
+
+         solutions[i] = adaptedAlgorithm.getSolution();
+         runTimes[i] = adaptedAlgorithm.getTotalTime();
+      }
+   }
+
+   public void printResults(){
+      System.out.println("solution values:");
+      for(int i = 0; i <= solutions.length - 1; i++){
+         System.out.println(solutions[i]);
+      }
+      System.out.println("");
+
+      System.out.println("run times:");
+      for(int i = 0; i <= runTimes.length - 1; i++){
+         System.out.println(runTimes[i]);
+      }
+      System.out.println("");
+
+      System.exit(0);
+   }
+
    public static void main(String[] args){
       String problem = null;
       String algorithm = null;
-      int numberOfIterations = 0;
-      Algorithm adaptedAlgorithm = null;
+      int numberOfRuns = 0;
+      int iterationsPerRun = 0;
 
-      InstanceChooser instanceChooser = new InstanceChooser();
-      File instance = instanceChooser.getInstance(); //choose the instance to be used by the algorithm
+      algorithm = args[0]; //first parameter is the algorithm to be used
+      problem = args[1]; //second parameter is the problem to be solved
+      numberOfRuns = Integer.parseInt(args[2]);
+      iterationsPerRun = Integer.parseInt(args[3]);
 
-      if(args.length >= 1){
-         algorithm = args[0]; //first parameter is the algorithm to be used
-         problem = args[1]; //second parameter is the problem to be solved
-
-         if(args.length >= 3){ //third parameter is the number of iterations, it's optional
-            numberOfIterations = Integer.parseInt(args[2]);
-         }
-         else{
-            numberOfIterations = 200;
-         }
-      }
-
-      if(algorithm.equals("antq")){
-         if(problem.equals("tsp")){
-            TSPProblem tspProblem = new TSPProblem(instance);
-            adaptedAlgorithm = new TSPAntQ(tspProblem, numberOfIterations);
-         }
-         else if(problem.equals("jssp")){
-            JSSPProblem jsspProblem = new JSSPProblem(instance);
-            adaptedAlgorithm = new JSSPAntQ(jsspProblem, numberOfIterations);
-         }
-         else if(problem.equals("srpp")){
-            SRPPProblem srppProblem = new SRPPProblem(instance);
-            adaptedAlgorithm = new SRPPAntQ(srppProblem, numberOfIterations);
-         }
-      }
-      else if(algorithm.equals("acs")){
-         if(problem.equals("tsp")){
-            TSPProblem tspProblem = new TSPProblem(instance);
-            adaptedAlgorithm = new TSPACS(tspProblem, numberOfIterations);
-         }
-         else if(problem.equals("jssp")){
-            JSSPProblem jsspProblem = new JSSPProblem(instance);
-            adaptedAlgorithm = new JSSPACS(jsspProblem, numberOfIterations);
-         }
-      }
-      else if(algorithm.equals("random")){
-         if(problem.equals("tsp")){
-            TSPProblem tspProblem = new TSPProblem(instance);
-            adaptedAlgorithm = new TSPRandomAlgorithm(tspProblem, numberOfIterations);
-         }
-         else if(problem.equals("jssp")){
-            JSSPProblem jsspProblem = new JSSPProblem(instance);
-            adaptedAlgorithm = new JSSPRandomAlgorithm(jsspProblem, numberOfIterations);
-         }
-         else if(problem.equals("srpp")){
-            SRPPProblem srppProblem = new SRPPProblem(instance);
-            adaptedAlgorithm = new SRPPRandomAlgorithm(srppProblem, numberOfIterations);
-         }
-      }
-      else if(algorithm.equals("sa")){
-         if(problem.equals("tsp")){
-            TSPProblem tspProblem = new TSPProblem(instance);
-            adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem);
-         }
-         else if(problem.equals("rnrp")){ 
-            RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instance);
-            adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP);
-         }
-      }
-      else if(algorithm.equals("ga")){
-         if(problem.equals("tsp")){
-            TSPProblem tspProblem = new TSPProblem(instance);
-            adaptedAlgorithm = new TSPGeneticAlgorithm(tspProblem, numberOfIterations);
-         }
-         else if(problem.equals("rnrp")){ 
-            RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instance);
-            adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, numberOfIterations);
-         }
-      }
-
-      System.out.println("Best Solution: "+adaptedAlgorithm.getSolution());
-      System.out.println("Time elapsed: "+adaptedAlgorithm.getTotalTime());
-      System.exit(0);
+      App app = new App();
+      app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
+      app.printResults();
    }
 }
