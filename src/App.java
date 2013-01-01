@@ -39,11 +39,11 @@ public class App{
       this.instance = instanceChooser.getInstance(); //choose the instance to be used by the algorithm
    }
 
-   public File getInstance(){
+   private File getInstance(){
       return this.instance;
    }
 
-   public void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
+   private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
       Algorithm adaptedAlgorithm = null;
       solutions = new double[numberOfRuns];
       runTimes = new double[numberOfRuns];
@@ -113,20 +113,51 @@ public class App{
       }
    }
 
-   public void printResults(){
-      System.out.println("solution values:");
-      for(int i = 0; i <= solutions.length - 1; i++){
-         System.out.println(solutions[i]);
-      }
-      System.out.println("");
+   private double getMean(double[] values){
+      double valuesSum = 0;
 
-      System.out.println("run times:");
-      for(int i = 0; i <= runTimes.length - 1; i++){
-         System.out.println(runTimes[i]);
+      for(int i = 0; i <= values.length - 1; i++){
+         valuesSum += values[i];
       }
-      System.out.println("");
 
-      System.exit(0);
+      return valuesSum / values.length;
+   }
+
+   private double getStandardDeviation(double mean, double[] values){
+      double[] deviances = getDeviances(mean, values);
+      double variance = getVariance(deviances);
+
+      return Math.sqrt(variance);
+   }
+
+   private double[] getDeviances(double mean, double[] values){
+      double[] deviances = new double[values.length];
+
+      for(int i = 0; i <= deviances.length - 1; i++){
+         deviances[i] = mean - values[i];
+      }
+
+      return deviances;
+   }
+
+   private double getVariance(double[] deviances){
+      double quadraticDeviancesSum = 0;
+
+      for(int i = 0; i <= deviances.length - 1; i++){
+         quadraticDeviancesSum += Math.pow(deviances[i], 2);
+      }
+
+      return quadraticDeviancesSum / deviances.length;
+   }
+
+   private void printResults(){
+      double solutionMean = getMean(solutions);
+      double runTimeMean = getMean(runTimes);
+      double solutionStandardDeviation = getStandardDeviation(solutionMean, solutions);
+      double runTimeStandardDeviation = getStandardDeviation(runTimeMean, runTimes);
+
+      System.out.println("solution: " + solutionMean + " +/- " + solutionStandardDeviation);
+      System.out.println("run time: " + runTimeMean + " +/- " + runTimeStandardDeviation);
    }
 
    public static void main(String[] args){
@@ -143,5 +174,7 @@ public class App{
       App app = new App();
       app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
       app.printResults();
+
+      System.exit(0);
    }
 }
