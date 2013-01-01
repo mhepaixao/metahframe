@@ -39,6 +39,10 @@ public class App{
       this.instance = instanceChooser.getInstance(); //choose the instance to be used by the algorithm
    }
 
+   public App(String instancePath){
+      this.instance = new File(instancePath);
+   }
+
    private File getInstance(){
       return this.instance;
    }
@@ -161,17 +165,27 @@ public class App{
    }
 
    public static void main(String[] args){
+      App app = null;
+
       String problem = null;
       String algorithm = null;
       int numberOfRuns = 0;
       int iterationsPerRun = 0;
+      String instancePath = null;
 
       algorithm = args[0]; //first parameter is the algorithm to be used
       problem = args[1]; //second parameter is the problem to be solved
       numberOfRuns = Integer.parseInt(args[2]);
       iterationsPerRun = Integer.parseInt(args[3]);
 
-      App app = new App();
+      if(args.length == 5){
+         instancePath = args[4];
+         app = new App(instancePath);
+      }
+      else{
+         app = new App();
+      }
+
       app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
       app.printResults();
 
