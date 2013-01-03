@@ -20,6 +20,8 @@ import problems.rnrp.RobustNRPGeneticAlgorithm;
 import instancereaders.InstanceChooser;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 
 /**
  * Class used to run the application.
@@ -164,6 +166,26 @@ public class App{
       System.out.println("run time: " + runTimeMean + " +/- " + runTimeStandardDeviation);
    }
 
+   private void writeResults(File outputFile){
+      double solutionMean = getMean(solutions);
+      double runTimeMean = getMean(runTimes);
+      double solutionStandardDeviation = getStandardDeviation(solutionMean, solutions);
+      double runTimeStandardDeviation = getStandardDeviation(runTimeMean, runTimes);
+
+      try{
+         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+
+         writer.write("solution: " + solutionMean + " +/- " + solutionStandardDeviation);
+         writer.write("\n");
+         writer.write("run time: " + runTimeMean + " +/- " + runTimeStandardDeviation);
+
+         writer.close();
+      }
+      catch(Exception e){
+         System.out.println("Error in write results to output file");
+      }
+   }
+
    public static void main(String[] args){
       App app = null;
 
@@ -172,22 +194,33 @@ public class App{
       int numberOfRuns = 0;
       int iterationsPerRun = 0;
       String instancePath = null;
+      File outputFile = null;
 
       algorithm = args[0]; //first parameter is the algorithm to be used
       problem = args[1]; //second parameter is the problem to be solved
       numberOfRuns = Integer.parseInt(args[2]);
       iterationsPerRun = Integer.parseInt(args[3]);
 
-      if(args.length == 5){
+      if(args.length >= 5){
          instancePath = args[4];
          app = new App(instancePath);
+
+         if(args.length >= 6){
+            outputFile = new File(args[5]);
+         }
       }
       else{
          app = new App();
       }
 
       app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
-      app.printResults();
+
+      if(outputFile == null){
+         app.printResults();
+      }
+      else{
+         app.writeResults(outputFile);
+      }
 
       System.exit(0);
    }
