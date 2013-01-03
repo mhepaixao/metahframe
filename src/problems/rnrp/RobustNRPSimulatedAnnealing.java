@@ -26,15 +26,15 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected double getInitialTemperature(){
-      return 1000;
+      return 100;
    }
 
    protected double getFinalTemperature(){
-      return 0.1;
+      return 0.001;
    }
 
    protected double getAlpha(){
-      return 0.995;
+      return 0.9995;
    }
 
    protected int getNumberOfMarkovChains(){
