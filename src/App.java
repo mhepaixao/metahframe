@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 
+import java.util.ArrayList;
+
 /**
  * Class used to run the application.
  * @author Matheus Paixao
@@ -32,90 +34,145 @@ import java.io.BufferedWriter;
  */
 public class App{
 
-   File instance;
-   double[] solutions;
-   double[] runTimes;
+   File[] instances;
+   String[] instancesNames;
+   double[][] solutions;
+   double[][] runTimes;
 
    public App(){
       InstanceChooser instanceChooser = new InstanceChooser();
-      this.instance = instanceChooser.getInstance(); //choose the instance to be used by the algorithm
+      File instance = instanceChooser.getInstance(); //choose the instance to be used by the algorithm
+
+      createSingleInstance(instance);
    }
 
-   public App(String instancePath){
-      this.instance = new File(instancePath);
+   public App(File path){
+      if(isInstancePath(path) == true){
+         createSingleInstance(path);
+      }
+      else{
+         createInstancesList(path);
+      }
    }
 
-   private File getInstance(){
-      return this.instance;
+   private File[] getInstances(){
+      return this.instances;
+   }
+
+   private boolean isInstancePath(File path){
+      boolean result = false;
+
+      if(path.getName().contains(".txt") == true){
+         result = true;
+      }
+
+      return result;
+   }
+
+   private void createSingleInstance(File instance){
+      this.instances = new File[1];
+      this.instances[0] = instance;
+
+      this.instancesNames = new String[1];
+      this.instancesNames[0] = instance.getName();
+   }
+
+   private void createInstancesList(File folder){
+      File[] pathsList = folder.listFiles();
+      ArrayList<File> instancesList = getInstancesList(pathsList);
+
+      this.instances = new File[instancesList.size()];
+      for(int i = 0; i <= instances.length - 1; i++){
+         this.instances[i] = instancesList.get(i);
+      }
+
+      this.instancesNames = new String[instances.length];
+      for(int i = 0; i <= instancesNames.length - 1; i++){
+         this.instancesNames[i] = instances[i].getName();
+      }
+   }
+
+   private ArrayList<File> getInstancesList(File[] pathsList){
+      ArrayList<File> instancesList = new ArrayList<File>();
+
+      for(int i = 0; i <= pathsList.length - 1; i++){
+         if(pathsList[i].getName().contains(".txt") == true){
+            instancesList.add(pathsList[i]);
+         }
+      }
+
+      return instancesList;
    }
 
    private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
       Algorithm adaptedAlgorithm = null;
-      solutions = new double[numberOfRuns];
-      runTimes = new double[numberOfRuns];
+      solutions = new double[instances.length][numberOfRuns];
+      runTimes = new double[instances.length][numberOfRuns];
 
-      for(int i = 0; i <= numberOfRuns - 1; i++){
-         if(algorithm.equals("antq")){
-            if(problem.equals("tsp")){
-               TSPProblem tspProblem = new TSPProblem(instance);
-               adaptedAlgorithm = new TSPAntQ(tspProblem, iterationsPerRun);
+      for(int i = 0; i <= instances.length - 1; i++){
+         for(int j = 0; j <= numberOfRuns - 1; j++){
+            if(algorithm.equals("antq")){
+               if(problem.equals("tsp")){
+                  TSPProblem tspProblem = new TSPProblem(instances[i]);
+                  adaptedAlgorithm = new TSPAntQ(tspProblem, iterationsPerRun);
+               }
+               else if(problem.equals("jssp")){
+                  JSSPProblem jsspProblem = new JSSPProblem(instances[i]);
+                  adaptedAlgorithm = new JSSPAntQ(jsspProblem, iterationsPerRun);
+               }
+               else if(problem.equals("srpp")){
+                  SRPPProblem srppProblem = new SRPPProblem(instances[i]);
+                  adaptedAlgorithm = new SRPPAntQ(srppProblem, iterationsPerRun);
+               }
             }
-            else if(problem.equals("jssp")){
-               JSSPProblem jsspProblem = new JSSPProblem(instance);
-               adaptedAlgorithm = new JSSPAntQ(jsspProblem, iterationsPerRun);
+            else if(algorithm.equals("acs")){
+               if(problem.equals("tsp")){
+                  TSPProblem tspProblem = new TSPProblem(instances[i]);
+                  adaptedAlgorithm = new TSPACS(tspProblem, iterationsPerRun);
+               }
+               else if(problem.equals("jssp")){
+                  JSSPProblem jsspProblem = new JSSPProblem(instances[i]);
+                  adaptedAlgorithm = new JSSPACS(jsspProblem, iterationsPerRun);
+               }
             }
-            else if(problem.equals("srpp")){
-               SRPPProblem srppProblem = new SRPPProblem(instance);
-               adaptedAlgorithm = new SRPPAntQ(srppProblem, iterationsPerRun);
+            else if(algorithm.equals("random")){
+               if(problem.equals("tsp")){
+                  TSPProblem tspProblem = new TSPProblem(instances[i]);
+                  adaptedAlgorithm = new TSPRandomAlgorithm(tspProblem, iterationsPerRun);
+               }
+               else if(problem.equals("jssp")){
+                  JSSPProblem jsspProblem = new JSSPProblem(instances[i]);
+                  adaptedAlgorithm = new JSSPRandomAlgorithm(jsspProblem, iterationsPerRun);
+               }
+               else if(problem.equals("srpp")){
+                  SRPPProblem srppProblem = new SRPPProblem(instances[i]);
+                  adaptedAlgorithm = new SRPPRandomAlgorithm(srppProblem, iterationsPerRun);
+               }
             }
-         }
-         else if(algorithm.equals("acs")){
-            if(problem.equals("tsp")){
-               TSPProblem tspProblem = new TSPProblem(instance);
-               adaptedAlgorithm = new TSPACS(tspProblem, iterationsPerRun);
+            else if(algorithm.equals("sa")){
+               if(problem.equals("tsp")){
+                  TSPProblem tspProblem = new TSPProblem(instances[i]);
+                  adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem);
+               }
+               else if(problem.equals("rnrp")){ 
+                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
+                  adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP);
+               }
             }
-            else if(problem.equals("jssp")){
-               JSSPProblem jsspProblem = new JSSPProblem(instance);
-               adaptedAlgorithm = new JSSPACS(jsspProblem, iterationsPerRun);
+            else if(algorithm.equals("ga")){
+               if(problem.equals("tsp")){
+                  TSPProblem tspProblem = new TSPProblem(instances[i]);
+                  adaptedAlgorithm = new TSPGeneticAlgorithm(tspProblem, iterationsPerRun);
+               }
+               else if(problem.equals("rnrp")){ 
+                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
+                  adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, iterationsPerRun);
+               }
             }
-         }
-         else if(algorithm.equals("random")){
-            if(problem.equals("tsp")){
-               TSPProblem tspProblem = new TSPProblem(instance);
-               adaptedAlgorithm = new TSPRandomAlgorithm(tspProblem, iterationsPerRun);
-            }
-            else if(problem.equals("jssp")){
-               JSSPProblem jsspProblem = new JSSPProblem(instance);
-               adaptedAlgorithm = new JSSPRandomAlgorithm(jsspProblem, iterationsPerRun);
-            }
-            else if(problem.equals("srpp")){
-               SRPPProblem srppProblem = new SRPPProblem(instance);
-               adaptedAlgorithm = new SRPPRandomAlgorithm(srppProblem, iterationsPerRun);
-            }
-         }
-         else if(algorithm.equals("sa")){
-            if(problem.equals("tsp")){
-               TSPProblem tspProblem = new TSPProblem(instance);
-               adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem);
-            }
-            else if(problem.equals("rnrp")){ 
-               RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instance);
-               adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP);
-            }
-         }
-         else if(algorithm.equals("ga")){
-            if(problem.equals("tsp")){
-               TSPProblem tspProblem = new TSPProblem(instance);
-               adaptedAlgorithm = new TSPGeneticAlgorithm(tspProblem, iterationsPerRun);
-            }
-            else if(problem.equals("rnrp")){ 
-               RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instance);
-               adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, iterationsPerRun);
-            }
-         }
 
-         solutions[i] = adaptedAlgorithm.getSolution();
-         runTimes[i] = adaptedAlgorithm.getTotalTime();
+            solutions[i][j] = adaptedAlgorithm.getSolution();
+            runTimes[i][j] = adaptedAlgorithm.getTotalTime();
+         }
       }
    }
 
@@ -157,27 +214,46 @@ public class App{
    }
 
    private void printResults(){
-      double solutionMean = getMean(solutions);
-      double runTimeMean = getMean(runTimes);
-      double solutionStandardDeviation = getStandardDeviation(solutionMean, solutions);
-      double runTimeStandardDeviation = getStandardDeviation(runTimeMean, runTimes);
+      double solutionMean = 0;
+      double runTimeMean = 0;
+      double solutionStandardDeviation = 0;
+      double runTimeStandardDeviation = 0;
 
-      System.out.println("solution: " + solutionMean + " +/- " + solutionStandardDeviation);
-      System.out.println("run time: " + runTimeMean + " +/- " + runTimeStandardDeviation);
+      for(int i = 0; i <= instances.length - 1; i++){
+         System.out.println(instancesNames[i]);
+         System.out.println("");
+
+         solutionMean = getMean(solutions[i]);
+         runTimeMean = getMean(runTimes[i]);
+         solutionStandardDeviation = getStandardDeviation(solutionMean, solutions[i]);
+         runTimeStandardDeviation = getStandardDeviation(runTimeMean, runTimes[i]);
+
+         System.out.println("solution: " + solutionMean + " +/- " + solutionStandardDeviation);
+         System.out.println("run time: " + runTimeMean + " +/- " + runTimeStandardDeviation);
+      }
    }
 
    private void writeResults(File outputFile){
-      double solutionMean = getMean(solutions);
-      double runTimeMean = getMean(runTimes);
-      double solutionStandardDeviation = getStandardDeviation(solutionMean, solutions);
-      double runTimeStandardDeviation = getStandardDeviation(runTimeMean, runTimes);
+      double solutionMean = 0;
+      double runTimeMean = 0;
+      double solutionStandardDeviation = 0;
+      double runTimeStandardDeviation = 0;
 
       try{
          BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
 
-         writer.write("solution: " + solutionMean + " +/- " + solutionStandardDeviation);
-         writer.write("\n");
-         writer.write("run time: " + runTimeMean + " +/- " + runTimeStandardDeviation);
+         for(int i = 0; i <= instances.length - 1; i++){
+            writer.write(instancesNames[i] + "\n");
+            writer.write("\n");
+
+            solutionMean = getMean(solutions[i]);
+            runTimeMean = getMean(runTimes[i]);
+            solutionStandardDeviation = getStandardDeviation(solutionMean, solutions[i]);
+            runTimeStandardDeviation = getStandardDeviation(runTimeMean, runTimes[i]);
+
+            writer.write("solution: " + solutionMean + " +/- " + solutionStandardDeviation + "\n");
+            writer.write("run time: " + runTimeMean + " +/- " + runTimeStandardDeviation + "\n");
+         }
 
          writer.close();
       }
@@ -203,7 +279,7 @@ public class App{
 
       if(args.length >= 5){
          instancePath = args[4];
-         app = new App(instancePath);
+         app = new App(new File(instancePath));
 
          if(args.length >= 6){
             outputFile = new File(args[5]);
