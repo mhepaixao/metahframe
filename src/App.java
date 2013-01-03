@@ -39,6 +39,11 @@ public class App{
    double[][] solutions;
    double[][] runTimes;
 
+   double[] instancesSolutionsMean;
+   double[] instancesSolutionsStandardDeviation;
+   double[] instancesRunTimesMean;
+   double[] instancesRunTimesStandardDeviation;
+
    public App(){
       InstanceChooser instanceChooser = new InstanceChooser();
       File instance = instanceChooser.getInstance(); //choose the instance to be used by the algorithm
@@ -176,6 +181,20 @@ public class App{
       }
    }
 
+   private void calculateMetrics(){
+      this.instancesSolutionsMean = new double[instances.length];
+      this.instancesSolutionsStandardDeviation = new double[instances.length];
+      this.instancesRunTimesMean = new double[instances.length];
+      this.instancesRunTimesStandardDeviation = new double[instances.length];
+
+      for(int i = 0; i <= instances.length - 1; i++){
+         this.instancesSolutionsMean[i] = getMean(solutions[i]);
+         this.instancesSolutionsStandardDeviation[i] = getStandardDeviation(instancesSolutionsMean[i], solutions[i]);
+         this.instancesRunTimesMean[i] = getMean(runTimes[i]);
+         this.instancesRunTimesStandardDeviation[i] = getStandardDeviation(instancesRunTimesMean[i], runTimes[i]);
+      }
+   }
+
    private double getMean(double[] values){
       double valuesSum = 0;
 
@@ -214,51 +233,56 @@ public class App{
    }
 
    private void printResults(){
-      double solutionMean = 0;
-      double runTimeMean = 0;
-      double solutionStandardDeviation = 0;
-      double runTimeStandardDeviation = 0;
-
       for(int i = 0; i <= instances.length - 1; i++){
-         System.out.println(instancesNames[i]);
-         System.out.println("");
-
-         solutionMean = getMean(solutions[i]);
-         runTimeMean = getMean(runTimes[i]);
-         solutionStandardDeviation = getStandardDeviation(solutionMean, solutions[i]);
-         runTimeStandardDeviation = getStandardDeviation(runTimeMean, runTimes[i]);
-
-         System.out.println("solution: " + solutionMean + " +/- " + solutionStandardDeviation);
-         System.out.println("run time: " + runTimeMean + " +/- " + runTimeStandardDeviation);
+         printInstanceResults(i);
+         System.out.println("--------------");
+         if(i != instances.length - 1){
+            System.out.println("");
+         } 
       }
    }
 
-   private void writeResults(File outputFile){
-      double solutionMean = 0;
-      double runTimeMean = 0;
-      double solutionStandardDeviation = 0;
-      double runTimeStandardDeviation = 0;
+   private void printInstanceResults(int instanceIndex){
+      System.out.println(instancesNames[instanceIndex]);
+      System.out.println("");
 
+      System.out.println("solution: " + instancesSolutionsMean[instanceIndex] + " +/- " 
+                           + instancesSolutionsStandardDeviation[instanceIndex]);
+      System.out.println("run time: " + instancesRunTimesMean[instanceIndex] + " +/- " 
+                           + instancesRunTimesStandardDeviation[instanceIndex]);
+   }
+
+   private void writeResults(File outputFile){
       try{
          BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
 
          for(int i = 0; i <= instances.length - 1; i++){
-            writer.write(instancesNames[i] + "\n");
-            writer.write("\n");
-
-            solutionMean = getMean(solutions[i]);
-            runTimeMean = getMean(runTimes[i]);
-            solutionStandardDeviation = getStandardDeviation(solutionMean, solutions[i]);
-            runTimeStandardDeviation = getStandardDeviation(runTimeMean, runTimes[i]);
-
-            writer.write("solution: " + solutionMean + " +/- " + solutionStandardDeviation + "\n");
-            writer.write("run time: " + runTimeMean + " +/- " + runTimeStandardDeviation + "\n");
+            writeInstanceResults(i, writer);
+            writer.write("--------------\n");
+            if(i != instances.length - 1){
+               writer.write("\n");
+            } 
          }
 
          writer.close();
       }
       catch(Exception e){
          System.out.println("Error in write results to output file");
+      }
+   }
+
+   private void writeInstanceResults(int instanceIndex, BufferedWriter writer){
+      try{
+         writer.write(instancesNames[instanceIndex] + "\n");
+         writer.write("\n");
+
+         writer.write("solution: " + instancesSolutionsMean[instanceIndex] + " +/- "
+               + instancesSolutionsStandardDeviation[instanceIndex] + "\n");
+         writer.write("run time: " + instancesRunTimesMean[instanceIndex] + " +/- "
+               + instancesRunTimesStandardDeviation[instanceIndex] + "\n");
+      }
+      catch(Exception e){
+         System.out.println("Error in write instance results");
       }
    }
 
@@ -290,6 +314,7 @@ public class App{
       }
 
       app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
+      app.calculateMetrics();
 
       if(outputFile == null){
          app.printResults();
