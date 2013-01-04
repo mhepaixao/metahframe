@@ -12,7 +12,7 @@ import java.text.DecimalFormatSymbols;
  *
  * To generate an instance just run: 
  * java RobustNRPInstanceGenerator <number of requirements> <number of scenarios> <requirements values upper bound>
- *                                  <requirements costs upper bound> <requirements deviance upper bound> <path>
+ *                                  <requirements costs upper bound> <requirements deviance percentage> <path>
  * Example: java RobustNRPInstanceGenerator 50 5 10 10 5 /home/instances
  *
  * The instance format is:
@@ -37,7 +37,7 @@ public class RobustNRPInstanceGenerator{
    private int numberOfScenarios;
    private int requirementRange;
    private int costRange;
-   private int devianceRange;
+   private int deviancePercentage;
 
    private String path;
 
@@ -50,14 +50,13 @@ public class RobustNRPInstanceGenerator{
       numberOfScenarios = Integer.parseInt(parameters[1]);
       requirementRange = Integer.parseInt(parameters[2]);
       costRange = Integer.parseInt(parameters[3]);
-      devianceRange = Integer.parseInt(parameters[4]);
+      deviancePercentage = Integer.parseInt(parameters[4]);
       path = parameters[5];
    }
 
    private void generateInstance(){
       try{
-         BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path + "Inst_" + numberOfRequirements + "_" + numberOfScenarios + 
-                                                                              "_" + devianceRange + ".txt")));
+         BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path + "I_" + numberOfRequirements + ".txt")));
 
          writer.write(numberOfRequirements + " " + numberOfScenarios);
          writer.write("\n");
@@ -73,10 +72,11 @@ public class RobustNRPInstanceGenerator{
          }
          writer.write("\n");
 
-         writer.write(getRandomNumbersSequency(numberOfRequirements, 1, costRange));
+         String costs = getRandomNumbersSequency(numberOfRequirements, 1, costRange);
+         writer.write(costs);
          writer.write("\n");
 
-         writer.write(getRandomNumbersSequency(numberOfRequirements, 0, devianceRange));
+         writer.write(getRequirementsDeviances(costs, deviancePercentage));
          writer.write("\n");
 
          writer.close();
@@ -130,6 +130,25 @@ public class RobustNRPInstanceGenerator{
       else{
          return lowerBound + random.nextInt(upperBound);
       }
+   }
+
+   private String getRequirementsDeviances(String costs, int deviancePercentage){
+      String deviances = null;
+      String[] costsValues = costs.split(" ");
+      double[] deviancesValues = new double[costsValues.length];
+
+      for(int i = 0; i <= deviancesValues.length - 1; i++){
+         deviancesValues[i] = Integer.parseInt(costsValues[i]) * ((double) deviancePercentage / 100);
+
+         if(deviances == null){
+            deviances = deviancesValues[i] + "";
+         }
+         else{
+            deviances += " " + deviancesValues[i];
+         }
+      }
+
+      return deviances;
    }
 
    public static void main(String[] args){
