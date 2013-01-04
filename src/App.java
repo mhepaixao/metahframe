@@ -109,7 +109,8 @@ public class App{
       return instancesList;
    }
 
-   private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
+   //private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
+   private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun, int gammaPercentage){
       Algorithm adaptedAlgorithm = null;
       solutions = new double[instances.length][numberOfRuns];
       runTimes = new double[instances.length][numberOfRuns];
@@ -160,7 +161,8 @@ public class App{
                   adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem);
                }
                else if(problem.equals("rnrp")){ 
-                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
+                  //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
+                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
                   adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP);
                }
             }
@@ -170,7 +172,8 @@ public class App{
                   adaptedAlgorithm = new TSPGeneticAlgorithm(tspProblem, iterationsPerRun);
                }
                else if(problem.equals("rnrp")){ 
-                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
+                  //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
+                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
                   adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, iterationsPerRun);
                }
             }
@@ -252,12 +255,15 @@ public class App{
                            + instancesRunTimesStandardDeviation[instanceIndex]);
    }
 
-   private void writeResults(File outputFile){
+   //private void writeResults(File outputFile){
+   private void writeResults(File outputFile, int gammaPercentage){
       try{
-         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+         //BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile, true));
 
          for(int i = 0; i <= instances.length - 1; i++){
-            writeInstanceResults(i, writer);
+            //writeInstanceResults(i, writer);
+            writeInstanceResults(i, writer, gammaPercentage);
             writer.write("--------------\n");
             if(i != instances.length - 1){
                writer.write("\n");
@@ -271,9 +277,11 @@ public class App{
       }
    }
 
-   private void writeInstanceResults(int instanceIndex, BufferedWriter writer){
+   //private void writeInstanceResults(int instanceIndex, BufferedWriter writer){
+   private void writeInstanceResults(int instanceIndex, BufferedWriter writer, int gammaPercentage){
       try{
-         writer.write(instancesNames[instanceIndex] + "\n");
+         //writer.write(instancesNames[instanceIndex] + "\n");
+         writer.write(instancesNames[instanceIndex] + " with gamma = " + gammaPercentage + "%\n");
          writer.write("\n");
 
          writer.write("solution: " + instancesSolutionsMean[instanceIndex] + " +/- "
@@ -313,14 +321,22 @@ public class App{
          app = new App();
       }
 
-      app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
-      app.calculateMetrics();
+      int[] gammaPercentages = {0, 25, 50, 80, 90, 100};
 
-      if(outputFile == null){
-         app.printResults();
-      }
-      else{
-         app.writeResults(outputFile);
+      for(int i = 0; i <= gammaPercentages.length - 1; i++){
+         //app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
+         app.solve(problem, algorithm, numberOfRuns, iterationsPerRun, gammaPercentages[i]);
+         app.calculateMetrics();
+
+         if(outputFile == null){
+            app.printResults();
+         }
+         else{
+            //app.writeResults(outputFile);
+            app.writeResults(outputFile, gammaPercentages[i]);
+         }
+
+         System.out.println("executed for gamma = " + gammaPercentages[i] + "%");
       }
 
       System.exit(0);

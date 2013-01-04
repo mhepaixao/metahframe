@@ -27,14 +27,16 @@ public class RobustNextReleaseProblem{
     * @author Matheus Paixao
     * @param instance the problem's instance
     */
-   public RobustNextReleaseProblem(File instance){
+   //public RobustNextReleaseProblem(File instance){
+   public RobustNextReleaseProblem(File instance, int gammaPercentage){
       robustNRPInstanceReader = new RobustNRPInstanceReader(instance);
       this.numberOfRequirements = robustNRPInstanceReader.getNumberOfRequirements();
       this.requirementsValues = robustNRPInstanceReader.getRequirementsValues();
       this.requirementsCosts = robustNRPInstanceReader.getRequirementsCosts();
       this.requirementsDeviances = robustNRPInstanceReader.getRequirementsDeviances();
       this.budget = getBudget(70);
-      this.gamma = getGamma();
+      //this.gamma = getGamma();
+      this.gamma = getGamma(gammaPercentage);
    }
 
    public int getNumberOfRequirements(){
@@ -57,8 +59,9 @@ public class RobustNextReleaseProblem{
       return totalCostsSum;
    }
 
-   private int getGamma(){
-      return 2;
+   //private int getGamma(){
+   private int getGamma(int gammaPercentage){
+      return (int) (((double) gammaPercentage / 100) * getNumberOfRequirements());
    }
 
    public boolean isSolutionValid(int[] solution){
