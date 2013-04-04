@@ -109,8 +109,8 @@ public class App{
       return instancesList;
    }
 
-   //private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
-   private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun, int gammaPercentage){
+   private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
+   //private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun, int gammaPercentage){
       Algorithm adaptedAlgorithm = null;
       solutions = new double[instances.length][numberOfRuns];
       runTimes = new double[instances.length][numberOfRuns];
@@ -162,8 +162,8 @@ public class App{
                }
                else if(problem.equals("rnrp")){ 
                   //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
-                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
-                  adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP);
+                  //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
+                  //adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP);
                }
             }
             else if(algorithm.equals("ga")){
@@ -173,8 +173,8 @@ public class App{
                }
                else if(problem.equals("rnrp")){ 
                   //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
-                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
-                  adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, iterationsPerRun);
+                  //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
+                  //adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, iterationsPerRun);
                }
             }
 
@@ -301,43 +301,25 @@ public class App{
       String algorithm = null;
       int numberOfRuns = 0;
       int iterationsPerRun = 0;
-      String instancePath = null;
-      File outputFile = null;
 
       algorithm = args[0]; //first parameter is the algorithm to be used
       problem = args[1]; //second parameter is the problem to be solved
       numberOfRuns = Integer.parseInt(args[2]);
       iterationsPerRun = Integer.parseInt(args[3]);
 
-      if(args.length >= 5){
-         instancePath = args[4];
-         app = new App(new File(instancePath));
+      app = new App();
 
-         if(args.length >= 6){
-            outputFile = new File(args[5]);
-         }
-      }
-      else{
-         app = new App();
-      }
+      //int[] gammaPercentages = {0, 25, 50, 80, 90, 100};
 
-      int[] gammaPercentages = {0, 25, 50, 80, 90, 100};
-
-      for(int i = 0; i <= gammaPercentages.length - 1; i++){
-         //app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
-         app.solve(problem, algorithm, numberOfRuns, iterationsPerRun, gammaPercentages[i]);
+      //for(int i = 0; i <= gammaPercentages.length - 1; i++){
+         app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
+         //app.solve(problem, algorithm, numberOfRuns, iterationsPerRun, gammaPercentages[i]);
          app.calculateMetrics();
 
-         if(outputFile == null){
-            app.printResults();
-         }
-         else{
-            //app.writeResults(outputFile);
-            app.writeResults(outputFile, gammaPercentages[i]);
-         }
+         app.printResults();
 
-         System.out.println("executed for gamma = " + gammaPercentages[i] + "%");
-      }
+         //System.out.println("executed for gamma = " + gammaPercentages[i] + "%");
+      //}
 
       System.exit(0);
    }
