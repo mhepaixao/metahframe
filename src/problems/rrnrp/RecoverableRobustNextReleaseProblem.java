@@ -20,6 +20,7 @@ public class RecoverableRobustNextReleaseProblem{
    double[] requirementsDeviances;
    double budget;
    int gamma;
+   int recoveryParameter;
 
    /**
     * Method to create the RobustNextReleaseProblem object.
@@ -35,6 +36,7 @@ public class RecoverableRobustNextReleaseProblem{
       this.requirementsDeviances = robustNRPInstanceReader.getRequirementsDeviances();
       this.budget = getBudget(70);
       this.gamma = getGamma(gammaPercentage);
+      this.recoveryParameter = 2;
    }
 
    public int getNumberOfRequirements(){
@@ -72,7 +74,7 @@ public class RecoverableRobustNextReleaseProblem{
    }
 
    private double getSolutionCost(int[] solution){
-      return getSolutionEstimatesCosts(solution) + getMaxDeviancesSubsetSum(solution);
+      return getSolutionEstimatesCosts(solution) + getMaxDeviancesSubsetSum(solution) - getMinEstimatesSubsetSum(solution);
    }
 
    private double getSolutionEstimatesCosts(int[] solution){
@@ -105,6 +107,37 @@ public class RecoverableRobustNextReleaseProblem{
       }
 
       return solutionDeviances;
+   }
+
+   private double getMinEstimatesSubsetSum(int[] solution){
+      double minEstimatesSubsetSum = 0;
+      double[] sortedSolutionCosts = getSolutionCosts(solution);
+
+      Arrays.sort(sortedSolutionCosts);
+
+      for(int i = 0; i <= sortedSolutionCosts.length - 1; i++){
+         if(sortedSolutionCosts[i] != 0){
+            for(int j = i; j <= (i + recoveryParameter) - 1; j++){
+               minEstimatesSubsetSum += sortedSolutionCosts[j];
+               if(j == sortedSolutionCosts.length - 1){
+                  break;
+               }
+            }
+            break;
+         }
+      }
+
+      return minEstimatesSubsetSum;
+   }
+
+   private double[] getSolutionCosts(int[] solution){
+      double[] solutionCosts = new double[solution.length];
+
+      for(int i = 0; i <= solutionCosts.length - 1; i++){
+         solutionCosts[i] = requirementsCosts[i] * solution[i];
+      }
+
+      return solutionCosts;
    }
 
    public double calculateSolutionValue(int[] solution){
