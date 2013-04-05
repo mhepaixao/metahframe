@@ -16,6 +16,8 @@ import problems.srpp.SRPPRandomAlgorithm;
 import problems.rnrp.RobustNextReleaseProblem;
 import problems.rnrp.RobustNRPSimulatedAnnealing;
 import problems.rnrp.RobustNRPGeneticAlgorithm;
+import problems.rrnrp.RecoverableRobustNextReleaseProblem;
+import problems.rrnrp.RecoverableRobustNRPGeneticAlgorithm;
 
 import instancereaders.InstanceChooser;
 
@@ -109,8 +111,8 @@ public class App{
       return instancesList;
    }
 
-   private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
-   //private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun, int gammaPercentage){
+   //private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
+   private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun, int gammaPercentage){
       Algorithm adaptedAlgorithm = null;
       solutions = new double[instances.length][numberOfRuns];
       runTimes = new double[instances.length][numberOfRuns];
@@ -175,6 +177,10 @@ public class App{
                   //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
                   //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
                   //adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, iterationsPerRun);
+               }
+               else if(problem.equals("rrnrp")){ 
+                  RecoverableRobustNextReleaseProblem recoverableRobustNRP = new RecoverableRobustNextReleaseProblem(instances[i], gammaPercentage);
+                  adaptedAlgorithm = new RecoverableRobustNRPGeneticAlgorithm(recoverableRobustNRP, iterationsPerRun);
                }
             }
 
@@ -309,17 +315,17 @@ public class App{
 
       app = new App();
 
-      //int[] gammaPercentages = {0, 25, 50, 80, 90, 100};
+      int[] gammaPercentages = {50};
 
-      //for(int i = 0; i <= gammaPercentages.length - 1; i++){
-         app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
-         //app.solve(problem, algorithm, numberOfRuns, iterationsPerRun, gammaPercentages[i]);
+      for(int i = 0; i <= gammaPercentages.length - 1; i++){
+         //app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
+         app.solve(problem, algorithm, numberOfRuns, iterationsPerRun, gammaPercentages[i]);
          app.calculateMetrics();
 
          app.printResults();
 
-         //System.out.println("executed for gamma = " + gammaPercentages[i] + "%");
-      //}
+         System.out.println("executed for gamma = " + gammaPercentages[i] + "%");
+      }
 
       System.exit(0);
    }
