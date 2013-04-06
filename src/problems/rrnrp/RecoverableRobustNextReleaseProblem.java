@@ -28,7 +28,7 @@ public class RecoverableRobustNextReleaseProblem{
     * @author Matheus Paixao
     * @param instance the problem's instance
     */
-   public RecoverableRobustNextReleaseProblem(File instance, int gammaPercentage){
+   public RecoverableRobustNextReleaseProblem(File instance, int gammaPercentage, int recoveryPercentage){
       robustNRPInstanceReader = new RobustNRPInstanceReader(instance);
       this.numberOfRequirements = robustNRPInstanceReader.getNumberOfRequirements();
       this.requirementsValues = robustNRPInstanceReader.getRequirementsValues();
@@ -36,7 +36,7 @@ public class RecoverableRobustNextReleaseProblem{
       this.requirementsDeviances = robustNRPInstanceReader.getRequirementsDeviances();
       this.budget = getBudget(70);
       this.gamma = getGamma(gammaPercentage);
-      this.recoveryParameter = 2;
+      this.recoveryParameter = getRecoveryParameter(recoveryPercentage);
    }
 
    public int getNumberOfRequirements(){
@@ -61,6 +61,10 @@ public class RecoverableRobustNextReleaseProblem{
 
    private int getGamma(int gammaPercentage){
       return (int) (((double) gammaPercentage / 100) * getNumberOfRequirements());
+   }
+
+   private int getRecoveryParameter(int recoveryPercentage){
+      return (int) (((double) recoveryPercentage / 100) * gamma);
    }
 
    public boolean isSolutionValid(int[] solution){

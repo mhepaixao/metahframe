@@ -112,7 +112,7 @@ public class App{
    }
 
    //private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
-   private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun, int gammaPercentage){
+   private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun, int gammaPercentage, int recoveryPercentage){
       Algorithm adaptedAlgorithm = null;
       solutions = new double[instances.length][numberOfRuns];
       runTimes = new double[instances.length][numberOfRuns];
@@ -179,7 +179,8 @@ public class App{
                   //adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, iterationsPerRun);
                }
                else if(problem.equals("rrnrp")){ 
-                  RecoverableRobustNextReleaseProblem recoverableRobustNRP = new RecoverableRobustNextReleaseProblem(instances[i], gammaPercentage);
+                  RecoverableRobustNextReleaseProblem recoverableRobustNRP = 
+                                 new RecoverableRobustNextReleaseProblem(instances[i], gammaPercentage, recoveryPercentage);
                   adaptedAlgorithm = new RecoverableRobustNRPGeneticAlgorithm(recoverableRobustNRP, iterationsPerRun);
                }
             }
@@ -261,15 +262,13 @@ public class App{
                            + instancesRunTimesStandardDeviation[instanceIndex]);
    }
 
-   //private void writeResults(File outputFile){
-   private void writeResults(File outputFile, int gammaPercentage){
+   private void writeResults(int gammaPercentage, int recoveryPercentage){
       try{
-         //BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile, true));
+         BufferedWriter writer = new BufferedWriter(new FileWriter(new File("/home/mhepaixao/instancias/rrnrp/results/" + 
+                                 instancesNames[0].split("\\.")[0] + "_results.txt"), true));
 
          for(int i = 0; i <= instances.length - 1; i++){
-            //writeInstanceResults(i, writer);
-            writeInstanceResults(i, writer, gammaPercentage);
+            writeInstanceResults(i, writer, gammaPercentage, recoveryPercentage);
             writer.write("--------------\n");
             if(i != instances.length - 1){
                writer.write("\n");
@@ -283,11 +282,10 @@ public class App{
       }
    }
 
-   //private void writeInstanceResults(int instanceIndex, BufferedWriter writer){
-   private void writeInstanceResults(int instanceIndex, BufferedWriter writer, int gammaPercentage){
+   private void writeInstanceResults(int instanceIndex, BufferedWriter writer, int gammaPercentage, int recoveryPercentage){
       try{
          //writer.write(instancesNames[instanceIndex] + "\n");
-         writer.write(instancesNames[instanceIndex] + " with gamma = " + gammaPercentage + "%\n");
+         writer.write(instancesNames[instanceIndex] + " with gamma = " + gammaPercentage + "% and k = " + recoveryPercentage + "%\n");
          writer.write("\n");
 
          writer.write("solution: " + instancesSolutionsMean[instanceIndex] + " +/- "
@@ -315,16 +313,30 @@ public class App{
 
       app = new App();
 
-      int[] gammaPercentages = {50};
+      int[] gammaPercentages = {0, 50, 100};
+      int[] recoveryPercentages = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
       for(int i = 0; i <= gammaPercentages.length - 1; i++){
-         //app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
-         app.solve(problem, algorithm, numberOfRuns, iterationsPerRun, gammaPercentages[i]);
-         app.calculateMetrics();
+         if(gammaPercentages[i] == 0){
+            //app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
+            app.solve(problem, algorithm, numberOfRuns, iterationsPerRun, gammaPercentages[0], recoveryPercentages[0]);
+            app.calculateMetrics();
 
-         app.printResults();
+            app.writeResults(gammaPercentages[0], recoveryPercentages[0]);
 
-         System.out.println("executed for gamma = " + gammaPercentages[i] + "%");
+            System.out.println("executed for gamma = " + gammaPercentages[0] + "% and k = " + recoveryPercentages[0] + "%");
+         }
+         else{
+            for(int j = 0; j <= recoveryPercentages.length - 1; j++){
+               //app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
+               app.solve(problem, algorithm, numberOfRuns, iterationsPerRun, gammaPercentages[i], recoveryPercentages[j]);
+               app.calculateMetrics();
+
+               app.writeResults(gammaPercentages[i], recoveryPercentages[j]);
+
+               System.out.println("executed for gamma = " + gammaPercentages[i] + "% and k = " + recoveryPercentages[j] + "%");
+            }
+         }
       }
 
       System.exit(0);
