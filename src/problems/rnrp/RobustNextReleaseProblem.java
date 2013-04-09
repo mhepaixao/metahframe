@@ -16,7 +16,7 @@ public class RobustNextReleaseProblem{
 
    int numberOfRequirements;
    double[] requirementsValues;
-   int[] requirementsCosts;
+   double[] requirementsCosts;
    double[] requirementsDeviances;
    double budget;
    int gamma;

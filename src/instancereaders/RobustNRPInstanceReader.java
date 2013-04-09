@@ -171,12 +171,12 @@ public class RobustNRPInstanceReader{
     * @see getNumberOfRequirements
     * @see getNumberOfScenarios
     */
-   public int[] getRequirementsCosts(){
+   public double[] getRequirementsCosts(){
       String[] instanceRequirementsCosts = instanceLines[4 + getNumberOfScenarios() + 1].split(" ");
-      int[] requirementsCosts = new int[getNumberOfRequirements()];
+      double[] requirementsCosts = new double[getNumberOfRequirements()];
 
       for(int i = 0; i <= requirementsCosts.length - 1; i++){
-         requirementsCosts[i] = Integer.parseInt(instanceRequirementsCosts[i]);
+         requirementsCosts[i] = Double.parseDouble(instanceRequirementsCosts[i]);
       }
 
       return requirementsCosts;

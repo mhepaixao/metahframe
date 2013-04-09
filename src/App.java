@@ -311,10 +311,10 @@ public class App{
       numberOfRuns = Integer.parseInt(args[2]);
       iterationsPerRun = Integer.parseInt(args[3]);
 
-      app = new App();
+      app = new App(new File(args[4]));
 
       int[] gammaPercentages = {0, 50, 100};
-      int[] recoveryPercentages = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+      int[] recoveryPercentages = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
       for(int i = 0; i <= gammaPercentages.length - 1; i++){
          if(gammaPercentages[i] == 0){
