@@ -1,7 +1,9 @@
 import algorithms.Algorithm;
 
 import statistics.StatisticalAnalyzer;
+
 import io.ResultsWriter;
+import io.InstancesHandler;
 
 import problems.tsp.TSPProblem;
 import problems.tsp.TSPAntQ;
@@ -22,13 +24,7 @@ import problems.rnrp.RobustNRPGeneticAlgorithm;
 import problems.rrnrp.RecoverableRobustNextReleaseProblem;
 import problems.rrnrp.RecoverableRobustNRPGeneticAlgorithm;
 
-import instancereaders.InstanceChooser;
-
 import java.io.File;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
-
-import java.util.ArrayList;
 
 /**
  * Class used to run the application.
@@ -39,82 +35,10 @@ import java.util.ArrayList;
  */
 public class App{
 
-   File[] instances;
-   String[] instancesNames;
    double[][] solutions;
    double[][] runTimes;
 
-   double[] instancesSolutionsMean;
-   double[] instancesSolutionsStandardDeviation;
-   double[] instancesRunTimesMean;
-   double[] instancesRunTimesStandardDeviation;
-
-   public App(){
-      InstanceChooser instanceChooser = new InstanceChooser();
-      File instance = instanceChooser.getInstance(); //choose the instance to be used by the algorithm
-
-      createSingleInstance(instance);
-   }
-
-   public App(File path){
-      if(isInstancePath(path) == true){
-         createSingleInstance(path);
-      }
-      else{
-         createInstancesList(path);
-      }
-   }
-
-   private File[] getInstances(){
-      return this.instances;
-   }
-
-   private boolean isInstancePath(File path){
-      boolean result = false;
-
-      if(path.getName().contains(".txt") == true){
-         result = true;
-      }
-
-      return result;
-   }
-
-   private void createSingleInstance(File instance){
-      this.instances = new File[1];
-      this.instances[0] = instance;
-
-      this.instancesNames = new String[1];
-      this.instancesNames[0] = instance.getName();
-   }
-
-   private void createInstancesList(File folder){
-      File[] pathsList = folder.listFiles();
-      ArrayList<File> instancesList = getInstancesList(pathsList);
-
-      this.instances = new File[instancesList.size()];
-      for(int i = 0; i <= instances.length - 1; i++){
-         this.instances[i] = instancesList.get(i);
-      }
-
-      this.instancesNames = new String[instances.length];
-      for(int i = 0; i <= instancesNames.length - 1; i++){
-         this.instancesNames[i] = instances[i].getName();
-      }
-   }
-
-   private ArrayList<File> getInstancesList(File[] pathsList){
-      ArrayList<File> instancesList = new ArrayList<File>();
-
-      for(int i = 0; i <= pathsList.length - 1; i++){
-         if(pathsList[i].getName().contains(".txt") == true){
-            instancesList.add(pathsList[i]);
-         }
-      }
-
-      return instancesList;
-   }
-
-   private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
+   private void solve(File[] instances, String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
       Algorithm adaptedAlgorithm = null;
       solutions = new double[instances.length][numberOfRuns];
       runTimes = new double[instances.length][numberOfRuns];
@@ -194,8 +118,10 @@ public class App{
    }
 
    public static void main(String[] args){
+      InstancesHandler instancesHandler = null;
       App app = null;
       StatisticalAnalyzer statisticalAnalyzer = null;
+      ResultsWriter resultsWriter = null;
 
       String problem = null;
       String algorithm = null;
@@ -207,11 +133,18 @@ public class App{
       numberOfRuns = Integer.parseInt(args[2]);
       iterationsPerRun = Integer.parseInt(args[3]);
 
+      if(args.length <= 4){
+         instancesHandler = new InstancesHandler();
+      }
+      else{
+         instancesHandler = new InstancesHandler(args[4]);
+      }
+
       app = new App();
 
-      app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
+      app.solve(instancesHandler.getInstances(), problem, algorithm, numberOfRuns, iterationsPerRun);
       statisticalAnalyzer = new StatisticalAnalyzer(app.solutions, app.runTimes);
-      ResultsWriter resultsWriter = new ResultsWriter(statisticalAnalyzer, app.instancesNames);
+      resultsWriter = new ResultsWriter(statisticalAnalyzer, instancesHandler);
       resultsWriter.printResults();
 
       System.exit(0);

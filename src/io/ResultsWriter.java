@@ -7,12 +7,12 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 
 public class ResultsWriter{
-   StatisticalAnalyzer statisticalAnalyzer;
-   String[] instancesNames;
+   private StatisticalAnalyzer statisticalAnalyzer;
+   private InstancesHandler instancesHandler;
 
-   public ResultsWriter(StatisticalAnalyzer statisticalAnalyzer, String[] instancesNames){
+   public ResultsWriter(StatisticalAnalyzer statisticalAnalyzer, InstancesHandler instancesHandler){
       this.statisticalAnalyzer = statisticalAnalyzer;
-      this.instancesNames = instancesNames;
+      this.instancesHandler = instancesHandler;
    }
 
    public void printResults(){
@@ -28,7 +28,7 @@ public class ResultsWriter{
    }
 
    private void printInstanceResults(StatisticalAnalyzer statisticalAnalyzer, int instanceIndex){
-      System.out.println(instancesNames[instanceIndex]);
+      System.out.println(instancesHandler.getInstanceName(instanceIndex));
       System.out.println("");
 
       System.out.println("solution: " + statisticalAnalyzer.getInstanceSolutionMean(instanceIndex) + " +/- " 
@@ -60,7 +60,7 @@ public class ResultsWriter{
 
    private void writeInstanceResults(int instanceIndex, BufferedWriter writer){
       try{
-         writer.write(instancesNames[instanceIndex] + "\n");
+         writer.write(instancesHandler.getInstanceName(instanceIndex) + "\n");
          writer.write("\n");
 
          writer.write("solution: " + statisticalAnalyzer.getInstanceSolutionMean(instanceIndex) + " +/- " 
