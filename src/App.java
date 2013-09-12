@@ -111,8 +111,7 @@ public class App{
       return instancesList;
    }
 
-   //private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
-   private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun, int gammaPercentage, int recoveryPercentage){
+   private void solve(String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
       Algorithm adaptedAlgorithm = null;
       solutions = new double[instances.length][numberOfRuns];
       runTimes = new double[instances.length][numberOfRuns];
@@ -179,9 +178,9 @@ public class App{
                   //adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, iterationsPerRun);
                }
                else if(problem.equals("rrnrp")){ 
-                  RecoverableRobustNextReleaseProblem recoverableRobustNRP = 
-                                 new RecoverableRobustNextReleaseProblem(instances[i], gammaPercentage, recoveryPercentage);
-                  adaptedAlgorithm = new RecoverableRobustNRPGeneticAlgorithm(recoverableRobustNRP, iterationsPerRun);
+                  //RecoverableRobustNextReleaseProblem recoverableRobustNRP = 
+                                 //new RecoverableRobustNextReleaseProblem(instances[i], gammaPercentage, recoveryPercentage);
+                  //adaptedAlgorithm = new RecoverableRobustNRPGeneticAlgorithm(recoverableRobustNRP, iterationsPerRun);
                }
             }
 
@@ -311,33 +310,12 @@ public class App{
       numberOfRuns = Integer.parseInt(args[2]);
       iterationsPerRun = Integer.parseInt(args[3]);
 
-      app = new App(new File(args[4]));
+      app = new App();
 
-      int[] gammaPercentages = {0, 50, 100};
-      int[] recoveryPercentages = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+      app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
+      app.calculateMetrics();
 
-      for(int i = 0; i <= gammaPercentages.length - 1; i++){
-         if(gammaPercentages[i] == 0){
-            //app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
-            app.solve(problem, algorithm, numberOfRuns, iterationsPerRun, gammaPercentages[0], recoveryPercentages[0]);
-            app.calculateMetrics();
-
-            app.writeResults(gammaPercentages[0], recoveryPercentages[0]);
-
-            System.out.println("executed for gamma = " + gammaPercentages[0] + "% and k = " + recoveryPercentages[0] + "%");
-         }
-         else{
-            for(int j = 0; j <= recoveryPercentages.length - 1; j++){
-               //app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
-               app.solve(problem, algorithm, numberOfRuns, iterationsPerRun, gammaPercentages[i], recoveryPercentages[j]);
-               app.calculateMetrics();
-
-               app.writeResults(gammaPercentages[i], recoveryPercentages[j]);
-
-               System.out.println("executed for gamma = " + gammaPercentages[i] + "% and k = " + recoveryPercentages[j] + "%");
-            }
-         }
-      }
+      app.printResults();
 
       System.exit(0);
    }
