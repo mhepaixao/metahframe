@@ -26,19 +26,12 @@ import problems.rrnrp.RecoverableRobustNRPGeneticAlgorithm;
 
 import java.io.File;
 
-/**
- * Class used to run the application.
- * @author Matheus Paixao
- *
- * How to run:
- * java App <algorithm> <problem> <number of runs> <iterations per run>
- */
-public class App{
+public class Metahframe{
 
    double[][] solutions;
    double[][] runTimes;
 
-   private void solve(File[] instances, String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
+   public void solve(File[] instances, String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
       Algorithm adaptedAlgorithm = null;
       solutions = new double[instances.length][numberOfRuns];
       runTimes = new double[instances.length][numberOfRuns];
@@ -115,38 +108,5 @@ public class App{
             runTimes[i][j] = adaptedAlgorithm.getTotalTime();
          }
       }
-   }
-
-   public static void main(String[] args){
-      InstancesHandler instancesHandler = null;
-      App app = null;
-      StatisticalAnalyzer statisticalAnalyzer = null;
-      ResultsWriter resultsWriter = null;
-
-      String problem = null;
-      String algorithm = null;
-      int numberOfRuns = 0;
-      int iterationsPerRun = 0;
-
-      algorithm = args[0]; //first parameter is the algorithm to be used
-      problem = args[1]; //second parameter is the problem to be solved
-      numberOfRuns = Integer.parseInt(args[2]);
-      iterationsPerRun = Integer.parseInt(args[3]);
-
-      if(args.length <= 4){
-         instancesHandler = new InstancesHandler();
-      }
-      else{
-         instancesHandler = new InstancesHandler(args[4]);
-      }
-
-      app = new App();
-
-      app.solve(instancesHandler.getInstances(), problem, algorithm, numberOfRuns, iterationsPerRun);
-      statisticalAnalyzer = new StatisticalAnalyzer(app.solutions, app.runTimes);
-      resultsWriter = new ResultsWriter(statisticalAnalyzer, instancesHandler);
-      resultsWriter.printResults();
-
-      System.exit(0);
    }
 }
