@@ -4,6 +4,8 @@ public class StatisticalAnalyzer{
    double[][] solutions;
    double[][] runTimes;
 
+   int numberOfInstances;
+
    double[] instancesSolutionsMean;
    double[] instancesSolutionsStandardDeviation;
    double[] instancesRunTimesMean;
@@ -13,7 +15,7 @@ public class StatisticalAnalyzer{
       this.solutions = solutions;
       this.runTimes = runTimes;
 
-      int numberOfInstances = solutions.length;
+      this.numberOfInstances = solutions.length;
 
       this.instancesSolutionsMean = new double[numberOfInstances];
       this.instancesSolutionsStandardDeviation = new double[numberOfInstances];
@@ -42,6 +44,10 @@ public class StatisticalAnalyzer{
 
    public double getInstanceRuntimeStandardDeviation(int instanceIndex){
       return instancesRunTimesStandardDeviation[instanceIndex];
+   }
+
+   public int getNumberOfInstances(){
+      return this.numberOfInstances;
    }
 
    private double getMean(double[] values){

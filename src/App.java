@@ -1,6 +1,7 @@
 import algorithms.Algorithm;
 
 import statistics.StatisticalAnalyzer;
+import io.ResultsWriter;
 
 import problems.tsp.TSPProblem;
 import problems.tsp.TSPAntQ;
@@ -192,62 +193,6 @@ public class App{
       }
    }
 
-   private void printResults(StatisticalAnalyzer statisticalAnalyzer){
-      for(int i = 0; i <= instances.length - 1; i++){
-         printInstanceResults(statisticalAnalyzer, i);
-         System.out.println("--------------");
-         if(i != instances.length - 1){
-            System.out.println("");
-         } 
-      }
-   }
-
-   private void printInstanceResults(StatisticalAnalyzer statisticalAnalyzer, int instanceIndex){
-      System.out.println(instancesNames[instanceIndex]);
-      System.out.println("");
-
-      System.out.println("solution: " + statisticalAnalyzer.getInstanceSolutionMean(instanceIndex) + " +/- " 
-                           + statisticalAnalyzer.getInstanceSolutionStandardDeviation(instanceIndex));
-      System.out.println("run time: " + statisticalAnalyzer.getInstanceRunTimeMean(instanceIndex) + " +/- " 
-                           + statisticalAnalyzer.getInstanceRuntimeStandardDeviation(instanceIndex));
-   }
-
-   private void writeResults(int gammaPercentage, int recoveryPercentage){
-      try{
-         BufferedWriter writer = new BufferedWriter(new FileWriter(new File("/home/mhepaixao/instancias/rrnrp/results/" + 
-                                 instancesNames[0].split("\\.")[0] + "_results.txt"), true));
-
-         for(int i = 0; i <= instances.length - 1; i++){
-            writeInstanceResults(i, writer, gammaPercentage, recoveryPercentage);
-            writer.write("--------------\n");
-            if(i != instances.length - 1){
-               writer.write("\n");
-            } 
-         }
-
-         writer.close();
-      }
-      catch(Exception e){
-         System.out.println("Error in write results to output file");
-      }
-   }
-
-   private void writeInstanceResults(int instanceIndex, BufferedWriter writer, int gammaPercentage, int recoveryPercentage){
-      try{
-         //writer.write(instancesNames[instanceIndex] + "\n");
-         writer.write(instancesNames[instanceIndex] + " with gamma = " + gammaPercentage + "% and k = " + recoveryPercentage + "%\n");
-         writer.write("\n");
-
-         writer.write("solution: " + instancesSolutionsMean[instanceIndex] + " +/- "
-               + instancesSolutionsStandardDeviation[instanceIndex] + "\n");
-         writer.write("run time: " + instancesRunTimesMean[instanceIndex] + " +/- "
-               + instancesRunTimesStandardDeviation[instanceIndex] + "\n");
-      }
-      catch(Exception e){
-         System.out.println("Error in write instance results");
-      }
-   }
-
    public static void main(String[] args){
       App app = null;
       StatisticalAnalyzer statisticalAnalyzer = null;
@@ -266,7 +211,8 @@ public class App{
 
       app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
       statisticalAnalyzer = new StatisticalAnalyzer(app.solutions, app.runTimes);
-      app.printResults(statisticalAnalyzer);
+      ResultsWriter resultsWriter = new ResultsWriter(statisticalAnalyzer, app.instancesNames);
+      resultsWriter.printResults();
 
       System.exit(0);
    }
