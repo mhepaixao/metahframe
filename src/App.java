@@ -1,5 +1,7 @@
 import algorithms.Algorithm;
 
+import statistics.StatisticalAnalyzer;
+
 import problems.tsp.TSPProblem;
 import problems.tsp.TSPAntQ;
 import problems.tsp.TSPRandomAlgorithm;
@@ -190,60 +192,9 @@ public class App{
       }
    }
 
-   private void calculateMetrics(){
-      this.instancesSolutionsMean = new double[instances.length];
-      this.instancesSolutionsStandardDeviation = new double[instances.length];
-      this.instancesRunTimesMean = new double[instances.length];
-      this.instancesRunTimesStandardDeviation = new double[instances.length];
-
+   private void printResults(StatisticalAnalyzer statisticalAnalyzer){
       for(int i = 0; i <= instances.length - 1; i++){
-         this.instancesSolutionsMean[i] = getMean(solutions[i]);
-         this.instancesSolutionsStandardDeviation[i] = getStandardDeviation(instancesSolutionsMean[i], solutions[i]);
-         this.instancesRunTimesMean[i] = getMean(runTimes[i]);
-         this.instancesRunTimesStandardDeviation[i] = getStandardDeviation(instancesRunTimesMean[i], runTimes[i]);
-      }
-   }
-
-   private double getMean(double[] values){
-      double valuesSum = 0;
-
-      for(int i = 0; i <= values.length - 1; i++){
-         valuesSum += values[i];
-      }
-
-      return valuesSum / values.length;
-   }
-
-   private double getStandardDeviation(double mean, double[] values){
-      double[] deviances = getDeviances(mean, values);
-      double variance = getVariance(deviances);
-
-      return Math.sqrt(variance);
-   }
-
-   private double[] getDeviances(double mean, double[] values){
-      double[] deviances = new double[values.length];
-
-      for(int i = 0; i <= deviances.length - 1; i++){
-         deviances[i] = mean - values[i];
-      }
-
-      return deviances;
-   }
-
-   private double getVariance(double[] deviances){
-      double quadraticDeviancesSum = 0;
-
-      for(int i = 0; i <= deviances.length - 1; i++){
-         quadraticDeviancesSum += Math.pow(deviances[i], 2);
-      }
-
-      return quadraticDeviancesSum / deviances.length;
-   }
-
-   private void printResults(){
-      for(int i = 0; i <= instances.length - 1; i++){
-         printInstanceResults(i);
+         printInstanceResults(statisticalAnalyzer, i);
          System.out.println("--------------");
          if(i != instances.length - 1){
             System.out.println("");
@@ -251,14 +202,14 @@ public class App{
       }
    }
 
-   private void printInstanceResults(int instanceIndex){
+   private void printInstanceResults(StatisticalAnalyzer statisticalAnalyzer, int instanceIndex){
       System.out.println(instancesNames[instanceIndex]);
       System.out.println("");
 
-      System.out.println("solution: " + instancesSolutionsMean[instanceIndex] + " +/- " 
-                           + instancesSolutionsStandardDeviation[instanceIndex]);
-      System.out.println("run time: " + instancesRunTimesMean[instanceIndex] + " +/- " 
-                           + instancesRunTimesStandardDeviation[instanceIndex]);
+      System.out.println("solution: " + statisticalAnalyzer.getInstanceSolutionMean(instanceIndex) + " +/- " 
+                           + statisticalAnalyzer.getInstanceSolutionStandardDeviation(instanceIndex));
+      System.out.println("run time: " + statisticalAnalyzer.getInstanceRunTimeMean(instanceIndex) + " +/- " 
+                           + statisticalAnalyzer.getInstanceRuntimeStandardDeviation(instanceIndex));
    }
 
    private void writeResults(int gammaPercentage, int recoveryPercentage){
@@ -299,6 +250,7 @@ public class App{
 
    public static void main(String[] args){
       App app = null;
+      StatisticalAnalyzer statisticalAnalyzer = null;
 
       String problem = null;
       String algorithm = null;
@@ -313,9 +265,8 @@ public class App{
       app = new App();
 
       app.solve(problem, algorithm, numberOfRuns, iterationsPerRun);
-      app.calculateMetrics();
-
-      app.printResults();
+      statisticalAnalyzer = new StatisticalAnalyzer(app.solutions, app.runTimes);
+      app.printResults(statisticalAnalyzer);
 
       System.exit(0);
    }
