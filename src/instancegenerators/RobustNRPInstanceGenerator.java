@@ -33,60 +33,54 @@ import java.text.DecimalFormatSymbols;
 public class RobustNRPInstanceGenerator{
    private Random random;
 
-   private int numberOfRequirements;
-   private int numberOfScenarios;
-   private int requirementRange;
-   private int costRange;
-   private int deviancePercentage;
-
-   private String path;
-
    public RobustNRPInstanceGenerator(){
       this.random = new Random();
    }
 
-   private void getGenerationsParameters(String[] parameters){
-      numberOfRequirements = Integer.parseInt(parameters[0]);
-      numberOfScenarios = Integer.parseInt(parameters[1]);
-      requirementRange = Integer.parseInt(parameters[2]);
-      costRange = Integer.parseInt(parameters[3]);
-      deviancePercentage = Integer.parseInt(parameters[4]);
-      path = parameters[5];
-   }
+   private void generateInstances(int numberOfRequirements, int numberOfScenarios, int requirementsRange, int costRange, String[] variationPercentages, 
+                                    int[] precedencePercentages){
+      String scenariosProbabilities = getScenariosProbabilities(numberOfScenarios);
+      String[] requirementsValues = getRequirementsValues(numberOfRequirements, numberOfScenarios, requirementsRange);
+      String requirementsCosts = getRandomNumbersSequency(numberOfRequirements, 1, costRange);
+      String[] precedenceStrings = null;
 
-   private void generateInstance(){
-      try{
-         BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path + "I_" + numberOfRequirements + ".txt")));
+      for(int i  = 0; i <= variationPercentages.length - 1; i++){
+         for(int j = 0; j <= precedencePercentages.length - 1; j++){
+            try{
+               BufferedWriter writer = new BufferedWriter(new FileWriter(new File("I_" + numberOfRequirements + "_" + variationPercentages[i] + 
+                                                                                    "_" + precedencePercentages[j] + ".txt")));
 
-         writer.write(numberOfRequirements + " " + numberOfScenarios);
-         writer.write("\n");
-         writer.write("\n");
+               writer.write(numberOfRequirements + " " + numberOfScenarios + "\n");
+               writer.write("\n");
 
-         writer.write(getScenariosProbabilities());
-         writer.write("\n");
-         writer.write("\n");
-      
-         for(int i = 0; i <= numberOfScenarios - 1; i++){
-            writer.write(getRandomNumbersSequency(numberOfRequirements, 1, requirementRange));
-            writer.write("\n");
+               writer.write(scenariosProbabilities + "\n");
+               writer.write("\n");
+
+               for(int k = 0; k <= requirementsValues.length - 1; k++){
+                  writer.write(requirementsValues[k] + "\n");
+               }
+               writer.write("\n");
+
+               writer.write(requirementsCosts + "\n");
+
+               writer.write(getRequirementsVariations(requirementsCosts, variationPercentages[i]) + "\n");
+               writer.write("\n");
+
+               precedenceStrings = getPrecedenceStrings(numberOfRequirements, precedencePercentages[j]);
+               for(int k = 0; k <= precedenceStrings.length - 1; k++){
+                  writer.write(precedenceStrings[k] + "\n");
+               }
+
+               writer.close();
+            }
+            catch(Exception e){
+               e.printStackTrace();
+            }
          }
-         writer.write("\n");
-
-         String costs = getRandomNumbersSequency(numberOfRequirements, 1, costRange);
-         writer.write(costs);
-         writer.write("\n");
-
-         writer.write(getRequirementsDeviances(costs, deviancePercentage));
-         writer.write("\n");
-
-         writer.close();
-      }
-      catch(Exception e){
-         e.printStackTrace();
       }
    }
 
-   private String getScenariosProbabilities(){
+   private String getScenariosProbabilities(int numberOfScenarios){
       String scenariosProbabilities = null;
       double[] randomNumbers = new double[numberOfScenarios];
       double randomNumbersSum = 0;
@@ -106,6 +100,16 @@ public class RobustNRPInstanceGenerator{
       }
 
       return scenariosProbabilities;
+   }
+
+   private String[] getRequirementsValues(int numbersOfRequirements, int numberOfScenarios, int requirementsRange){
+      String[] requirementsValues = new String[numberOfScenarios];
+
+      for(int i = 0; i <= requirementsValues.length - 1; i++){
+         requirementsValues[i] = getRandomNumbersSequency(numbersOfRequirements, 1, requirementsRange);
+      }
+
+      return requirementsValues;
    }
 
    private String getRandomNumbersSequency(int size, int lowerBound, int upperBound){
@@ -132,29 +136,145 @@ public class RobustNRPInstanceGenerator{
       }
    }
 
-   private String getRequirementsDeviances(String costs, int deviancePercentage){
-      String deviances = null;
-      String[] costsValues = costs.split(" ");
-      double[] deviancesValues = new double[costsValues.length];
+   private String getRequirementsVariations(String requirementsCosts, String variationPercentage){
+      String requirementsVariations = null;
+      double[] costs = getCosts(requirementsCosts);
 
-      for(int i = 0; i <= deviancesValues.length - 1; i++){
-         deviancesValues[i] = Integer.parseInt(costsValues[i]) * ((double) deviancePercentage / 100);
+      if(variationPercentage.equals("random") == true){
+         requirementsVariations = getRandomVariations(costs);
+      }
+      else{
+         int percentage = Integer.parseInt(variationPercentage);
 
-         if(deviances == null){
-            deviances = deviancesValues[i] + "";
-         }
-         else{
-            deviances += " " + deviancesValues[i];
+         for(int i = 0; i <= costs.length - 1; i++){
+            if(requirementsVariations == null){
+               requirementsVariations = costs[i] * ((double) percentage / 100) + "";
+            }
+            else{
+               requirementsVariations += " " + costs[i] * ((double) percentage / 100);
+            }
          }
       }
 
-      return deviances;
+      return requirementsVariations;
+   }
+
+   private double[] getCosts(String requirementsCosts){
+      String[] costsArray = requirementsCosts.split(" ");
+      double[] costs = new double[costsArray.length];
+
+      for(int i = 0; i <= costs.length - 1; i++){
+         costs[i] = Double.parseDouble(costsArray[i]);
+      }
+
+      return costs;
+   }
+
+   private String getRandomVariations(double[] costs){
+      String randomVariations  = null;
+
+      for(int i = 0; i <= costs.length - 1; i++){
+         if(randomVariations == null){
+            randomVariations = getNumberInInterval(0, 0.5 * costs[i], random) + "";
+         }
+         else{
+            randomVariations += " " + getNumberInInterval(0, 0.5 * costs[i], random);
+         }
+      }
+
+      return randomVariations;
+   }
+
+   private double getNumberInInterval(double lowerBound, double upperBound, Random random){
+      return lowerBound + random.nextDouble() * (upperBound - lowerBound);
+   }
+
+   private String[] getPrecedenceStrings(int numberOfRequirements, int precedencePercentage){
+      String[] precedenceStrings = new String[numberOfRequirements];
+      int[][] precedenceMatrix = getPrecedenceMatrix(numberOfRequirements, precedencePercentage);
+
+      for(int i = 0; i <= precedenceMatrix.length - 1; i++){
+         for(int j = 0; j <= precedenceMatrix[0].length - 1; j++){
+            if(j == 0){
+               precedenceStrings[i] = precedenceMatrix[i][j] + "";
+            }
+            else{
+               precedenceStrings[i] += " " + precedenceMatrix[i][j];
+            }
+         }
+      }
+
+      return precedenceStrings;
+   }
+
+   private int[][] getPrecedenceMatrix(int numberOfRequirements, int precedencePercentage){
+      int[][] precedenceMatrix = new int[numberOfRequirements][numberOfRequirements];
+      int[] requirementsWhoHavePrecedents = getRandomNumbersList(numberOfRequirements, precedencePercentage);
+      int precedentsPercentage = 0;
+      int[] precedents = null;
+
+      for(int i = 0; i <= requirementsWhoHavePrecedents.length - 1; i++){
+         precedentsPercentage = random.nextInt(5) + 1;
+         precedents = getRandomNumbersList(numberOfRequirements, precedentsPercentage);
+
+         for(int j = 0; j <= precedents.length - 1; j++){
+            precedenceMatrix[requirementsWhoHavePrecedents[i]][precedents[j]] = 1;
+         }
+      }
+
+      return precedenceMatrix;
+   }
+
+   private int[] getRandomNumbersList(int numbers, int percentage){
+      int listLength = (int) (numbers * ((double) percentage) / 100);
+      int[] randomNumbersList = new int[listLength];
+      int randomNumber = 0;
+
+      for(int i = 0; i <= randomNumbersList.length - 1; i++){
+         randomNumbersList[i] = numbers + 1;
+      }
+
+      for(int i = 0; i <= randomNumbersList.length - 1; i++){
+         randomNumber = random.nextInt(numbers);
+         while(isNumberInList(randomNumber, randomNumbersList) == true){
+            randomNumber = random.nextInt(numbers);
+         }
+
+         randomNumbersList[i] = randomNumber;
+      }
+
+      return randomNumbersList;
+   }
+
+   private boolean isNumberInList(int number, int[] list){
+      boolean result = false;
+
+      for(int i = 0; i <= list.length - 1; i++){
+         if(list[i] == number){
+            result = true;
+            break;
+         }
+      }
+
+      return result;
    }
 
    public static void main(String[] args){
       RobustNRPInstanceGenerator instanceGenerator = new RobustNRPInstanceGenerator();
 
-      instanceGenerator.getGenerationsParameters(args);
-      instanceGenerator.generateInstance();
+      int[] numbersOfRequirements = {50, 100, 150, 200, 250, 300, 350, 400, 450, 500};
+      String[] variationPercentages = {"10", "20", "30", "40", "50", "random"};
+      int[] precedencePercentages = {0, 10, 20};
+
+      int requirementsRange = 10;
+      int costRange = 10;
+      int numberOfScenarios = 0;
+
+      for(int i = 0; i <= numbersOfRequirements.length - 1; i++){
+         numberOfScenarios = instanceGenerator.random.nextInt(3) + 2;
+
+         instanceGenerator.generateInstances(numbersOfRequirements[i], numberOfScenarios, requirementsRange, costRange, 
+               variationPercentages, precedencePercentages);
+      }
    }
 }
