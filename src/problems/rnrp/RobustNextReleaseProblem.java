@@ -70,7 +70,8 @@ public class RobustNextReleaseProblem{
    public boolean isSolutionValid(int[] solution){
       boolean result = false;
 
-      if(getSolutionCost(solution) <= budget){
+      //if((getSolutionCost(solution) <= budget) && (arePrecedencesRespected(solution) == true)){
+      if((getSolutionCost(solution) <= budget)){
          result = true;
       }
 
@@ -111,6 +112,26 @@ public class RobustNextReleaseProblem{
       }
 
       return solutionDeviances;
+   }
+
+   private boolean arePrecedencesRespected(int[] solution){
+      boolean result = true;
+
+      loop:
+      for(int i = 0; i <= solution.length - 1; i++){
+         if(solution[i] == 1){
+            for(int j = 0; j <= solution.length - 1; j++){
+               if(precedenceMatrix[i][j] == 1){
+                  if(solution[j] == 0){
+                     result = false;
+                     break loop;
+                  }
+               }
+            }
+         }
+      }
+
+      return result;
    }
 
    public double calculateSolutionValue(int[] solution){
