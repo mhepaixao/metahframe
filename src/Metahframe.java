@@ -7,20 +7,21 @@ import io.InstancesHandler;
 
 import problems.tsp.TSPProblem;
 import problems.tsp.TSPAntQ;
-import problems.tsp.TSPRandomAlgorithm;
+//import problems.tsp.TSPRandomAlgorithm;
 import problems.tsp.TSPACS;
 import problems.tsp.TSPSimulatedAnnealing;
 import problems.tsp.TSPGeneticAlgorithm;
 import problems.jssp.JSSPProblem;
 import problems.jssp.JSSPAntQ;
-import problems.jssp.JSSPRandomAlgorithm;
+//import problems.jssp.JSSPRandomAlgorithm;
 import problems.jssp.JSSPACS;
 import problems.srpp.SRPPProblem;
 import problems.srpp.SRPPAntQ;
-import problems.srpp.SRPPRandomAlgorithm;
+//import problems.srpp.SRPPRandomAlgorithm;
 import problems.rnrp.RobustNextReleaseProblem;
 import problems.rnrp.RobustNRPSimulatedAnnealing;
 import problems.rnrp.RobustNRPGeneticAlgorithm;
+import problems.rnrp.RobustNRPRandomAlgorithm;
 import problems.rrnrp.RecoverableRobustNextReleaseProblem;
 import problems.rrnrp.RecoverableRobustNRPGeneticAlgorithm;
 
@@ -63,17 +64,21 @@ public class Metahframe{
                }
             }
             else if(algorithm.equals("random")){
-               if(problem.equals("tsp")){
-                  TSPProblem tspProblem = new TSPProblem(instances[i]);
-                  adaptedAlgorithm = new TSPRandomAlgorithm(tspProblem, iterationsPerRun);
-               }
-               else if(problem.equals("jssp")){
-                  JSSPProblem jsspProblem = new JSSPProblem(instances[i]);
-                  adaptedAlgorithm = new JSSPRandomAlgorithm(jsspProblem, iterationsPerRun);
-               }
-               else if(problem.equals("srpp")){
-                  SRPPProblem srppProblem = new SRPPProblem(instances[i]);
-                  adaptedAlgorithm = new SRPPRandomAlgorithm(srppProblem, iterationsPerRun);
+               //if(problem.equals("tsp")){
+                  //TSPProblem tspProblem = new TSPProblem(instances[i]);
+                  //adaptedAlgorithm = new TSPRandomAlgorithm(tspProblem, iterationsPerRun);
+               //}
+               //else if(problem.equals("jssp")){
+                  //JSSPProblem jsspProblem = new JSSPProblem(instances[i]);
+                  //adaptedAlgorithm = new JSSPRandomAlgorithm(jsspProblem, iterationsPerRun);
+               //}
+               //else if(problem.equals("srpp")){
+                  //SRPPProblem srppProblem = new SRPPProblem(instances[i]);
+                  //adaptedAlgorithm = new SRPPRandomAlgorithm(srppProblem, iterationsPerRun);
+               //}
+               if(problem.equals("rnrp")){
+                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
+                  adaptedAlgorithm = new RobustNRPRandomAlgorithm(robustNRP);
                }
             }
             else if(algorithm.equals("sa")){

@@ -16,14 +16,11 @@ public abstract class RandomAlgorithm implements Algorithm{
    private int numberOfIterations;
    private double totalTime;
 
-   private ArrayList<Integer> dynamicListOfNodes;
-   private Random random;
-
-   //abstract methods that each problem to be solved with this random algorithm must implement:
-   public abstract double calculateSolutionValue(Integer[] solution); //fitness function value
+   public abstract int[] getRandomSolution();
+   public abstract void repairSolution(int[] solution);
+   public abstract double calculateSolutionValue(int[] solution); //fitness function value
    public abstract boolean isSolutionBest(double iterationSolutionValue, double bestSolutionValue); //depends on a max or min problem
-   public abstract boolean satisfyAllRestrictions(Integer[] solution); //if the founded solution broke some restriction
-   public abstract int getNumberOfNodes();
+   public abstract boolean isSolutionValid(int[] solution); //if the founded solution broke some restriction
    
    /**
     * Method to create an RandomAlgorithm object passing the number of iterations
@@ -35,8 +32,6 @@ public abstract class RandomAlgorithm implements Algorithm{
    public RandomAlgorithm(int numberOfIterations){
       this.numberOfIterations = numberOfIterations;
       setTotalTime(0);
-      dynamicListOfNodes = new ArrayList<Integer>();
-      random = new Random();
    }
 
    private int getNumberOfIterations(){
@@ -63,21 +58,24 @@ public abstract class RandomAlgorithm implements Algorithm{
     * @see isSolutionBest
     */
    public double getSolution(){
-      loadDynamicListOfNodes();
-
       double initialTime = 0;
       double finalTime = 0;
 
-      Integer[] iterationSolution = null;
+      int[] iterationSolution = null;
       double iterationSolutionValue = 0;
-      Integer[] bestSolution = null;
+      int[] bestSolution = null;
       double bestSolutionValue = 0;
 
       int iterationsCounter = 0;
 
       initialTime = System.currentTimeMillis();
       while(iterationsCounter <= getNumberOfIterations() - 1){
-         iterationSolution = getIterationSolution();
+         iterationSolution = getRandomSolution();
+
+         if(isSolutionValid(iterationSolution) == false){
+            repairSolution(iterationSolution);
+         }
+
          iterationSolutionValue = calculateSolutionValue(iterationSolution);
 
          if(bestSolution != null){
@@ -99,54 +97,5 @@ public abstract class RandomAlgorithm implements Algorithm{
       setTotalTime(finalTime - initialTime);
 
       return bestSolutionValue;
-   }
-
-   /**
-    * Method to create the list of nodes.
-    *
-    * @author Matheus Paixao
-    */
-   private void loadDynamicListOfNodes(){
-      for(int i = 0; i <= getNumberOfNodes() - 1; i++){
-         dynamicListOfNodes.add(new Integer(i));
-      }
-   }
-
-   /**
-    * Method to get the solution of an iteration.
-    *
-    * @author Matheus Paixao
-    * @return the solution founded in an iteration
-    * @see getRandomSolution
-    * @see satisfyAllRestrictions
-    */
-   private Integer[] getIterationSolution(){
-      Integer[] iterationSolution = getRandomSolution();
-
-      while(satisfyAllRestrictions(iterationSolution) == false){
-         iterationSolution = getRandomSolution();
-      }
-
-      return iterationSolution;
-   }
-
-   /**
-    * Method to get a random solution.
-    *
-    * @author Matheus Paixao
-    * @return a random solution
-    * @see getNumberOfNodes
-    * @see shuffle method of the Collections class
-    */
-   private Integer[] getRandomSolution(){
-      Integer[] randomSolution = new Integer[getNumberOfNodes()];
-
-      Collections.shuffle(dynamicListOfNodes);
-
-      for(int i = 0; i <= randomSolution.length - 1; i++){
-         randomSolution[i] = dynamicListOfNodes.get(i);
-      }
-
-      return randomSolution;
    }
 }
