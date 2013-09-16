@@ -18,6 +18,7 @@ public class RobustNextReleaseProblem{
    double[] requirementsValues;
    double[] requirementsCosts;
    double[] requirementsDeviances;
+   int[][] precedenceMatrix;
    double budget;
    int gamma;
 
@@ -34,6 +35,7 @@ public class RobustNextReleaseProblem{
       this.requirementsValues = robustNRPInstanceReader.getRequirementsValues();
       this.requirementsCosts = robustNRPInstanceReader.getRequirementsCosts();
       this.requirementsDeviances = robustNRPInstanceReader.getRequirementsDeviances();
+      this.precedenceMatrix = robustNRPInstanceReader.getPrecedenceMatrix();
       this.budget = getBudget(70);
       this.gamma = getGamma();
       //this.gamma = getGamma(gammaPercentage);

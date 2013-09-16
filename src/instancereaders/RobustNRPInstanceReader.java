@@ -199,4 +199,22 @@ public class RobustNRPInstanceReader{
 
       return requirementsDeviances;
    }
+
+   public int[][] getPrecedenceMatrix(){
+      int numberOfRequirements = getNumberOfRequirements();
+      int[][] precedenceMatrix = new int[numberOfRequirements][numberOfRequirements];
+      String[] precedencesValues = new String[numberOfRequirements];
+      int decrementor = 0;
+
+      for(int i = instanceLines.length - 1; i >= instanceLines.length - numberOfRequirements; i--){
+         precedencesValues = instanceLines[i].split(" ");
+
+         for(int j = 0; j <= precedenceMatrix[0].length - 1; j++){
+            precedenceMatrix[precedenceMatrix.length - 1 - decrementor][j] = Integer.parseInt(precedencesValues[j]);
+         }
+         decrementor++;
+      }
+
+      return precedenceMatrix;
+   }
 }
