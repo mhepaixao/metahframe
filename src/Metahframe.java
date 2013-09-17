@@ -87,9 +87,9 @@ public class Metahframe{
                   adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem);
                }
                else if(problem.equals("rnrp")){ 
-                  //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
+                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
                   //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
-                  //adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP);
+                  adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP);
                }
             }
             else if(algorithm.equals("ga")){

@@ -27,7 +27,6 @@ public abstract class SimulatedAnnealing implements Algorithm{
    private double alpha;
    private int numberOfMarkovChains;
    private int[] bestSolution;
-   private int[] bestSoFarSolution;
 
    //all these parameters and functions depends on the problem
    //they must be implemented by the problem child class
@@ -76,6 +75,7 @@ public abstract class SimulatedAnnealing implements Algorithm{
    public double getSolution(){
       int[] neighbourSolution = null;
       double bestSolutionValue = 0;
+      double bestSoFarSolutionValue = 0;
       double neighbourSolutionValue = 0;
       double acceptanceProbability = 0;
 
@@ -85,24 +85,27 @@ public abstract class SimulatedAnnealing implements Algorithm{
       initSA();
 
       initialTime = System.currentTimeMillis();
+
+      bestSolutionValue = calculateSolutionValue(bestSolution);
+      bestSoFarSolutionValue = bestSolutionValue;
       while(temperature > finalTemperature){
          for(int i = 0; i <= numberOfMarkovChains - 1; i++){
             neighbourSolution = getNeighbourSolution(bestSolution);
-
-            bestSolutionValue = calculateSolutionValue(bestSolution);
             neighbourSolutionValue = calculateSolutionValue(neighbourSolution);
 
             if(isSolutionBest(neighbourSolutionValue, bestSolutionValue)){
                bestSolution = neighbourSolution;
+               bestSolutionValue = neighbourSolutionValue;
 
-               if(isSolutionBest(bestSolutionValue, calculateSolutionValue(bestSoFarSolution))){
-                  bestSoFarSolution = bestSolution;
+               if(isSolutionBest(bestSolutionValue, bestSoFarSolutionValue)){
+                  bestSoFarSolutionValue = bestSolutionValue;
                }
             }
             else{
                acceptanceProbability = getAcceptanceProbability(bestSolutionValue, neighbourSolutionValue);
                if(acceptanceProbability > random.nextDouble()){
                   bestSolution = neighbourSolution;
+                  bestSolutionValue = neighbourSolutionValue;
                }
             }
          }
@@ -113,7 +116,7 @@ public abstract class SimulatedAnnealing implements Algorithm{
       finalTime = System.currentTimeMillis();
       setTotalTime(finalTime - initialTime);
 
-      return calculateSolutionValue(bestSoFarSolution);
+      return bestSoFarSolutionValue;
    }
 
    /**
@@ -132,7 +135,6 @@ public abstract class SimulatedAnnealing implements Algorithm{
       alpha = getAlpha();
       numberOfMarkovChains = getNumberOfMarkovChains();
       bestSolution = getInitialSolution();
-      bestSoFarSolution = getInitialSolution();
    }
 
    /**
