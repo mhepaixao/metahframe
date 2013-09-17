@@ -12,7 +12,6 @@ import java.util.Random;
 public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    RobustNextReleaseProblem robustNRP;
 
-   int[] initialSolution;
    int numberOfRequirementsToChangeInNeighbourSolution;
 
    Random random;
@@ -21,7 +20,6 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
       this.random = new Random();
 
       this.robustNRP = robustNRP;
-      this.initialSolution = generateInitialSolution();
       this.numberOfRequirementsToChangeInNeighbourSolution = 1;
    }
 
@@ -30,11 +28,11 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected double getFinalTemperature(){
-      return 0.001;
+      return 0.00000001;
    }
 
    protected double getAlpha(){
-      return 0.9995;
+      return 1 - (1 / 10);
    }
 
    protected int getNumberOfMarkovChains(){
@@ -42,14 +40,43 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected int[] getInitialSolution(){
-      return this.initialSolution;
+      int[] randomSolution = new int[robustNRP.getNumberOfRequirements()];
+      int amountOfNumbersToInsert = random.nextInt(randomSolution.length);
+
+      if(amountOfNumbersToInsert <= randomSolution.length / 2){
+         insertNumbers(amountOfNumbersToInsert, randomSolution, 1);
+      }
+      else{
+         for(int i = 0; i <= randomSolution.length - 1; i++){
+            randomSolution[i] = 1;
+         }
+         insertNumbers(randomSolution.length - amountOfNumbersToInsert, randomSolution, 0);
+      }
+
+      return randomSolution;
+   }
+
+   public void insertNumbers(int amountOfNumbersToInsert, int[] randomSolution, int numberToInsert){
+      int positionToInsert = random.nextInt(randomSolution.length);
+
+      for(int i = 0; i <= amountOfNumbersToInsert - 1; i++){
+         while(randomSolution[positionToInsert] == numberToInsert){
+            positionToInsert = random.nextInt(randomSolution.length);
+         }
+
+         randomSolution[positionToInsert] = numberToInsert;
+      }
    }
 
    protected int[] getNeighbourSolution(int[] solution){
       int[] neighbourSolution = getNeighbourSolution(solution, numberOfRequirementsToChangeInNeighbourSolution);
 
-      while(robustNRP.isSolutionValid(neighbourSolution) == false){
-         neighbourSolution = getNeighbourSolution(solution, numberOfRequirementsToChangeInNeighbourSolution);
+      //while(robustNRP.isSolutionValid(neighbourSolution) == false){
+         //neighbourSolution = getNeighbourSolution(solution, numberOfRequirementsToChangeInNeighbourSolution);
+      //}
+
+      if(robustNRP.isSolutionValid(neighbourSolution) == false){
+         repairSolution(neighbourSolution);
       }
 
       return neighbourSolution;
@@ -76,31 +103,32 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
       return neighbourSolution;
    }
 
+   public void repairSolution(int[] solution){
+      removeRandomRequirement(solution);
+
+      if(robustNRP.isSolutionValid(solution) == false){
+         repairSolution(solution);
+      }
+   }
+
+   private void removeRandomRequirement(int[] solution){
+      boolean removeFlag = false;
+      int randomRequirementToRemove = 0;
+
+      while(removeFlag == false){
+         randomRequirementToRemove = random.nextInt(solution.length);
+         if(solution[randomRequirementToRemove] == 1){
+            solution[randomRequirementToRemove] = 0;
+            removeFlag = true;
+         }
+      }
+   }
+
    protected double calculateSolutionValue(int[] solution){
       return robustNRP.calculateSolutionValue(solution);
    }
 
    protected boolean isSolutionBest(double solutionValue1, double solutionValue2){
       return robustNRP.isSolutionBest(solutionValue1, solutionValue2);
-   }
-
-   private int[] generateInitialSolution(){
-      int[] initialSolution = getRandomSolution();
-
-      while(robustNRP.isSolutionValid(initialSolution) == false){
-         initialSolution = getRandomSolution();
-      }
-
-      return initialSolution;
-   }
-
-   private int[] getRandomSolution(){
-      int[] randomSolution = new int[robustNRP.getNumberOfRequirements()];
-
-      for(int i = 0; i <= randomSolution.length - 1; i++){
-         randomSolution[i] = random.nextInt(2);
-      }
-
-      return randomSolution;
    }
 }
