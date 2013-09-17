@@ -98,9 +98,9 @@ public class Metahframe{
                   adaptedAlgorithm = new TSPGeneticAlgorithm(tspProblem, iterationsPerRun);
                }
                else if(problem.equals("rnrp")){ 
-                  //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
+                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
                   //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
-                  //adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, iterationsPerRun);
+                  adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP);
                }
                else if(problem.equals("rrnrp")){ 
                   //RecoverableRobustNextReleaseProblem recoverableRobustNRP = 

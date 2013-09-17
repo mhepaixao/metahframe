@@ -70,8 +70,7 @@ public class RobustNextReleaseProblem{
    public boolean isSolutionValid(int[] solution){
       boolean result = false;
 
-      //if((getSolutionCost(solution) <= budget) && (arePrecedencesRespected(solution) == true)){
-      if((getSolutionCost(solution) <= budget)){
+      if((getSolutionCost(solution) <= budget) && (arePrecedencesRespected(solution) == true)){
          result = true;
       }
 

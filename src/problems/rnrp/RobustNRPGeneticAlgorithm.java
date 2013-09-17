@@ -16,8 +16,8 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
 
    Random random;
 
-   public RobustNRPGeneticAlgorithm(RobustNextReleaseProblem robustNRP, int numberOfIterations){
-      super(numberOfIterations);
+   public RobustNRPGeneticAlgorithm(RobustNextReleaseProblem robustNRP){
+      super(1000);
       this.robustNRP = robustNRP;
       this.random = new Random();
    }
@@ -51,15 +51,46 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
       return initialPopulation;
    }
 
+   //private int[] getRandomIndividual(int numberOfRequirements, int requirementToBeIncluded){
+      //int[] randomIndividual = new int[numberOfRequirements];
+
+      //for(int i = 0; i <= randomIndividual.length - 1; i++){
+         //randomIndividual[i] = random.nextInt(2);
+      //}
+      //randomIndividual[requirementToBeIncluded] = 1;
+
+      //return randomIndividual;
+   //}
+
    private int[] getRandomIndividual(int numberOfRequirements, int requirementToBeIncluded){
-      int[] randomIndividual = new int[numberOfRequirements];
+      int[] randomSolution = new int[numberOfRequirements];
+      int amountOfNumbersToInsert = random.nextInt(randomSolution.length);
 
-      for(int i = 0; i <= randomIndividual.length - 1; i++){
-         randomIndividual[i] = random.nextInt(2);
+      if(amountOfNumbersToInsert <= randomSolution.length / 2){
+         insertNumbers(amountOfNumbersToInsert, randomSolution, 1);
       }
-      randomIndividual[requirementToBeIncluded] = 1;
+      else{
+         for(int i = 0; i <= randomSolution.length - 1; i++){
+            randomSolution[i] = 1;
+         }
+         insertNumbers(randomSolution.length - amountOfNumbersToInsert, randomSolution, 0);
+      }
 
-      return randomIndividual;
+      randomSolution[requirementToBeIncluded] = 1;
+
+      return randomSolution;
+   }
+
+   public void insertNumbers(int amountOfNumbersToInsert, int[] randomSolution, int numberToInsert){
+      int positionToInsert = random.nextInt(randomSolution.length);
+
+      for(int i = 0; i <= amountOfNumbersToInsert - 1; i++){
+         while(randomSolution[positionToInsert] == numberToInsert){
+            positionToInsert = random.nextInt(randomSolution.length);
+         }
+
+         randomSolution[positionToInsert] = numberToInsert;
+      }
    }
 
    protected int[][] getParents(int[][] population, double[] individualsSolutionValues){
