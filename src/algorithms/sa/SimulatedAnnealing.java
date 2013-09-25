@@ -98,10 +98,6 @@ public abstract class SimulatedAnnealing implements Algorithm{
             neighbourSolutionValue = calculateSolutionValue(neighbourSolution);
             fitnessEvaluations++;
 
-            if(fitnessEvaluations > 1000 * neighbourSolution.length){
-               break loop;
-            }
-
             if(isSolutionBest(neighbourSolutionValue, bestSolutionValue)){
                bestSolution = neighbourSolution;
                bestSolutionValue = neighbourSolutionValue;

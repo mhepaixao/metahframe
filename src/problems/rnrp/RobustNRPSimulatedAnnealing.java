@@ -28,11 +28,13 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected double getFinalTemperature(){
-      return 0.00000001;
+      int numberOfFitnessEvaluations = 1000;
+
+      return Math.pow(getAlpha(), (numberOfFitnessEvaluations)) * getInitialTemperature();
    }
 
    protected double getAlpha(){
-      return 1 - (1 / 10);
+      return 0.9995;
    }
 
    protected int getNumberOfMarkovChains(){
@@ -70,10 +72,6 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
 
    protected int[] getNeighbourSolution(int[] solution){
       int[] neighbourSolution = getNeighbourSolution(solution, numberOfRequirementsToChangeInNeighbourSolution);
-
-      //while(robustNRP.isSolutionValid(neighbourSolution) == false){
-         //neighbourSolution = getNeighbourSolution(solution, numberOfRequirementsToChangeInNeighbourSolution);
-      //}
 
       if(robustNRP.isSolutionValid(neighbourSolution) == false){
          repairSolution(neighbourSolution);
