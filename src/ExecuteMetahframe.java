@@ -33,8 +33,10 @@ public class ExecuteMetahframe{
       //metahframe.solve(instancesHandler.getInstances(), problem, algorithm, numberOfRuns, iterationsPerRun);
       metahframe.solve(instancesHandler.getInstances(), problem, algorithm, numberOfRuns, numberOfFitnessEvaluations);
       statisticalAnalyzer = new StatisticalAnalyzer(metahframe.solutions, metahframe.runTimes);
-      resultsWriter = new ResultsWriter(statisticalAnalyzer, instancesHandler);
-      resultsWriter.printResults();
+      //resultsWriter = new ResultsWriter(statisticalAnalyzer, instancesHandler);
+      resultsWriter = new ResultsWriter(statisticalAnalyzer, instancesHandler, algorithm);
+      //resultsWriter.printResults();
+      resultsWriter.writeResults();
 
       System.exit(0);
    }

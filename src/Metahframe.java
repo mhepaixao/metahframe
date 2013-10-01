@@ -38,6 +38,7 @@ public class Metahframe{
       runTimes = new double[instances.length][numberOfRuns];
 
       for(int i = 0; i <= instances.length - 1; i++){
+         System.out.println("Executing for "+instances[i].getName());
          for(int j = 0; j <= numberOfRuns - 1; j++){
             if(algorithm.equals("antq")){
                //if(problem.equals("tsp")){
@@ -111,7 +112,10 @@ public class Metahframe{
 
             solutions[i][j] = adaptedAlgorithm.getSolution();
             runTimes[i][j] = adaptedAlgorithm.getTotalTime();
+
          }
+
+         System.out.println("Executed for instance "+i);
       }
    }
 }

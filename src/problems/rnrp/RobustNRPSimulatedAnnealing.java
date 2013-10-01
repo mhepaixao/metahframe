@@ -26,7 +26,7 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected double getInitialTemperature(){
-      return 100;
+      return 20;
    }
 
    protected double getFinalTemperature(){
@@ -34,7 +34,7 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected double getAlpha(){
-      return 0.9995;
+      return 1 - ((1.0 / robustNRP.getNumberOfRequirements()) / 100);
    }
 
    protected int getNumberOfMarkovChains(){

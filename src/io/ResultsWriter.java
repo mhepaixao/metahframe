@@ -9,10 +9,13 @@ import java.io.BufferedWriter;
 public class ResultsWriter{
    private StatisticalAnalyzer statisticalAnalyzer;
    private InstancesHandler instancesHandler;
+   String algorithm;
 
-   public ResultsWriter(StatisticalAnalyzer statisticalAnalyzer, InstancesHandler instancesHandler){
+   //public ResultsWriter(StatisticalAnalyzer statisticalAnalyzer, InstancesHandler instancesHandler){
+   public ResultsWriter(StatisticalAnalyzer statisticalAnalyzer, InstancesHandler instancesHandler, String algorithm){
       this.statisticalAnalyzer = statisticalAnalyzer;
       this.instancesHandler = instancesHandler;
+      this.algorithm = algorithm;
    }
 
    public void printResults(){
@@ -41,7 +44,7 @@ public class ResultsWriter{
       int numberOfInstances = statisticalAnalyzer.getNumberOfInstances();
 
       try{
-         BufferedWriter writer = new BufferedWriter(new FileWriter(new File("/home/mhepaixao/instancias/results.txt"), true));
+         BufferedWriter writer = new BufferedWriter(new FileWriter(new File("/home/mhepaixao/instancias/rnrp/jss/parametrizacao/results_"+algorithm+".txt"), true));
 
          for(int i = 0; i <= numberOfInstances - 1; i++){
             writeInstanceResults(i, writer);
