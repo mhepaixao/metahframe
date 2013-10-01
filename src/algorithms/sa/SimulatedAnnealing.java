@@ -86,17 +86,13 @@ public abstract class SimulatedAnnealing implements Algorithm{
 
       initialTime = System.currentTimeMillis();
 
-      int fitnessEvaluations = 0;
-
       bestSolutionValue = calculateSolutionValue(bestSolution);
       bestSoFarSolutionValue = bestSolutionValue;
 
-      loop:
       while(temperature > finalTemperature){
          for(int i = 0; i <= numberOfMarkovChains - 1; i++){
             neighbourSolution = getNeighbourSolution(bestSolution);
             neighbourSolutionValue = calculateSolutionValue(neighbourSolution);
-            fitnessEvaluations++;
 
             if(isSolutionBest(neighbourSolutionValue, bestSolutionValue)){
                bestSolution = neighbourSolution;

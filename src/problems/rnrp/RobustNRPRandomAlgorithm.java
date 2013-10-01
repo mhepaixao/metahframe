@@ -8,8 +8,8 @@ public class RobustNRPRandomAlgorithm extends RandomAlgorithm{
    public RobustNextReleaseProblem robustNRP;
    private Random random;
 
-   public RobustNRPRandomAlgorithm(RobustNextReleaseProblem robustNRP){
-      super(1000 * robustNRP.getNumberOfRequirements());
+   public RobustNRPRandomAlgorithm(RobustNextReleaseProblem robustNRP, int numberOfFitnessEvaluations){
+      super(numberOfFitnessEvaluations * robustNRP.getNumberOfRequirements());
       this.robustNRP = robustNRP;
       this.random = new Random();
    }

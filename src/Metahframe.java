@@ -32,7 +32,7 @@ public class Metahframe{
    double[][] solutions;
    double[][] runTimes;
 
-   public void solve(File[] instances, String problem, String algorithm, int numberOfRuns, int iterationsPerRun){
+   public void solve(File[] instances, String problem, String algorithm, int numberOfRuns, int numberOfFitnessEvaluations){
       Algorithm adaptedAlgorithm = null;
       solutions = new double[instances.length][numberOfRuns];
       runTimes = new double[instances.length][numberOfRuns];
@@ -40,28 +40,28 @@ public class Metahframe{
       for(int i = 0; i <= instances.length - 1; i++){
          for(int j = 0; j <= numberOfRuns - 1; j++){
             if(algorithm.equals("antq")){
-               if(problem.equals("tsp")){
-                  TSPProblem tspProblem = new TSPProblem(instances[i]);
-                  adaptedAlgorithm = new TSPAntQ(tspProblem, iterationsPerRun);
-               }
-               else if(problem.equals("jssp")){
-                  JSSPProblem jsspProblem = new JSSPProblem(instances[i]);
-                  adaptedAlgorithm = new JSSPAntQ(jsspProblem, iterationsPerRun);
-               }
-               else if(problem.equals("srpp")){
-                  SRPPProblem srppProblem = new SRPPProblem(instances[i]);
-                  adaptedAlgorithm = new SRPPAntQ(srppProblem, iterationsPerRun);
-               }
-            }
-            else if(algorithm.equals("acs")){
-               if(problem.equals("tsp")){
-                  TSPProblem tspProblem = new TSPProblem(instances[i]);
-                  adaptedAlgorithm = new TSPACS(tspProblem, iterationsPerRun);
-               }
-               else if(problem.equals("jssp")){
-                  JSSPProblem jsspProblem = new JSSPProblem(instances[i]);
-                  adaptedAlgorithm = new JSSPACS(jsspProblem, iterationsPerRun);
-               }
+               //if(problem.equals("tsp")){
+                  //TSPProblem tspProblem = new TSPProblem(instances[i]);
+                  //adaptedAlgorithm = new TSPAntQ(tspProblem, iterationsPerRun);
+               //}
+               //else if(problem.equals("jssp")){
+                  //JSSPProblem jsspProblem = new JSSPProblem(instances[i]);
+                  //adaptedAlgorithm = new JSSPAntQ(jsspProblem, iterationsPerRun);
+               //}
+               //else if(problem.equals("srpp")){
+                  //SRPPProblem srppProblem = new SRPPProblem(instances[i]);
+                  //adaptedAlgorithm = new SRPPAntQ(srppProblem, iterationsPerRun);
+               //}
+            //}
+            //else if(algorithm.equals("acs")){
+               //if(problem.equals("tsp")){
+                  //TSPProblem tspProblem = new TSPProblem(instances[i]);
+                  //adaptedAlgorithm = new TSPACS(tspProblem, iterationsPerRun);
+               //}
+               //else if(problem.equals("jssp")){
+                  //JSSPProblem jsspProblem = new JSSPProblem(instances[i]);
+                  //adaptedAlgorithm = new JSSPACS(jsspProblem, iterationsPerRun);
+               //}
             }
             else if(algorithm.equals("random")){
                //if(problem.equals("tsp")){
@@ -78,35 +78,35 @@ public class Metahframe{
                //}
                if(problem.equals("rnrp")){
                   RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
-                  adaptedAlgorithm = new RobustNRPRandomAlgorithm(robustNRP);
+                  adaptedAlgorithm = new RobustNRPRandomAlgorithm(robustNRP, numberOfFitnessEvaluations);
                }
             }
             else if(algorithm.equals("sa")){
-               if(problem.equals("tsp")){
-                  TSPProblem tspProblem = new TSPProblem(instances[i]);
-                  adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem);
-               }
-               else if(problem.equals("rnrp")){ 
+               //if(problem.equals("tsp")){
+                  //TSPProblem tspProblem = new TSPProblem(instances[i]);
+                  //adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem);
+               //}
+               if(problem.equals("rnrp")){ 
                   RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
                   //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
-                  adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP);
+                  adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP, numberOfFitnessEvaluations);
                }
             }
             else if(algorithm.equals("ga")){
-               if(problem.equals("tsp")){
-                  TSPProblem tspProblem = new TSPProblem(instances[i]);
-                  adaptedAlgorithm = new TSPGeneticAlgorithm(tspProblem, iterationsPerRun);
-               }
-               else if(problem.equals("rnrp")){ 
+               //if(problem.equals("tsp")){
+                  //TSPProblem tspProblem = new TSPProblem(instances[i]);
+                  //adaptedAlgorithm = new TSPGeneticAlgorithm(tspProblem, iterationsPerRun);
+               //}
+               if(problem.equals("rnrp")){ 
                   RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
                   //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
-                  adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP);
+                  adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, numberOfFitnessEvaluations);
                }
-               else if(problem.equals("rrnrp")){ 
-                  //RecoverableRobustNextReleaseProblem recoverableRobustNRP = 
-                                 //new RecoverableRobustNextReleaseProblem(instances[i], gammaPercentage, recoveryPercentage);
-                  //adaptedAlgorithm = new RecoverableRobustNRPGeneticAlgorithm(recoverableRobustNRP, iterationsPerRun);
-               }
+               //else if(problem.equals("rrnrp")){ 
+                  ////RecoverableRobustNextReleaseProblem recoverableRobustNRP = 
+                                 ////new RecoverableRobustNextReleaseProblem(instances[i], gammaPercentage, recoveryPercentage);
+                  ////adaptedAlgorithm = new RecoverableRobustNRPGeneticAlgorithm(recoverableRobustNRP, iterationsPerRun);
+               //}
             }
 
             solutions[i][j] = adaptedAlgorithm.getSolution();

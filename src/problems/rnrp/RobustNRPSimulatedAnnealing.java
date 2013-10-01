@@ -13,13 +13,15 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    RobustNextReleaseProblem robustNRP;
 
    int numberOfRequirementsToChangeInNeighbourSolution;
+   int numberOfFitnessEvaluations;
 
    Random random;
 
-   public RobustNRPSimulatedAnnealing(RobustNextReleaseProblem robustNRP){
+   public RobustNRPSimulatedAnnealing(RobustNextReleaseProblem robustNRP, int numberOfFitnessEvaluations){
       this.random = new Random();
 
       this.robustNRP = robustNRP;
+      this.numberOfFitnessEvaluations = numberOfFitnessEvaluations;
       this.numberOfRequirementsToChangeInNeighbourSolution = 1;
    }
 
@@ -28,9 +30,7 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected double getFinalTemperature(){
-      int numberOfFitnessEvaluations = 1000;
-
-      return Math.pow(getAlpha(), (numberOfFitnessEvaluations)) * getInitialTemperature();
+      return Math.pow(getAlpha(), numberOfFitnessEvaluations) * getInitialTemperature();
    }
 
    protected double getAlpha(){

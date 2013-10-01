@@ -64,7 +64,7 @@ public class RobustNextReleaseProblem{
    private int getGamma(){
    //private int getGamma(int gammaPercentage){
       //return (int) (((double) gammaPercentage / 100) * getNumberOfRequirements());
-      return (int) (((double) 50 / 100) * getNumberOfRequirements());
+      return (int) (((double) 0 / 100) * getNumberOfRequirements());
    }
 
    public boolean isSolutionValid(int[] solution){

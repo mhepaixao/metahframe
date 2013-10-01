@@ -16,8 +16,8 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
 
    Random random;
 
-   public RobustNRPGeneticAlgorithm(RobustNextReleaseProblem robustNRP){
-      super(1000);
+   public RobustNRPGeneticAlgorithm(RobustNextReleaseProblem robustNRP, int numberOfFitnessEvaluations){
+      super(numberOfFitnessEvaluations);
       this.robustNRP = robustNRP;
       this.random = new Random();
    }
