@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
 public class ResultsWriter{
    private StatisticalAnalyzer statisticalAnalyzer;
    private InstancesHandler instancesHandler;
@@ -16,6 +19,11 @@ public class ResultsWriter{
       this.statisticalAnalyzer = statisticalAnalyzer;
       this.instancesHandler = instancesHandler;
       this.algorithm = algorithm;
+      this.parameters = parameters;
+
+      DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+      dfs.setDecimalSeparator('.');
+      df = new DecimalFormat("0.00", dfs);
    }
 
    public void printResults(){
@@ -34,10 +42,10 @@ public class ResultsWriter{
       System.out.println(instancesHandler.getInstanceName(instanceIndex));
       System.out.println("");
 
-      System.out.println("solution: " + statisticalAnalyzer.getInstanceSolutionMean(instanceIndex) + " +/- " 
-                           + statisticalAnalyzer.getInstanceSolutionStandardDeviation(instanceIndex));
-      System.out.println("run time: " + statisticalAnalyzer.getInstanceRunTimeMean(instanceIndex) + " +/- " 
-                           + statisticalAnalyzer.getInstanceRuntimeStandardDeviation(instanceIndex));
+      System.out.println("solution: " + df.format(statisticalAnalyzer.getInstanceSolutionMean(instanceIndex)) + " +/- " 
+                           + df.format(statisticalAnalyzer.getInstanceSolutionStandardDeviation(instanceIndex)));
+      System.out.println("run time: " + df.format(statisticalAnalyzer.getInstanceRunTimeMean(instanceIndex)) + " +/- " 
+                           + df.format(statisticalAnalyzer.getInstanceRuntimeStandardDeviation(instanceIndex)));
    }
 
    public void writeResults(){
@@ -66,10 +74,10 @@ public class ResultsWriter{
          writer.write(instancesHandler.getInstanceName(instanceIndex) + "\n");
          writer.write("\n");
 
-         writer.write("solution: " + statisticalAnalyzer.getInstanceSolutionMean(instanceIndex) + " +/- " 
-                           + statisticalAnalyzer.getInstanceSolutionStandardDeviation(instanceIndex) + "\n");
-         writer.write("run time: " + statisticalAnalyzer.getInstanceRunTimeMean(instanceIndex) + " +/- " 
-                           + statisticalAnalyzer.getInstanceRuntimeStandardDeviation(instanceIndex) + "\n");
+         writer.write("solution: " + df.format(statisticalAnalyzer.getInstanceSolutionMean(instanceIndex)) + " +/- " 
+                           + df.format(statisticalAnalyzer.getInstanceSolutionStandardDeviation(instanceIndex)) + "\n");
+         writer.write("run time: " + df.format(statisticalAnalyzer.getInstanceRunTimeMean(instanceIndex)) + " +/- " 
+                           + df.format(statisticalAnalyzer.getInstanceRuntimeStandardDeviation(instanceIndex)) + "\n");
       }
       catch(Exception e){
          System.out.println("Error in write instance results");
