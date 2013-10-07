@@ -26,7 +26,7 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
    }
 
    protected double getInitialTemperature(){
-      return 20;
+      return 50;
    }
 
    protected double getFinalTemperature(){

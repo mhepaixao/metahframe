@@ -66,10 +66,8 @@ public class RobustNRPRandomAlgorithm extends RandomAlgorithm{
    }
 
    public void repairSolution(int[] solution){
-      removeRandomRequirement(solution);
-
-      if(robustNRP.isSolutionValid(solution) == false){
-         repairSolution(solution);
+      while(robustNRP.isSolutionValid(solution) == false){
+         removeRandomRequirement(solution);
       }
    }
 
