@@ -35,8 +35,8 @@ public class ExecuteMetahframe{
       statisticalAnalyzer = new StatisticalAnalyzer(metahframe.solutions, metahframe.runTimes);
       //resultsWriter = new ResultsWriter(statisticalAnalyzer, instancesHandler);
       resultsWriter = new ResultsWriter(statisticalAnalyzer, instancesHandler, algorithm);
-      //resultsWriter.printResults();
-      resultsWriter.writeResults();
+      resultsWriter.printResults();
+      //resultsWriter.writeResults();
 
       System.exit(0);
    }

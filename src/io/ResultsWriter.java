@@ -12,6 +12,7 @@ import java.text.DecimalFormatSymbols;
 public class ResultsWriter{
    private StatisticalAnalyzer statisticalAnalyzer;
    private InstancesHandler instancesHandler;
+   private DecimalFormat df;
    String algorithm;
 
    //public ResultsWriter(StatisticalAnalyzer statisticalAnalyzer, InstancesHandler instancesHandler){
@@ -19,7 +20,6 @@ public class ResultsWriter{
       this.statisticalAnalyzer = statisticalAnalyzer;
       this.instancesHandler = instancesHandler;
       this.algorithm = algorithm;
-      this.parameters = parameters;
 
       DecimalFormatSymbols dfs = new DecimalFormatSymbols();
       dfs.setDecimalSeparator('.');
