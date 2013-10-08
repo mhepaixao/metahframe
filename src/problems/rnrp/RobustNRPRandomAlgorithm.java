@@ -36,33 +36,46 @@ public class RobustNRPRandomAlgorithm extends RandomAlgorithm{
       //return randomSolution;
    //}
 
+   //public int[] getRandomSolution(){
+      //int[] randomSolution = new int[robustNRP.getNumberOfRequirements()];
+      //int amountOfNumbersToInsert = random.nextInt(randomSolution.length);
+
+      //if(amountOfNumbersToInsert <= randomSolution.length / 2){
+         //insertNumbers(amountOfNumbersToInsert, randomSolution, 1);
+      //}
+      //else{
+         //for(int i = 0; i <= randomSolution.length - 1; i++){
+            //randomSolution[i] = 1;
+         //}
+         //insertNumbers(randomSolution.length - amountOfNumbersToInsert, randomSolution, 0);
+      //}
+
+      //return randomSolution;
+   //}
+
+   //public void insertNumbers(int amountOfNumbersToInsert, int[] randomSolution, int numberToInsert){
+      //int positionToInsert = random.nextInt(randomSolution.length);
+
+      //for(int i = 0; i <= amountOfNumbersToInsert - 1; i++){
+         //while(randomSolution[positionToInsert] == numberToInsert){
+            //positionToInsert = random.nextInt(randomSolution.length);
+         //}
+
+         //randomSolution[positionToInsert] = numberToInsert;
+      //}
+   //}
+
    public int[] getRandomSolution(){
       int[] randomSolution = new int[robustNRP.getNumberOfRequirements()];
-      int amountOfNumbersToInsert = random.nextInt(randomSolution.length);
+      int randomRequirement = 0;
 
-      if(amountOfNumbersToInsert <= randomSolution.length / 2){
-         insertNumbers(amountOfNumbersToInsert, randomSolution, 1);
+      while(robustNRP.isSolutionValid(randomSolution) == true){
+         randomRequirement = random.nextInt(randomSolution.length);
+         randomSolution[randomRequirement] = 1;
       }
-      else{
-         for(int i = 0; i <= randomSolution.length - 1; i++){
-            randomSolution[i] = 1;
-         }
-         insertNumbers(randomSolution.length - amountOfNumbersToInsert, randomSolution, 0);
-      }
+      randomSolution[randomRequirement] = 0;
 
       return randomSolution;
-   }
-
-   public void insertNumbers(int amountOfNumbersToInsert, int[] randomSolution, int numberToInsert){
-      int positionToInsert = random.nextInt(randomSolution.length);
-
-      for(int i = 0; i <= amountOfNumbersToInsert - 1; i++){
-         while(randomSolution[positionToInsert] == numberToInsert){
-            positionToInsert = random.nextInt(randomSolution.length);
-         }
-
-         randomSolution[positionToInsert] = numberToInsert;
-      }
    }
 
    public void repairSolution(int[] solution){

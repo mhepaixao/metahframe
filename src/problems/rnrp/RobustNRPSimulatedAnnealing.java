@@ -41,33 +41,17 @@ public class RobustNRPSimulatedAnnealing extends SimulatedAnnealing{
       return robustNRP.getNumberOfRequirements();
    }
 
-   protected int[] getInitialSolution(){
-      int[] randomSolution = new int[robustNRP.getNumberOfRequirements()];
-      int amountOfNumbersToInsert = random.nextInt(randomSolution.length);
+   public int[] getInitialSolution(){
+      int[] initialSolution = new int[robustNRP.getNumberOfRequirements()];
+      int randomRequirement = 0;
 
-      if(amountOfNumbersToInsert <= randomSolution.length / 2){
-         insertNumbers(amountOfNumbersToInsert, randomSolution, 1);
+      while(robustNRP.isSolutionValid(initialSolution) == true){
+         randomRequirement = random.nextInt(initialSolution.length);
+         initialSolution[randomRequirement] = 1;
       }
-      else{
-         for(int i = 0; i <= randomSolution.length - 1; i++){
-            randomSolution[i] = 1;
-         }
-         insertNumbers(randomSolution.length - amountOfNumbersToInsert, randomSolution, 0);
-      }
+      initialSolution[randomRequirement] = 0;
 
-      return randomSolution;
-   }
-
-   public void insertNumbers(int amountOfNumbersToInsert, int[] randomSolution, int numberToInsert){
-      int positionToInsert = random.nextInt(randomSolution.length);
-
-      for(int i = 0; i <= amountOfNumbersToInsert - 1; i++){
-         while(randomSolution[positionToInsert] == numberToInsert){
-            positionToInsert = random.nextInt(randomSolution.length);
-         }
-
-         randomSolution[positionToInsert] = numberToInsert;
-      }
+      return initialSolution;
    }
 
    protected int[] getNeighbourSolution(int[] solution){

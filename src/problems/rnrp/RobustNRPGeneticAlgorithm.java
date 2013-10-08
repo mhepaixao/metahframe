@@ -27,7 +27,8 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
    }
 
    protected double getMutationProbability(){
-      return 1 / 100;
+      //return 1.0 / 100;
+      return (1.0 / robustNRP.getNumberOfRequirements()) / 100;
    }
 
    protected int getNumberOfEliteIndividuals(){
@@ -68,35 +69,49 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
       //return randomIndividual;
    //}
 
+   //private int[] getRandomIndividual(int numberOfRequirements, int requirementToBeIncluded){
+      //int[] randomSolution = new int[numberOfRequirements];
+      //int amountOfNumbersToInsert = random.nextInt(randomSolution.length);
+
+      //if(amountOfNumbersToInsert <= randomSolution.length / 2){
+         //insertNumbers(amountOfNumbersToInsert, randomSolution, 1);
+      //}
+      //else{
+         //for(int i = 0; i <= randomSolution.length - 1; i++){
+            //randomSolution[i] = 1;
+         //}
+         //insertNumbers(randomSolution.length - amountOfNumbersToInsert, randomSolution, 0);
+      //}
+
+      //randomSolution[requirementToBeIncluded] = 1;
+
+      //return randomSolution;
+   //}
+
+   //private void insertNumbers(int amountOfNumbersToInsert, int[] randomSolution, int numberToInsert){
+      //int positionToInsert = random.nextInt(randomSolution.length);
+
+      //for(int i = 0; i <= amountOfNumbersToInsert - 1; i++){
+         //while(randomSolution[positionToInsert] == numberToInsert){
+            //positionToInsert = random.nextInt(randomSolution.length);
+         //}
+
+         //randomSolution[positionToInsert] = numberToInsert;
+      //}
+   //}
+
    private int[] getRandomIndividual(int numberOfRequirements, int requirementToBeIncluded){
-      int[] randomSolution = new int[numberOfRequirements];
-      int amountOfNumbersToInsert = random.nextInt(randomSolution.length);
+      int[] randomIndividual = new int[numberOfRequirements];
+      randomIndividual[requirementToBeIncluded] = 1;
+      int randomRequirement = 0;
 
-      if(amountOfNumbersToInsert <= randomSolution.length / 2){
-         insertNumbers(amountOfNumbersToInsert, randomSolution, 1);
+      while(robustNRP.isSolutionValid(randomIndividual) == true){
+         randomRequirement = random.nextInt(numberOfRequirements);
+         randomIndividual[randomRequirement] = 1;
       }
-      else{
-         for(int i = 0; i <= randomSolution.length - 1; i++){
-            randomSolution[i] = 1;
-         }
-         insertNumbers(randomSolution.length - amountOfNumbersToInsert, randomSolution, 0);
-      }
+      randomIndividual[randomRequirement] = 0;
 
-      randomSolution[requirementToBeIncluded] = 1;
-
-      return randomSolution;
-   }
-
-   public void insertNumbers(int amountOfNumbersToInsert, int[] randomSolution, int numberToInsert){
-      int positionToInsert = random.nextInt(randomSolution.length);
-
-      for(int i = 0; i <= amountOfNumbersToInsert - 1; i++){
-         while(randomSolution[positionToInsert] == numberToInsert){
-            positionToInsert = random.nextInt(randomSolution.length);
-         }
-
-         randomSolution[positionToInsert] = numberToInsert;
-      }
+      return randomIndividual;
    }
 
    protected int[][] getParents(int[][] population, double[] individualsSolutionValues){
@@ -251,7 +266,7 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
       if(individual[indexToMutate] == 0){
          individual[indexToMutate] = 1;
       }
-      else if(individual[indexToMutate] == 1){
+      else{
          individual[indexToMutate] = 0;
       }
 
@@ -260,9 +275,9 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
       }
    }
 
-   public void repair(int[] solution){
-      while(robustNRP.isSolutionValid(solution) == false){
-         removeRandomRequirement(solution);
+   private void repair(int[] individual){
+      while(robustNRP.isSolutionValid(individual) == false){
+         removeRandomRequirement(individual);
       }
    }
 
