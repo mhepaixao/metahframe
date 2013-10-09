@@ -26,6 +26,10 @@ public class InstancesHandler{
       }
    }
 
+   public InstancesHandler(File instance){
+      createSingleInstance(instance);
+   }
+
    private void createSingleInstance(File instance){
       this.instances = new File[1];
       this.instances[0] = instance;
@@ -76,6 +80,7 @@ public class InstancesHandler{
    }
 
    public String getInstanceName(int instanceIndex){
-      return this.instancesNames[instanceIndex];
+      String fullName = this.instancesNames[instanceIndex];
+      return fullName.substring(0, fullName.indexOf(".txt"));
    }
 }

@@ -32,13 +32,13 @@ public class Metahframe{
    double[][] solutions;
    double[][] runTimes;
 
-   public void solve(File[] instances, String problem, String algorithm, int numberOfRuns, int numberOfFitnessEvaluations){
+   //public void solve(File[] instances, String problem, String algorithm, int numberOfRuns, int numberOfFitnessEvaluations){
+   public void solve(File[] instances, String problem, String algorithm, int numberOfRuns, int numberOfFitnessEvaluations, int gammaPercentage){
       Algorithm adaptedAlgorithm = null;
       solutions = new double[instances.length][numberOfRuns];
       runTimes = new double[instances.length][numberOfRuns];
 
       for(int i = 0; i <= instances.length - 1; i++){
-         System.out.println("Executing for "+instances[i].getName());
          for(int j = 0; j <= numberOfRuns - 1; j++){
             if(algorithm.equals("antq")){
                //if(problem.equals("tsp")){
@@ -78,7 +78,8 @@ public class Metahframe{
                   //adaptedAlgorithm = new SRPPRandomAlgorithm(srppProblem, iterationsPerRun);
                //}
                if(problem.equals("rnrp")){
-                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
+                  //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
+                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
                   adaptedAlgorithm = new RobustNRPRandomAlgorithm(robustNRP, numberOfFitnessEvaluations);
                }
             }
@@ -88,8 +89,8 @@ public class Metahframe{
                   //adaptedAlgorithm = new TSPSimulatedAnnealing(tspProblem);
                //}
                if(problem.equals("rnrp")){ 
-                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
-                  //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
+                  //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
+                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
                   adaptedAlgorithm = new RobustNRPSimulatedAnnealing(robustNRP, numberOfFitnessEvaluations);
                }
             }
@@ -99,8 +100,8 @@ public class Metahframe{
                   //adaptedAlgorithm = new TSPGeneticAlgorithm(tspProblem, iterationsPerRun);
                //}
                if(problem.equals("rnrp")){ 
-                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
-                  //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
+                  //RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i]);
+                  RobustNextReleaseProblem robustNRP = new RobustNextReleaseProblem(instances[i], gammaPercentage);
                   adaptedAlgorithm = new RobustNRPGeneticAlgorithm(robustNRP, numberOfFitnessEvaluations);
                }
                //else if(problem.equals("rrnrp")){ 
@@ -114,8 +115,6 @@ public class Metahframe{
             runTimes[i][j] = adaptedAlgorithm.getTotalTime();
 
          }
-
-         System.out.println("Executed for instance "+i);
       }
    }
 }

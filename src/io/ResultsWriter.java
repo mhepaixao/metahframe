@@ -14,12 +14,14 @@ public class ResultsWriter{
    private InstancesHandler instancesHandler;
    private DecimalFormat df;
    String algorithm;
+   int gammaPercentage;
 
    //public ResultsWriter(StatisticalAnalyzer statisticalAnalyzer, InstancesHandler instancesHandler){
-   public ResultsWriter(StatisticalAnalyzer statisticalAnalyzer, InstancesHandler instancesHandler, String algorithm){
+   public ResultsWriter(StatisticalAnalyzer statisticalAnalyzer, InstancesHandler instancesHandler, String algorithm, int gammaPercentage){
       this.statisticalAnalyzer = statisticalAnalyzer;
       this.instancesHandler = instancesHandler;
       this.algorithm = algorithm;
+      this.gammaPercentage = gammaPercentage;
 
       DecimalFormatSymbols dfs = new DecimalFormatSymbols();
       dfs.setDecimalSeparator('.');
@@ -52,7 +54,9 @@ public class ResultsWriter{
       int numberOfInstances = statisticalAnalyzer.getNumberOfInstances();
 
       try{
-         BufferedWriter writer = new BufferedWriter(new FileWriter(new File("/home/mhepaixao/instancias/rnrp/jss/parametrizacao/results_"+algorithm+".txt"), true));
+         BufferedWriter writer = new BufferedWriter(new FileWriter(new File("/home/mhepaixao/instancias/rnrp/jss/results/" +
+                                                                              instancesHandler.getInstanceName(0) + "_results_" + algorithm + 
+                                                                              ".txt"), true));
 
          for(int i = 0; i <= numberOfInstances - 1; i++){
             writeInstanceResults(i, writer);
@@ -71,7 +75,8 @@ public class ResultsWriter{
 
    private void writeInstanceResults(int instanceIndex, BufferedWriter writer){
       try{
-         writer.write(instancesHandler.getInstanceName(instanceIndex) + "\n");
+         //writer.write(instancesHandler.getInstanceName(instanceIndex) + "\n");
+         writer.write("for gamma = " + gammaPercentage + "%\n");
          writer.write("\n");
 
          writer.write("solution: " + df.format(statisticalAnalyzer.getInstanceSolutionMean(instanceIndex)) + " +/- " 

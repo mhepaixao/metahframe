@@ -28,6 +28,9 @@ public abstract class GeneticAlgorithm implements Algorithm{
    protected abstract int getNumberOfEliteIndividuals();
    protected abstract boolean isMinimizationProblem();
 
+   public boolean isSolutionValid(int[] individual){return false;}
+   public void repairIndividual(int[] individual){}
+
    public GeneticAlgorithm(int numberOfIterations){
       this.numberOfIterations = numberOfIterations;
       this.random = new Random();
@@ -87,6 +90,10 @@ public abstract class GeneticAlgorithm implements Algorithm{
                   if(randomNumber < mutationProbability){
                      mutate(childs[k], w);
                   }
+               }
+
+               if(isSolutionValid(childs[k]) == false){
+                  repairIndividual(childs[k]);
                }
             }
 

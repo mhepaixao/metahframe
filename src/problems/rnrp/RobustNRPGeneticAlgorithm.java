@@ -27,7 +27,7 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
    }
 
    protected double getMutationProbability(){
-      //return 1.0 / 100;
+      //return 0.1 / 100;
       return (1.0 / robustNRP.getNumberOfRequirements()) / 100;
    }
 
@@ -49,7 +49,7 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
          randomIndividual = getRandomIndividual(initialPopulation[0].length, i);
 
          if(robustNRP.isSolutionValid(randomIndividual) == false){
-            repair(randomIndividual);
+            repairIndividual(randomIndividual);
          }
 
          initialPopulation[i] = randomIndividual;
@@ -255,7 +255,7 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
          }
 
          if(robustNRP.isSolutionValid(childs[i]) == false){
-            repair(childs[i]);
+            repairIndividual(childs[i]);
          }
       }
 
@@ -270,12 +270,12 @@ public class RobustNRPGeneticAlgorithm extends GeneticAlgorithm{
          individual[indexToMutate] = 0;
       }
 
-      if(robustNRP.isSolutionValid(individual) == false){
-         repair(individual);
-      }
+      //if(robustNRP.isSolutionValid(individual) == false){
+         //repairIndividual(individual);
+      //}
    }
 
-   private void repair(int[] individual){
+   public void repairIndividual(int[] individual){
       while(robustNRP.isSolutionValid(individual) == false){
          removeRandomRequirement(individual);
       }
